@@ -25,6 +25,37 @@ class Matrix4f
     build_schema
   end
   
+  def row kth 
+    entry_parser kth
+  end
+  
+  def column kth
+    self.transpose 
+    col = entry_parser kth
+    self.transpose 
+    col
+  end
+  
+  # write val into (i,j) element of this matrix
+  def setElementAt(i, j, val) 
+    send("m#{i-1}#{j-1}=", val)
+  end
+  
+  # get val of (i,j) element of this matrix
+  def elementAt(i, j) 
+    send("m#{i-1}#{j-1}")
+  end
+  
+  def mult other
+    (1..4).each do |i|
+      (1..4).each do |j|
+        val = row(i).dot(other.column(j))
+        setElementAt(i,j, val)
+      end
+    end
+    build_schema
+  end
+  
   def add other
     applyBinaryComponentwise(:+, other)
   end
@@ -33,8 +64,22 @@ class Matrix4f
     applyBinaryComponentwise(:-, other)
   end
   
-  
   private
+  
+  def entry_parser at 
+    collection = nil
+    case at
+    when 1
+      collection = Vector4f.new(@m00, @m01, @m02, @m03)
+    when 2
+      collection = Vector4f.new(@m10, @m11, @m12, @m13)
+    when 3
+      collection = Vector4f.new(@m20, @m21, @m22, @m23)
+    when 4
+      collection = Vector4f.new(@m30, @m31, @m32, @m33)
+    end
+    collection
+  end
   
   def applyBinaryComponentwise(op, other)
     @m00 = @m00.send(op, other.m00)
