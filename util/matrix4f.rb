@@ -79,6 +79,14 @@ class Matrix4f
     applyBinaryComponentwise(:-, other)
   end
   
+  def same_values_as? other
+    predicat = true
+    (1..4).each do |idx|
+      predicat &&= other.row(idx).same_values_as?(self.row(idx))
+    end
+    predicat
+  end
+  
   private
   
   def entry_parser at 

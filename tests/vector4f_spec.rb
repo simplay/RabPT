@@ -1,5 +1,4 @@
 require_relative '../util/vector4f.rb'
-require "pry"
 describe Vector4f do
   let(:v1) { Vector4f.new(1.0, 2.0, 4.0, 1.0) }
   let(:v1_orig) { Vector4f.new(1.0, 2.0, 4.0, 1.0) }
@@ -7,6 +6,10 @@ describe Vector4f do
   let(:zero) { Vector4f.new(0.0, 0.0, 0.0, 0.0) }
   let(:one) { Vector4f.new(1.0, 1.0, 1.0, 1.0) }
   let(:one_norm) { Vector4f.new(0.5, 0.5, 0.5, 0.5) }
+    
+    it "Im myself id==id" do
+      v1.same_values_as?(v1).should be_true
+    end
     
     it "eigensubstraction is zero" do
       v1.sub(v1)
