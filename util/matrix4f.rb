@@ -15,8 +15,6 @@ class Matrix4f
     build_schema
   end
   
-  
-  
   def transpose
     swap(:m10, :m01)
     swap(:m20, :m02)
@@ -27,7 +25,36 @@ class Matrix4f
     build_schema
   end
   
+  def add other
+    applyBinaryComponentwise(:+, other)
+  end
+  
+  def sub other
+    applyBinaryComponentwise(:-, other)
+  end
+  
+  
   private
+  
+  def applyBinaryComponentwise(op, other)
+    @m00 = @m00.send(op, other.m00)
+    @m01 = @m01.send(op, other.m01)
+    @m02 = @m02.send(op, other.m02)
+    @m03 = @m03.send(op, other.m03)
+    @m10 = @m10.send(op, other.m10)
+    @m11 = @m11.send(op, other.m11)
+    @m12 = @m12.send(op, other.m12)
+    @m13 = @m13.send(op, other.m13)
+    @m20 = @m20.send(op, other.m20)
+    @m21 = @m21.send(op, other.m21)
+    @m22 = @m22.send(op, other.m22)
+    @m23 = @m23.send(op, other.m23)
+    @m30 = @m30.send(op, other.m30)
+    @m31 = @m31.send(op, other.m31)
+    @m32 = @m32.send(op, other.m32)
+    @m33 = @m33.send(op, other.m33)
+    build_schema
+  end
   
   def swap(a, b)  
     tmp = send("#{a}")
@@ -41,6 +68,7 @@ class Matrix4f
     [@m10, @m11, @m12, @m13],
     [@m20, @m21, @m22, @m23],
     [@m30, @m31, @m32, @m33]]
+    self
   end
   
 end
