@@ -6,3 +6,5 @@ gem 'imageruby-bmp'
 
 # Debugger, only works with MRI
 gem "pry-debugger", "~> 0.2.2"
+
+gem "rspec"
