@@ -18,7 +18,12 @@ class Camera
                 :width,
                 :height,
                 :C, 
-                :Cinv
+                :Cinv,
+                :angularFov,
+                :t,
+                :b,
+                :r,
+                :l
   
   # @param eye from position of camera
   # @param lookAt to position of camera
@@ -31,20 +36,22 @@ class Camera
     args.each do |key, value|
       send("#{key}=", value)
     end
-    
-    Camera.compute_camera_matrix
-    Camera.compute_image_corners
-    
+    compute_camera_matrix
+    compute_image_corners
   end
   
   private
   
-  def self.compute_camera_matrix
-  
+  def compute_camera_matrix
+    
   end
   
-  def self.compute_image_corners
-  
+  def compute_image_corners
+    @angularFov = Math::PI * (fov / 180.0);
+    @t = Math::tan(angularFov/2.0.to_f);
+    @b = -t;
+    @r = aspect_ratio*t;
+    @l = -r;
   end
   
 end

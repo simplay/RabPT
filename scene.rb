@@ -24,6 +24,6 @@ class Scene
             :height => @height}
             
     @camera = Camera.new camera_args
-    
+
   end
 end
