@@ -25,10 +25,12 @@ class Matrix4f
     build_schema
   end
   
+  # first row equal index 
   def row kth 
     entry_parser kth
   end
   
+  # first column equal index 1
   def column kth
     self.transpose 
     col = entry_parser kth
@@ -46,6 +48,8 @@ class Matrix4f
     send("m#{i-1}#{j-1}")
   end
   
+  # assumption: dimensions match
+  # perfroms a matrix4f matrix4f multiplication
   def mult other
     (1..4).each do |i|
       (1..4).each do |j|
@@ -54,6 +58,17 @@ class Matrix4f
       end
     end
     build_schema
+  end
+  
+  # assumption vec4f is a column vector
+  # performs a matrix4f vector4f multiplaction
+  def vectormult vec4f
+    values = []
+    (1..4).each do |i|
+      values << row(i).dot(vec4f)
+    end
+    
+    Vector4f.new(values[0], values[1], values[2], values[3])
   end
   
   def add other
@@ -81,6 +96,8 @@ class Matrix4f
     collection
   end
   
+  # deuglyfy this helper bz using chained sends
+  # and a for for loop
   def applyBinaryComponentwise(op, other)
     @m00 = @m00.send(op, other.m00)
     @m01 = @m01.send(op, other.m01)
