@@ -25,6 +25,9 @@ class Scene
             :height => @height}
             
     @camera = Camera.new camera_args
+    
+    v = Vector4f.new(1.0, 2.0, 3.0, 4.0)
+    m = Matrix4f.new(v,v,v, v)
     binding.pry
   end
 end
