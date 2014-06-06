@@ -1,11 +1,15 @@
 class Renderer
+  require File.join(File.dirname(__FILE__), 'scene.rb')
   include ImageRuby
 
-  attr_accessor :image, :dimN, :dimM
+  attr_accessor :image, :dimN, :dimM, :scene
   
   def initialize(args={})
     # setup scene
     # main loop
+    @scene = Scene.new({:SPP => args[:SPP] || 1})
+    
+    puts @scene.SPP
     
     @dimN = args[:N]
     @dimM = args[:M]
@@ -23,12 +27,12 @@ class Renderer
     (@dimN*@dimM).times do
       colors << color
     end
-    puts "color count " + colors.length.to_s
+
     puts "start rendering pixels"
     render_cluster([0, @dimM-1], [0, @dimN-1], colors)
     
     begin
-      @image.save("raytraced.bmp", :bmp)
+      @image.save("output/raytraced.bmp", :bmp)
     rescue
       print "Could no generate the image"
     end
