@@ -1,4 +1,4 @@
-class Vector3f
+class Vector4f
 
   attr_accessor :x, :y, :z, :w
   
