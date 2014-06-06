@@ -1,12 +1,5 @@
 require_relative '../util/matrix4f.rb'
 require "pry"
-v1 = Vector4f.new(1.0, 2.0, 3.0, 4.0)
-v2 = Vector4f.new(5.0, 6.0, 7.0, 8.0)
-v3 = Vector4f.new(9.0, 10.0, 11.0, 12.0)
-v4 = Vector4f.new(13.0, 14.0, 15.0, 16.0)
-
-
-
 
 describe Matrix4f do
   before(:each) do
@@ -46,6 +39,12 @@ describe Matrix4f do
     v3 = Vector4f.new(0.0, 0.0, 1.0, 0.0)
     v4 = Vector4f.new(1.0, 2.0, 3.0, 1.0)
     @Tt = Matrix4f.new(v1, v2, v3, v4)
+    
+    v1 = Vector4f.new(1.0, 2.0, 3.0, 4.0)
+    v2 = Vector4f.new(5.0, 6.0, 7.0, 8.0)
+    v3 = Vector4f.new(9.0, 10.0, 11.0, 12.0)
+    v4 = Vector4f.new(13.0, 14.0, 15.0, 16.0)
+    @Enum = Matrix4f.new(v1, v2, v3, v4)
   end
   
   it "Im myself id==id" do
@@ -80,6 +79,32 @@ describe Matrix4f do
       predicat &&= @M1.column(idx).same_values_as?(columns[idx-1])
     end
     predicat.should be_true
+  end
+  
+  it "#elementAt getter work as they are supposed to" do
+    predicat = true
+    counter = 1
+    columns = [@v1c, @v2c, @v3c, @v4c]
+    (1..4).each do |i|
+      (1..4).each do |j|
+        predicat &&= (@Enum.elementAt(i,j)== counter)
+        counter += 1
+      end
+    end
+    predicat.should be_true
+  end
+  
+  it "#elementAt getter work as they are supposed to (sanity check)" do
+    predicat = true
+    counter = 0
+    columns = [@v1c, @v2c, @v3c, @v4c]
+    (1..4).each do |i|
+      (1..4).each do |j|
+        predicat &&= (@Enum.elementAt(i,j)== counter)
+        counter += 1
+      end
+    end
+    predicat.should_not be_true
   end
   
 end
