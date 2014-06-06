@@ -15,6 +15,7 @@ class Vector4f
     @y = @y-other.y
     @z = @z-other.z
     @w = @w-other.w
+    self
   end
   
   # add other to this
@@ -23,6 +24,7 @@ class Vector4f
     @y = @y+other.y
     @z = @z+other.z
     @w = @w+other.w
+    self
   end
   
    # compute euclidian scalar product between this and other
@@ -36,18 +38,27 @@ class Vector4f
     Math::sqrt(dot)
   end
   
+  def length
+    norm_2(self)
+  end
+  
   # scale this vector by a constant
   def scale by
     @x = @x*by
     @y = @y*by
     @z = @z*by
     @w = @w*by
+    self
   end
   
   # get unit vector version of this vector
   def normalize
     normalization_factor = norm_2 self
-    self.scale normalization_factor
+    self.scale (1.0 / normalization_factor.to_f)
+  end
+  
+  def same_values_as? other
+    (@x == other.x) && (@y == other.y) && (@z == other.z) && (@w == other.w) 
   end
   
 end
