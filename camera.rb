@@ -32,8 +32,8 @@ class Camera
       send("#{key}=", value)
     end
     
-    compute_camera_matrix
-    compute_image_corners
+    Camera.compute_camera_matrix
+    Camera.compute_image_corners
     
   end
   
