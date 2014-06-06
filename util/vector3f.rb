@@ -13,6 +13,7 @@ class Vector3f
     @x = @x-other.x
     @y = @y-other.y
     @z = @z-other.z
+    self
   end
   
   # add other to this
@@ -20,6 +21,7 @@ class Vector3f
     @x = @x+other.x
     @y = @y+other.y
     @z = @z+other.z
+    self
   end
   
    # compute euclidian scalar product between this and other
@@ -33,17 +35,26 @@ class Vector3f
     Math::sqrt(dot)
   end
   
+  def length
+    norm_2(self)
+  end
+  
   # scale this vector by a constant
   def scale by
     @x = @x*by
     @y = @y*by
     @z = @z*by
+    self
   end
   
   # get unit vector version of this vector
   def normalize
     normalization_factor = norm_2 self
-    self.scale normalization_factor
+    self.scale (1.0 / normalization_factor.to_f)
+  end
+  
+  def same_values_as? other
+    (@x == other.x) && (@y == other.y) && (@z == other.z)
   end
   
 end
