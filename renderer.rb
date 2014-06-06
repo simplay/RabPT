@@ -5,14 +5,14 @@ class Renderer
   attr_accessor :image, :dimN, :dimM, :scene
   
   def initialize(args={})
-    # setup scene
-    # main loop
-    @scene = Scene.new({:SPP => args[:SPP] || 1})
-    
-    puts @scene.SPP
     
     @dimN = args[:N]
     @dimM = args[:M]
+    
+    @scene = Scene.new({:SPP => args[:SPP] || 1,
+                        :width => @dimM,
+                        :height => @dimN
+                        })
     
     puts "dimensions (#{@dimN}, #{@dimM}),"
     
