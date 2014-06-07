@@ -97,9 +97,48 @@ require "pry"
     predicat
   end
   
+  # scale every element of this matrix by given value
+  def scale by
+    (1..4).each do |i|
+      (1..4).each do |j|
+        val = elementAt(i,j)*by
+        setElementAt(i, j, val) 
+      end
+    end  
+  end
+  
+  # explicit inverse for a 4x4 matrix
   def invert
     values = []
+    unless is_singular?
+      # b11 = at()*at()*at() + at()*at()*at() + at()*at()*at() - at()*at()*at() - at()*at()*at() - at()*at()*at()
+      # b12 = at()*at()*at() + at()*at()*at() + at()*at()*at() - at()*at()*at() - at()*at()*at() - at()*at()*at()
+      # b13 = at()*at()*at() + at()*at()*at() + at()*at()*at() - at()*at()*at() - at()*at()*at() - at()*at()*at()
+      # b14 = at()*at()*at() + at()*at()*at() + at()*at()*at() - at()*at()*at() - at()*at()*at() - at()*at()*at()
+      # 
+      # b21 = at()*at()*at() + at()*at()*at() + at()*at()*at() - at()*at()*at() - at()*at()*at() - at()*at()*at()
+      # b22 = at()*at()*at() + at()*at()*at() + at()*at()*at() - at()*at()*at() - at()*at()*at() - at()*at()*at()
+      # b23 = at()*at()*at() + at()*at()*at() + at()*at()*at() - at()*at()*at() - at()*at()*at() - at()*at()*at()
+      # b24 = at()*at()*at() + at()*at()*at() + at()*at()*at() - at()*at()*at() - at()*at()*at() - at()*at()*at()
+      # 
+      # b31 = at()*at()*at() + at()*at()*at() + at()*at()*at() - at()*at()*at() - at()*at()*at() - at()*at()*at()
+      # b32 = at()*at()*at() + at()*at()*at() + at()*at()*at() - at()*at()*at() - at()*at()*at() - at()*at()*at()
+      # b33 = at()*at()*at() + at()*at()*at() + at()*at()*at() - at()*at()*at() - at()*at()*at() - at()*at()*at()
+      # b34 = at()*at()*at() + at()*at()*at() + at()*at()*at() - at()*at()*at() - at()*at()*at() - at()*at()*at()
+      # 
+      # b41 = at()*at()*at() + at()*at()*at() + at()*at()*at() - at()*at()*at() - at()*at()*at() - at()*at()*at()
+      # b42 = at()*at()*at() + at()*at()*at() + at()*at()*at() - at()*at()*at() - at()*at()*at() - at()*at()*at()
+      # b43 = at()*at()*at() + at()*at()*at() + at()*at()*at() - at()*at()*at() - at()*at()*at() - at()*at()*at()
+      # b44 = at()*at()*at() + at()*at()*at() + at()*at()*at() - at()*at()*at() - at()*at()*at() - at()*at()*at()
+      
+      
+    end
     
+    
+  end
+  
+  def is_singular?
+    det == 0.0
   end
   
   # recursive det calculation
