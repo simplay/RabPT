@@ -51,12 +51,19 @@ class Matrix4f
   # assumption: dimensions match
   # perfroms a matrix4f matrix4f multiplication
   def mult other
+    values = []
     (1..4).each do |i|
       (1..4).each do |j|
-        val = row(i).dot(other.column(j))
-        setElementAt(i,j, val)
+        values << row(j).dot(other.column(i))
       end
-    end
+    end  
+    counter = 0
+    (1..4).each do |i|
+      (1..4).each do |j|
+        setElementAt(j,i, values[counter])
+        counter += 1
+      end
+    end  
     build_schema
   end
   

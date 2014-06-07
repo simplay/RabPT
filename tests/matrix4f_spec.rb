@@ -45,6 +45,13 @@ describe Matrix4f do
     v3 = Vector4f.new(9.0, 10.0, 11.0, 12.0)
     v4 = Vector4f.new(13.0, 14.0, 15.0, 16.0)
     @Enum = Matrix4f.new(v1, v2, v3, v4)
+    
+    v1 = Vector4f.new(93.0, 111.0, 109.0, 107.0)
+    v2 = Vector4f.new(209.0, 259.0, 249.0, 247.0)
+    v3 = Vector4f.new(325.0, 407.0, 389.0, 387.0)
+    v4 = Vector4f.new(441.0, 555.0, 529.0, 527.0)
+    @EnumTimesM2 = Matrix4f.new(v1, v2, v3, v4)
+    
   end
   
   it "Im myself id==id" do
@@ -105,6 +112,10 @@ describe Matrix4f do
       end
     end
     predicat.should_not be_true
+  end
+  
+  it "M1 times Enum gives expected result" do
+    @Enum.mult(@M2).same_values_as?(@EnumTimesM2).should be_true
   end
   
 end
