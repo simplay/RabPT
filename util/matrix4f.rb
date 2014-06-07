@@ -45,6 +45,7 @@ require "pry"
   # write val into (i,j) element of this matrix
   def setElementAt(i, j, val) 
     send("m#{i-1}#{j-1}=", val)
+    build_schema
   end
   
   # get val of (i,j) element of this matrix
@@ -104,36 +105,51 @@ require "pry"
         val = elementAt(i,j)*by
         setElementAt(i, j, val) 
       end
-    end  
+    end
+    build_schema  
   end
   
   # explicit inverse for a 4x4 matrix
   def invert
     values = []
     unless is_singular?
-      # b11 = at()*at()*at() + at()*at()*at() + at()*at()*at() - at()*at()*at() - at()*at()*at() - at()*at()*at()
-      # b12 = at()*at()*at() + at()*at()*at() + at()*at()*at() - at()*at()*at() - at()*at()*at() - at()*at()*at()
-      # b13 = at()*at()*at() + at()*at()*at() + at()*at()*at() - at()*at()*at() - at()*at()*at() - at()*at()*at()
-      # b14 = at()*at()*at() + at()*at()*at() + at()*at()*at() - at()*at()*at() - at()*at()*at() - at()*at()*at()
-      # 
-      # b21 = at()*at()*at() + at()*at()*at() + at()*at()*at() - at()*at()*at() - at()*at()*at() - at()*at()*at()
-      # b22 = at()*at()*at() + at()*at()*at() + at()*at()*at() - at()*at()*at() - at()*at()*at() - at()*at()*at()
-      # b23 = at()*at()*at() + at()*at()*at() + at()*at()*at() - at()*at()*at() - at()*at()*at() - at()*at()*at()
-      # b24 = at()*at()*at() + at()*at()*at() + at()*at()*at() - at()*at()*at() - at()*at()*at() - at()*at()*at()
-      # 
-      # b31 = at()*at()*at() + at()*at()*at() + at()*at()*at() - at()*at()*at() - at()*at()*at() - at()*at()*at()
-      # b32 = at()*at()*at() + at()*at()*at() + at()*at()*at() - at()*at()*at() - at()*at()*at() - at()*at()*at()
-      # b33 = at()*at()*at() + at()*at()*at() + at()*at()*at() - at()*at()*at() - at()*at()*at() - at()*at()*at()
-      # b34 = at()*at()*at() + at()*at()*at() + at()*at()*at() - at()*at()*at() - at()*at()*at() - at()*at()*at()
-      # 
-      # b41 = at()*at()*at() + at()*at()*at() + at()*at()*at() - at()*at()*at() - at()*at()*at() - at()*at()*at()
-      # b42 = at()*at()*at() + at()*at()*at() + at()*at()*at() - at()*at()*at() - at()*at()*at() - at()*at()*at()
-      # b43 = at()*at()*at() + at()*at()*at() + at()*at()*at() - at()*at()*at() - at()*at()*at() - at()*at()*at()
-      # b44 = at()*at()*at() + at()*at()*at() + at()*at()*at() - at()*at()*at() - at()*at()*at() - at()*at()*at()
+      # compute elementwise inverses
       
+      # b11 to b14
+      values << at(2,2)*at(3,3)*at(4,4) + at(2,3)*at(3,4)*at(4,2) + at(2,4)*at(3,2)*at(4,3) - at(2,2)*at(3,4)*at(4,3) - at(2,3)*at(3,2)*at(4,4) - at(2,4)*at(3,3)*at(4,2)
+      values << at(1,2)*at(3,4)*at(4,3) + at(1,3)*at(3,2)*at(4,4) + at(1,4)*at(3,3)*at(4,2) - at(1,2)*at(3,3)*at(4,4) - at(1,3)*at(3,4)*at(4,2) - at(1,4)*at(3,2)*at(4,3)
+      values << at(1,2)*at(2,3)*at(4,4) + at(1,3)*at(2,4)*at(4,2) + at(1,4)*at(2,2)*at(4,3) - at(1,2)*at(2,4)*at(4,3) - at(1,3)*at(2,2)*at(4,4) - at(1,4)*at(2,3)*at(4,2)
+      values << at(1,2)*at(2,4)*at(3,3) + at(1,3)*at(2,2)*at(3,4) + at(1,4)*at(2,3)*at(3,2) - at(1,2)*at(2,3)*at(3,4) - at(1,3)*at(2,4)*at(3,2) - at(1,4)*at(2,2)*at(3,3)
       
+      # b21 to b24
+      values << at(2,1)*at(3,4)*at(4,3) + at(2,3)*at(3,1)*at(4,4) + at(2,4)*at(3,3)*at(4,1) - at(2,1)*at(3,3)*at(4,4) - at(2,3)*at(3,4)*at(4,1) - at(2,4)*at(3,1)*at(4,3)
+      values << at(1,1)*at(3,3)*at(4,4) + at(1,3)*at(3,4)*at(4,1) + at(1,4)*at(3,1)*at(4,3) - at(1,1)*at(3,4)*at(4,3) - at(1,3)*at(3,1)*at(4,4) - at(1,4)*at(3,3)*at(4,1)
+      values << at(1,1)*at(2,4)*at(4,3) + at(1,3)*at(2,1)*at(4,4) + at(1,4)*at(2,3)*at(4,1) - at(1,1)*at(2,3)*at(4,4) - at(1,3)*at(2,4)*at(4,1) - at(1,4)*at(2,1)*at(4,3)
+      values << at(1,1)*at(2,3)*at(3,4) + at(1,3)*at(2,4)*at(3,1) + at(1,4)*at(2,1)*at(3,3) - at(1,1)*at(2,4)*at(3,3) - at(1,3)*at(2,1)*at(3,4) - at(1,4)*at(2,3)*at(3,1)
+      
+      # b31 to b34
+      values << at(2,1)*at(3,2)*at(4,4) + at(2,2)*at(3,4)*at(4,1) + at(2,4)*at(3,1)*at(4,2) - at(2,1)*at(3,4)*at(4,2) - at(2,2)*at(3,1)*at(4,4) - at(2,4)*at(3,2)*at(4,1)
+      values << at(1,1)*at(3,4)*at(4,2) + at(1,2)*at(3,1)*at(4,4) + at(1,4)*at(3,2)*at(4,1) - at(1,1)*at(3,2)*at(4,4) - at(1,2)*at(3,4)*at(4,1) - at(1,4)*at(3,1)*at(4,2)
+      values << at(1,1)*at(2,2)*at(4,4) + at(1,2)*at(2,4)*at(4,1) + at(1,4)*at(2,1)*at(4,2) - at(1,1)*at(2,4)*at(4,2) - at(1,2)*at(2,1)*at(4,4) - at(1,4)*at(2,2)*at(4,1)
+      values << at(1,1)*at(2,4)*at(3,2) + at(1,2)*at(2,1)*at(3,4) + at(1,4)*at(2,2)*at(3,1) - at(1,1)*at(2,2)*at(3,4) - at(1,2)*at(2,4)*at(3,1) - at(1,4)*at(2,1)*at(3,2)
+      
+      # b41 to b44
+      values << at()*at()*at() + at()*at()*at() + at()*at()*at() - at()*at()*at() - at()*at()*at() - at()*at()*at()
+      values << at()*at()*at() + at()*at()*at() + at()*at()*at() - at()*at()*at() - at()*at()*at() - at()*at()*at()
+      values << at()*at()*at() + at()*at()*at() + at()*at()*at() - at()*at()*at() - at()*at()*at() - at()*at()*at()
+      values << at()*at()*at() + at()*at()*at() + at()*at()*at() - at()*at()*at() - at()*at()*at() - at()*at()*at()
+      
+      counter = 0
+      (1..4).each do |i|
+        (1..4).each do |j|
+          setElementAt(j,i, values[counter])
+          counter += 1
+        end
+      end  
+      
+      build_schema
+      scale((1.0/det.to_f))
     end
-    
     
   end
   
