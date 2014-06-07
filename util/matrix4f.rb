@@ -2,7 +2,7 @@ class Matrix4f
   require File.join(File.dirname(__FILE__), 'vector4f.rb')
   require File.join(File.dirname(__FILE__), 'matrix3f.rb')
   
-
+require "pry"
   
   attr_accessor :schema,
                 :m00, :m01, :m02, :m03,
@@ -105,30 +105,30 @@ class Matrix4f
   # recursive det calculation
   def det
     s1 = at(1,1)
-    r11 = Vector3f.new(at(2,2),at(2,3),at(1,4))
+    r11 = Vector3f.new(at(2,2),at(2,3),at(2,4))
     r12 = Vector3f.new(at(3,2),at(3,3),at(3,4))
     r13 = Vector3f.new(at(4,2),at(4,3),at(4,4))
-    det1 = (Matrix3f.new(r11.scale(s1), r12.scale(s1), r13.scale(s1))).det
+    det1 = (Matrix3f.new(r11, r12, r13)).det
     
-    s1 = at(1,2)
-    r11 = Vector3f.new(at(2,1),at(2,3),at(1,4))
-    r12 = Vector3f.new(at(3,1),at(3,3),at(3,4))
-    r13 = Vector3f.new(at(4,1),at(4,3),at(4,4))
-    det2 = (Matrix3f.new(r11.scale(s1), r12.scale(s1), r13.scale(s1))).det
+    s2 = at(1,2)
+    r21 = Vector3f.new(at(2,1),at(2,3),at(2,4))
+    r22 = Vector3f.new(at(3,1),at(3,3),at(3,4))
+    r23 = Vector3f.new(at(4,1),at(4,3),at(4,4))
+    det2 = (Matrix3f.new(r21, r22, r23)).det
     
-    s1 = at(1,3)
-    r11 = Vector3f.new(at(2,1),at(2,2),at(1,4))
-    r12 = Vector3f.new(at(3,1),at(3,2),at(3,4))
-    r13 = Vector3f.new(at(4,1),at(4,2),at(4,4))
-    det3 = (Matrix3f.new(r11.scale(s1), r12.scale(s1), r13.scale(s1))).det
+    s3 = at(1,3)
+    r31 = Vector3f.new(at(2,1),at(2,2),at(2,4))
+    r32 = Vector3f.new(at(3,1),at(3,2),at(3,4))
+    r33 = Vector3f.new(at(4,1),at(4,2),at(4,4))
+    det3 = (Matrix3f.new(r31, r32, r33)).det
     
-    s1 = at(1,4)
-    r11 = Vector3f.new(at(2,1),at(2,2),at(1,3))
-    r12 = Vector3f.new(at(3,1),at(3,2),at(3,3))
-    r13 = Vector3f.new(at(4,1),at(4,2),at(4,3))
-    det4 = (Matrix3f.new(r11.scale(s1), r12.scale(s1), r13.scale(s1))).det
+    s4 = at(1,4)
+    r41 = Vector3f.new(at(2,1),at(2,2),at(2,3))
+    r42 = Vector3f.new(at(3,1),at(3,2),at(3,3))
+    r43 = Vector3f.new(at(4,1),at(4,2),at(4,3))
+    det4 = (Matrix3f.new(r41, r42, r43)).det
     
-    (det1 - det2 + det3 - det4)
+    (s1*det1 - s2*det2 + s3*det3 - s4*det4)
   end
   
   private

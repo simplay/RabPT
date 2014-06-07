@@ -63,6 +63,7 @@ describe Matrix4f do
     v4 = Vector4f.new(441.0, 555.0, 529.0, 527.0)
     @EnumTimesM2 = Matrix4f.new(v1, v2, v3, v4)
     
+    
   end
   
   it "Im myself id==id" do
@@ -141,6 +142,27 @@ describe Matrix4f do
   
   it "Eigensubtraction is zerp" do
     @M1.sub(@M1).same_values_as?(@Z).should be_true
+  end
+  
+  it "det identity matrix is 1" do
+    @I.det.should eq(1.0)
+  end
+  
+  it "det zero matrix is 0" do
+    @Z.det.should eq(0.0)
+  end
+  
+  it "det homogeneous translation is 1" do
+    @T.det.should eq(1.0)
+  end
+  
+  it "det should be correct calculated" do
+    v1 = Vector4f.new(5.0, 0.0, 3.0, -1.0)
+    v2 = Vector4f.new(3.0, 0.0, 0.0, 4.0)
+    v3 = Vector4f.new(-1.0, 2.0, 4.0, -2.0)
+    v4 = Vector4f.new(1.0, 0.0, 0.0, 5.0)
+    A = Matrix4f.new(v1, v2, v3, v4)
+    A.det.should eq(66.0)
   end
   
 end

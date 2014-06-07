@@ -103,7 +103,7 @@ class Matrix3f
     b2 = at(1,2)*at(2,1)*at(3,3)
     b3 = at(1,3)*at(2,2)*at(3,1)
     
-    (a1+a2+a3)+(-1*(b1+b2+b3))
+    (a1+a2+a3)-(b1+b2+b3)
   end
   
   def is_singular?
@@ -157,5 +157,5 @@ class Matrix3f
     self
   end
   
-  alias :at :element_at 
+  alias_method :at, :element_at 
 end

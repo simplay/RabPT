@@ -65,5 +65,5 @@ describe Vector4f do
     it "v1 dot v2 yields expected value 12" do
       v1.dot(v2).should eq(12.0)
     end
-
+    
 end
