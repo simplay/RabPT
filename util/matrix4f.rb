@@ -1,5 +1,9 @@
 class Matrix4f
   require File.join(File.dirname(__FILE__), 'vector4f.rb')
+  require File.join(File.dirname(__FILE__), 'matrix3f.rb')
+  
+
+  
   attr_accessor :schema,
                 :m00, :m01, :m02, :m03,
                 :m10, :m11, :m12, :m13,
@@ -93,6 +97,40 @@ class Matrix4f
     predicat
   end
   
+  def invert
+    values = []
+    
+  end
+  
+  # recursive det calculation
+  def det
+    s1 = at(1,1)
+    r11 = Vector3f.new(at(2,2),at(2,3),at(1,4))
+    r12 = Vector3f.new(at(3,2),at(3,3),at(3,4))
+    r13 = Vector3f.new(at(4,2),at(4,3),at(4,4))
+    det1 = (Matrix3f.new(r11.scale(s1), r12.scale(s1), r13.scale(s1))).det
+    
+    s1 = at(1,2)
+    r11 = Vector3f.new(at(2,1),at(2,3),at(1,4))
+    r12 = Vector3f.new(at(3,1),at(3,3),at(3,4))
+    r13 = Vector3f.new(at(4,1),at(4,3),at(4,4))
+    det2 = (Matrix3f.new(r11.scale(s1), r12.scale(s1), r13.scale(s1))).det
+    
+    s1 = at(1,3)
+    r11 = Vector3f.new(at(2,1),at(2,2),at(1,4))
+    r12 = Vector3f.new(at(3,1),at(3,2),at(3,4))
+    r13 = Vector3f.new(at(4,1),at(4,2),at(4,4))
+    det3 = (Matrix3f.new(r11.scale(s1), r12.scale(s1), r13.scale(s1))).det
+    
+    s1 = at(1,4)
+    r11 = Vector3f.new(at(2,1),at(2,2),at(1,3))
+    r12 = Vector3f.new(at(3,1),at(3,2),at(3,3))
+    r13 = Vector3f.new(at(4,1),at(4,2),at(4,3))
+    det4 = (Matrix3f.new(r11.scale(s1), r12.scale(s1), r13.scale(s1))).det
+    
+    (det1 - det2 + det3 - det4)
+  end
+  
   private
   
   def entry_parser at 
@@ -147,4 +185,5 @@ class Matrix4f
     self
   end
   
+  alias_method :at, :elementAt
 end
