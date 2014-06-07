@@ -1,5 +1,4 @@
 require_relative '../util/matrix4f.rb'
-require "pry"
 
 describe Matrix4f do
   before(:each) do
