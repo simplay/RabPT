@@ -74,7 +74,6 @@ class Matrix4f
     (1..4).each do |i|
       values << row(i).dot(vec4f)
     end
-    
     Vector4f.new(values[0], values[1], values[2], values[3])
   end
   

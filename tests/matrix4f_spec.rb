@@ -27,6 +27,18 @@ describe Matrix4f do
     v4 = Vector4f.new(0.0, 0.0, 0.0, 1.0)
     @I = Matrix4f.new(v1, v2, v3, v4)
     
+    v1 = Vector4f.new(2.0, 4.0, 6.0, 8.0)
+    v2 = Vector4f.new(10.0, 12.0, 14.0, 16.0)
+    v3 = Vector4f.new(18.0, 20.0, 22.0, 24.0)
+    v4 = Vector4f.new(26.0, 28.0, 30.0, 32.0)
+    @twoM1 = Matrix4f.new(v1, v2, v3, v4)
+    
+    v1 = Vector4f.new(0.0, 0.0, 0.0, 0.0)
+    v2 = Vector4f.new(0.0, 0.0, 0.0, 0.0)
+    v3 = Vector4f.new(0.0, 0.0, 0.0, 0.0)
+    v4 = Vector4f.new(0.0, 0.0, 0.0, 0.0)
+    @Z = Matrix4f.new(v1, v2, v3, v4)
+    
     v1 = Vector4f.new(1.0, 0.0, 0.0, 1.0)
     v2 = Vector4f.new(0.0, 1.0, 0.0, 2.0)
     v3 = Vector4f.new(0.0, 0.0, 1.0, 3.0)
@@ -114,8 +126,22 @@ describe Matrix4f do
     predicat.should_not be_true
   end
   
-  it "M1 times Enum gives expected result" do
+  it "Enum times M2 gives expected result EnumTimesM2" do
     @Enum.mult(@M2).same_values_as?(@EnumTimesM2).should be_true
+  end
+  
+  it "@Enum times v1c gives expected result" do
+    v1 = Vector4f.new(1.0, 2.0, 3.0, 4.0)
+    res = Vector4f.new(30.0, 70.0, 110.0, 150.0)
+    @Enum.vectormult(v1).same_values_as?(res).should be_true
+  end
+  
+  it "Eigenaddition is twice the matrix" do
+    @M1.add(@M1).same_values_as?(@twoM1).should be_true
+  end
+  
+  it "Eigensubtraction is zerp" do
+    @M1.sub(@M1).same_values_as?(@Z).should be_true
   end
   
 end
