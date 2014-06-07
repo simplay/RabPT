@@ -134,10 +134,10 @@ require "pry"
       values << at(1,1)*at(2,4)*at(3,2) + at(1,2)*at(2,1)*at(3,4) + at(1,4)*at(2,2)*at(3,1) - at(1,1)*at(2,2)*at(3,4) - at(1,2)*at(2,4)*at(3,1) - at(1,4)*at(2,1)*at(3,2)
       
       # b41 to b44
-      values << at()*at()*at() + at()*at()*at() + at()*at()*at() - at()*at()*at() - at()*at()*at() - at()*at()*at()
-      values << at()*at()*at() + at()*at()*at() + at()*at()*at() - at()*at()*at() - at()*at()*at() - at()*at()*at()
-      values << at()*at()*at() + at()*at()*at() + at()*at()*at() - at()*at()*at() - at()*at()*at() - at()*at()*at()
-      values << at()*at()*at() + at()*at()*at() + at()*at()*at() - at()*at()*at() - at()*at()*at() - at()*at()*at()
+      values << at(2,1)*at(3,3)*at(4,2) + at(2,2)*at(3,1)*at(4,3) + at(2,3)*at(3,2)*at(4,1) - at(2,1)*at(3,2)*at(4,3) - at(2,2)*at(3,3)*at(4,1) - at(2,3)*at(3,1)*at(4,2)
+      values << at(1,1)*at(3,2)*at(4,3) + at(1,2)*at(3,3)*at(4,1) + at(1,3)*at(3,1)*at(4,2) - at(1,1)*at(3,3)*at(4,2) - at(1,2)*at(3,1)*at(4,3) - at(1,3)*at(3,2)*at(4,1)
+      values << at(1,1)*at(2,3)*at(4,2) + at(1,2)*at(2,1)*at(4,3) + at(1,3)*at(2,2)*at(4,1) - at(1,1)*at(2,2)*at(4,3) - at(1,2)*at(2,3)*at(4,1) - at(1,3)*at(2,1)*at(4,2)
+      values << at(1,1)*at(2,2)*at(3,3) + at(1,2)*at(2,3)*at(3,1) + at(1,3)*at(2,1)*at(3,2) - at(1,1)*at(2,3)*at(3,2) - at(1,2)*at(2,1)*at(3,3) - at(1,3)*at(2,2)*at(3,1)
       
       counter = 0
       (1..4).each do |i|
