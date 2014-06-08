@@ -24,6 +24,14 @@ require "pry"
     build_schema
   end
   
+  def ovwrite_me other
+    (1..4).each do |i|
+      (1..4).each do |j|
+        setElementAt(i, j, other.at(i,j)) 
+      end
+    end
+  end
+  
   def s_copy 
     v1 = Vector4f.new(@m00, @m01, @m02, @m03)
     v2 = Vector4f.new(@m10, @m11, @m12, @m13)
@@ -126,8 +134,8 @@ require "pry"
   # Lower triangular matrix L resulting by 
   # lu decomposition: A = L*R
   def get_l_matrix
-    l = Matrix4f.new
-    lu = lu_decomp
+    l = Matrix4f.new(nil, nil, nil, nil)
+    lu = lu_decomp[0]
     (1..4).each do |i|
       (1..4).each do |j|
         if (i > j)
@@ -145,8 +153,8 @@ require "pry"
   # Upper triangular matrix U resulting by 
   # lu decomposition: A = L*R
   def get_u_matrix
-    u = Matrix4f.new
-    lu = lu_decomp
+    u = Matrix4f.new(nil, nil, nil, nil)
+    lu = lu_decomp[0]
     (1..4).each do |i|
       (1..4).each do |j|
         if (i <= j)
@@ -156,8 +164,40 @@ require "pry"
         end
       end
     end
-    r 
+    u 
   end
+  
+  def get_p_matrix
+    rows = []
+    lu_decomp_permutation_vec.each do |pidx|
+      row = nil
+      case pidx
+      when 1
+        row = Vector4f.new(1.0, 0.0, 0.0, 0.0)
+      when 2
+        row = Vector4f.new(0.0, 1.0, 0.0, 0.0)
+      when 3
+        row = Vector4f.new(0.0, 0.0, 1.0, 0.0)
+      when 4
+        row = Vector4f.new(0.0, 0.0, 0.0, 1.0)
+      else
+        puts "error, index greater than 4 or smaller than 1"
+      end
+      rows << row
+    end
+    Matrix4f.new(rows[0], rows[1], rows[2], rows[3])
+  end
+  
+  def lu_decomp_permutation_vec
+    piv = lu_decomp[1]
+    p = []
+    (1..4).each do |i|
+      p << piv[i-1];
+    end
+    p
+  end
+  
+
   
   # Given an equation system Ax = y
   # assumption A is N x N matrix, N=4
@@ -197,7 +237,7 @@ require "pry"
     values = []
     unless is_singular?
       # compute elementwise inverses
-      self = adj
+      ovwrite_me adj
       scale((1.0/det.to_f))
       binding.pry
     end   
@@ -240,7 +280,7 @@ require "pry"
     end  
     build_schema
     tmp2 = s_copy
-    self = tmp
+    ovwrite_me tmp
     tmp2
   end
   
@@ -336,7 +376,7 @@ require "pry"
     piv = []
     
     (1..4).each do |idx| 
-      pix << idx
+      piv << idx
     end
     pivsign = 1;
     
@@ -351,7 +391,7 @@ require "pry"
       # i-th element of j-th column of LU is ith index in array LUcolj
       lu_col_j = []
       (1..4).each do |i|
-        lu_col_j < lu.at(i,j);
+        lu_col_j << lu.at(i,j);
       end
       
       # Apply previous transformations.
@@ -379,30 +419,30 @@ require "pry"
       ((j+1)..4).each do |i|
         p = i if(lu_col_j[i-1].abs > lu_col_j[p-1].abs)
       end
-      
+      # binding.pry
       if (p != j)
-        (1..n).each do |k|
+        (1..4).each do |k|
           t = lu.at(p,k)
           lu.setElementAt(p,k, lu.at(j,k))
           lu.setElementAt(j,k, t)          
         end
-        k = piv[p]
+        k = piv[p-1]
         piv[p-1] = piv[j-1]
         piv[j-1] = k
         pivsign = -pivsign
       end
       
       # Compute multipliers.   
-      if(j < m && lu.at(j,j) != 0.0)
+      if(j < 4 && lu.at(j,j) != 0.0)
         ((j+1)..4).each do |i|
           lu_ii = lu.at(j,j)
           lu_ij = lu.at(i,j)
           normalized_val = lu_ij.to_f / lu_ii.to_f
-          lu.setElementAt(j,k, normalized_val)           
+          lu.setElementAt(i, j, normalized_val)           
         end
       end
     end
-    lu
+    [lu,piv]
   end
   
   alias_method :at, :elementAt
