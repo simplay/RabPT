@@ -172,8 +172,22 @@ describe Matrix4f do
   end
   
   it "me times inverse is identity" do
-    binding.pry
+    # binding.pry
     @M2.invert.mult(@M2copy).same_values_as?(@I).should be_true
   end
+  
+  it "permutation matrix has |det| = 1" do
+    @M2.get_p_matrix.det.abs.should eq(1.0)
+  end
+  
+  it "L matrix has ones in its diagonal" do
+    l = @M2.get_l_matrix
+    (1..4).each do |d|
+      l_diag = l.at(d,d)
+      l_diag.should eq(1.0)
+    end
+  end
+  
+  
   
 end

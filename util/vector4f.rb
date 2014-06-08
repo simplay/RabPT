@@ -9,6 +9,10 @@ class Vector4f
     @w = w
   end
   
+  def to_a
+    [@x, @y, @z, @w]
+  end
+  
   # substract other to this
   def sub other
     @x = @x-other.x

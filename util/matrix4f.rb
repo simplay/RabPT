@@ -188,16 +188,13 @@ require "pry"
     Matrix4f.new(rows[0], rows[1], rows[2], rows[3])
   end
   
-  def lu_decomp_permutation_vec
-    piv = lu_decomp[1]
-    p = []
-    (1..4).each do |i|
-      p << piv[i-1];
+  def diag
+    d = []
+    (1..4).each do |k|
+      d << at(k,k)
     end
-    p
+    Vector4f.new(d[0], d[1], d[2], d[3])
   end
-  
-
   
   # Given an equation system Ax = y
   # assumption A is N x N matrix, N=4
@@ -443,6 +440,15 @@ require "pry"
       end
     end
     [lu,piv]
+  end
+  
+  def lu_decomp_permutation_vec
+    piv = lu_decomp[1]
+    p = []
+    (1..4).each do |i|
+      p << piv[i-1];
+    end
+    p
   end
   
   alias_method :at, :elementAt
