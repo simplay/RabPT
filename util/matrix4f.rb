@@ -125,7 +125,7 @@ require "pry"
  
   # Lower triangular matrix L resulting by 
   # lu decomposition: A = L*R
-  def L_matrix
+  def get_l_matrix
     l = Matrix4f.new
     lu = lu_decomp
     (1..4).each do |i|
@@ -144,7 +144,7 @@ require "pry"
   
   # Upper triangular matrix U resulting by 
   # lu decomposition: A = L*R
-  def U_matrix
+  def get_u_matrix
     u = Matrix4f.new
     lu = lu_decomp
     (1..4).each do |i|
@@ -169,8 +169,8 @@ require "pry"
   # Thus, we can reformulate our system 
   # as: (LU)x = y
   # which gives us a system of equation systems [SeS]:
-  # 1. || Lc = y ||
-  # 2. || Ux = x ||
+  # 1. || Lc = y || Foreward subst
+  # 2. || Ux = x || Backward subst
   # which allows us to solve for the vector x
   # Our goal: Compute A^-1 of our given A
   # by using this trick from above:
@@ -180,51 +180,68 @@ require "pry"
   #   set x = e_k and solve then [SeS]
   #   x is then k-th column of A-^1
   def invert2
+    e1 = Vector4f.new(1.0, 0.0, 0.0, 0.0)
+    l_mat = get_l_matrix
+    u_mat = get_u_matrix
+    
+    (1..4).each do |k|
+    end
+    
   end
   
+  # note this is highly unstable for some matrices
+  # and has a runtime of O(N^3 N!)
   # explicit inverse for a 4x4 matrix
+  # relying on Laplace expansions
   def invert
     values = []
     unless is_singular?
       # compute elementwise inverses
-      transpose
-      # b11 to b14
-      values << at(2,2)*at(3,3)*at(4,4) + at(2,3)*at(3,4)*at(4,2) + at(2,4)*at(3,2)*at(4,3) - at(2,2)*at(3,4)*at(4,3) - at(2,3)*at(3,2)*at(4,4) - at(2,4)*at(3,3)*at(4,2)
-      values << at(1,2)*at(3,4)*at(4,3) + at(1,3)*at(3,2)*at(4,4) + at(1,4)*at(3,3)*at(4,2) - at(1,2)*at(3,3)*at(4,4) - at(1,3)*at(3,4)*at(4,2) - at(1,4)*at(3,2)*at(4,3)
-      values << at(1,2)*at(2,3)*at(4,4) + at(1,3)*at(2,4)*at(4,2) + at(1,4)*at(2,2)*at(4,3) - at(1,2)*at(2,4)*at(4,3) - at(1,3)*at(2,2)*at(4,4) - at(1,4)*at(2,3)*at(4,2)
-      values << at(1,2)*at(2,4)*at(3,3) + at(1,3)*at(2,2)*at(3,4) + at(1,4)*at(2,3)*at(3,2) - at(1,2)*at(2,3)*at(3,4) - at(1,3)*at(2,4)*at(3,2) - at(1,4)*at(2,2)*at(3,3)
-      
-      # b21 to b24
-      values << at(2,1)*at(3,4)*at(4,3) + at(2,3)*at(3,1)*at(4,4) + at(2,4)*at(3,3)*at(4,1) - at(2,1)*at(3,3)*at(4,4) - at(2,3)*at(3,4)*at(4,1) - at(2,4)*at(3,1)*at(4,3)
-      values << at(1,1)*at(3,3)*at(4,4) + at(1,3)*at(3,4)*at(4,1) + at(1,4)*at(3,1)*at(4,3) - at(1,1)*at(3,4)*at(4,3) - at(1,3)*at(3,1)*at(4,4) - at(1,4)*at(3,3)*at(4,1)
-      values << at(1,1)*at(2,4)*at(4,3) + at(1,3)*at(2,1)*at(4,4) + at(1,4)*at(2,3)*at(4,1) - at(1,1)*at(2,3)*at(4,4) - at(1,3)*at(2,4)*at(4,1) - at(1,4)*at(2,1)*at(4,3)
-      values << at(1,1)*at(2,3)*at(3,4) + at(1,3)*at(2,4)*at(3,1) + at(1,4)*at(2,1)*at(3,3) - at(1,1)*at(2,4)*at(3,3) - at(1,3)*at(2,1)*at(3,4) - at(1,4)*at(2,3)*at(3,1)
-      
-      # b31 to b34
-      values << at(2,1)*at(3,2)*at(4,4) + at(2,2)*at(3,4)*at(4,1) + at(2,4)*at(3,1)*at(4,2) - at(2,1)*at(3,4)*at(4,2) - at(2,2)*at(3,1)*at(4,4) - at(2,4)*at(3,2)*at(4,1)
-      values << at(1,1)*at(3,4)*at(4,2) + at(1,2)*at(3,1)*at(4,4) + at(1,4)*at(3,2)*at(4,1) - at(1,1)*at(3,2)*at(4,4) - at(1,2)*at(3,4)*at(4,1) - at(1,4)*at(3,1)*at(4,2)
-      values << at(1,1)*at(2,2)*at(4,4) + at(1,2)*at(2,4)*at(4,1) + at(1,4)*at(2,1)*at(4,2) - at(1,1)*at(2,4)*at(4,2) - at(1,2)*at(2,1)*at(4,4) - at(1,4)*at(2,2)*at(4,1)
-      values << at(1,1)*at(2,4)*at(3,2) + at(1,2)*at(2,1)*at(3,4) + at(1,4)*at(2,2)*at(3,1) - at(1,1)*at(2,2)*at(3,4) - at(1,2)*at(2,4)*at(3,1) - at(1,4)*at(2,1)*at(3,2)
-      
-      # b41 to b44
-      values << at(2,1)*at(3,3)*at(4,2) + at(2,2)*at(3,1)*at(4,3) + at(2,3)*at(3,2)*at(4,1) - at(2,1)*at(3,2)*at(4,3) - at(2,2)*at(3,3)*at(4,1) - at(2,3)*at(3,1)*at(4,2)
-      values << at(1,1)*at(3,2)*at(4,3) + at(1,2)*at(3,3)*at(4,1) + at(1,3)*at(3,1)*at(4,2) - at(1,1)*at(3,3)*at(4,2) - at(1,2)*at(3,1)*at(4,3) - at(1,3)*at(3,2)*at(4,1)
-      values << at(1,1)*at(2,3)*at(4,2) + at(1,2)*at(2,1)*at(4,3) + at(1,3)*at(2,2)*at(4,1) - at(1,1)*at(2,2)*at(4,3) - at(1,2)*at(2,3)*at(4,1) - at(1,3)*at(2,1)*at(4,2)
-      values << at(1,1)*at(2,2)*at(3,3) + at(1,2)*at(2,3)*at(3,1) + at(1,3)*at(2,1)*at(3,2) - at(1,1)*at(2,3)*at(3,2) - at(1,2)*at(2,1)*at(3,3) - at(1,3)*at(2,2)*at(3,1)
-      
-      counter = 0
-      (1..4).each do |i|
-        (1..4).each do |j|
-          setElementAt(i,j, values[counter])
-          counter += 1
-        end
-      end  
-      
-      build_schema
+      self = adj
       scale((1.0/det.to_f))
       binding.pry
-    end
+    end   
+  end
+  
+  # Adjugate of this matrix
+  def adj
+    tmp = s_copy
+    values = []
+    # b11 to b14
+    values << at(2,2)*at(3,3)*at(4,4) + at(2,3)*at(3,4)*at(4,2) + at(2,4)*at(3,2)*at(4,3) - at(2,2)*at(3,4)*at(4,3) - at(2,3)*at(3,2)*at(4,4) - at(2,4)*at(3,3)*at(4,2)
+    values << at(1,2)*at(3,4)*at(4,3) + at(1,3)*at(3,2)*at(4,4) + at(1,4)*at(3,3)*at(4,2) - at(1,2)*at(3,3)*at(4,4) - at(1,3)*at(3,4)*at(4,2) - at(1,4)*at(3,2)*at(4,3)
+    values << at(1,2)*at(2,3)*at(4,4) + at(1,3)*at(2,4)*at(4,2) + at(1,4)*at(2,2)*at(4,3) - at(1,2)*at(2,4)*at(4,3) - at(1,3)*at(2,2)*at(4,4) - at(1,4)*at(2,3)*at(4,2)
+    values << at(1,2)*at(2,4)*at(3,3) + at(1,3)*at(2,2)*at(3,4) + at(1,4)*at(2,3)*at(3,2) - at(1,2)*at(2,3)*at(3,4) - at(1,3)*at(2,4)*at(3,2) - at(1,4)*at(2,2)*at(3,3)
     
+    # b21 to b24
+    values << at(2,1)*at(3,4)*at(4,3) + at(2,3)*at(3,1)*at(4,4) + at(2,4)*at(3,3)*at(4,1) - at(2,1)*at(3,3)*at(4,4) - at(2,3)*at(3,4)*at(4,1) - at(2,4)*at(3,1)*at(4,3)
+    values << at(1,1)*at(3,3)*at(4,4) + at(1,3)*at(3,4)*at(4,1) + at(1,4)*at(3,1)*at(4,3) - at(1,1)*at(3,4)*at(4,3) - at(1,3)*at(3,1)*at(4,4) - at(1,4)*at(3,3)*at(4,1)
+    values << at(1,1)*at(2,4)*at(4,3) + at(1,3)*at(2,1)*at(4,4) + at(1,4)*at(2,3)*at(4,1) - at(1,1)*at(2,3)*at(4,4) - at(1,3)*at(2,4)*at(4,1) - at(1,4)*at(2,1)*at(4,3)
+    values << at(1,1)*at(2,3)*at(3,4) + at(1,3)*at(2,4)*at(3,1) + at(1,4)*at(2,1)*at(3,3) - at(1,1)*at(2,4)*at(3,3) - at(1,3)*at(2,1)*at(3,4) - at(1,4)*at(2,3)*at(3,1)
+    
+    # b31 to b34
+    values << at(2,1)*at(3,2)*at(4,4) + at(2,2)*at(3,4)*at(4,1) + at(2,4)*at(3,1)*at(4,2) - at(2,1)*at(3,4)*at(4,2) - at(2,2)*at(3,1)*at(4,4) - at(2,4)*at(3,2)*at(4,1)
+    values << at(1,1)*at(3,4)*at(4,2) + at(1,2)*at(3,1)*at(4,4) + at(1,4)*at(3,2)*at(4,1) - at(1,1)*at(3,2)*at(4,4) - at(1,2)*at(3,4)*at(4,1) - at(1,4)*at(3,1)*at(4,2)
+    values << at(1,1)*at(2,2)*at(4,4) + at(1,2)*at(2,4)*at(4,1) + at(1,4)*at(2,1)*at(4,2) - at(1,1)*at(2,4)*at(4,2) - at(1,2)*at(2,1)*at(4,4) - at(1,4)*at(2,2)*at(4,1)
+    values << at(1,1)*at(2,4)*at(3,2) + at(1,2)*at(2,1)*at(3,4) + at(1,4)*at(2,2)*at(3,1) - at(1,1)*at(2,2)*at(3,4) - at(1,2)*at(2,4)*at(3,1) - at(1,4)*at(2,1)*at(3,2)
+    
+    # b41 to b44
+    values << at(2,1)*at(3,3)*at(4,2) + at(2,2)*at(3,1)*at(4,3) + at(2,3)*at(3,2)*at(4,1) - at(2,1)*at(3,2)*at(4,3) - at(2,2)*at(3,3)*at(4,1) - at(2,3)*at(3,1)*at(4,2)
+    values << at(1,1)*at(3,2)*at(4,3) + at(1,2)*at(3,3)*at(4,1) + at(1,3)*at(3,1)*at(4,2) - at(1,1)*at(3,3)*at(4,2) - at(1,2)*at(3,1)*at(4,3) - at(1,3)*at(3,2)*at(4,1)
+    values << at(1,1)*at(2,3)*at(4,2) + at(1,2)*at(2,1)*at(4,3) + at(1,3)*at(2,2)*at(4,1) - at(1,1)*at(2,2)*at(4,3) - at(1,2)*at(2,3)*at(4,1) - at(1,3)*at(2,1)*at(4,2)
+    values << at(1,1)*at(2,2)*at(3,3) + at(1,2)*at(2,3)*at(3,1) + at(1,3)*at(2,1)*at(3,2) - at(1,1)*at(2,3)*at(3,2) - at(1,2)*at(2,1)*at(3,3) - at(1,3)*at(2,2)*at(3,1)
+    
+    counter = 0
+    (1..4).each do |i|
+      (1..4).each do |j|
+        setElementAt(i,j, values[counter])
+        counter += 1
+      end
+    end  
+    build_schema
+    tmp2 = s_copy
+    self = tmp
+    tmp2
   end
   
   def is_singular?
