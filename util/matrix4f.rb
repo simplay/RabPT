@@ -19,6 +19,14 @@ require "pry"
     build_schema
   end
   
+  def s_copy 
+    v1 = Vector4f.new(@m00, @m01, @m02, @m03)
+    v2 = Vector4f.new(@m10, @m11, @m12, @m13)
+    v3 = Vector4f.new(@m20, @m21, @m22, @m23)
+    v4 = Vector4f.new(@m30, @m31, @m32, @m33)
+    Matrix4f.new(v1, v2, v3, v4)
+  end
+  
   def transpose
     swap(:m10, :m01)
     swap(:m20, :m02)
@@ -109,12 +117,89 @@ require "pry"
     build_schema  
   end
   
+  def lu_decomp
+    lu = s_copy
+    piv = []
+    
+    (1..4).each do |idx| 
+      pix << idx
+    end
+    pivsign = 1;
+    
+    #double[] 
+    lu_row_i = [];
+    
+    # double[] new double[m];
+    lu_col_j = []
+    
+    (1..4).each do |j|
+      # Make a copy of the j-th column to localize references.
+      # i-th element of j-th column of LU is ith index in array LUcolj
+      lu_col_j = []
+      (1..4).each do |i|
+        lu_col_j < lu.at(i,j);
+      end
+      
+      # Apply previous transformations.
+      (1..4).each do |i|
+        
+        # LUrowi = LU[i];
+        row_i_lu = lu.row(i)
+        lu_row_i = []
+        lu_row_i << row_i_lu.x
+        lu_row_i << row_i_lu.y
+        lu_row_i << row_i_lu.z
+        lu_row_i << row_i_lu.w
+
+        # Most of the time is spent in the following dot product.
+        kmax = [i, j].min
+        s = 0.0;
+        (1..kmax).each do |k|
+          s += lu_row_i[k-1] * lu_col_j[k-1];
+        end
+        lu_row_i[j-1] = lu_col_j[i-1] -= s;
+      end
+
+      # Find pivot and exchange if necessary.
+      p = j
+      ((j+1)..4).each do |i|
+        p = i if(lu_col_j[i-1].abs > lu_col_j[p-1].abs)
+      end
+      
+      if (p != j)
+        (1..n).each do |k|
+          t = lu.at(p,k)
+          lu.setElementAt(p,k, lu.at(j,k))
+          lu.setElementAt(j,k, t)          
+        end
+        k = piv[p]
+        piv[p-1] = piv[j-1]
+        piv[j-1] = k
+        pivsign = -pivsign
+      end
+      
+      # Compute multipliers.   
+      if(j < m && lu.at(j,j) != 0.0)
+        ((j+1)..4).each do |i|
+          lu_ii = lu.at(j,j)
+          lu_ij = lu.at(i,j)
+          normalized_val = lu_ij.to_f / lu_ii.to_f
+          lu.setElementAt(j,k, normalized_val)           
+        end
+      end
+    end
+    lu
+  end
+  
+  def invert2
+  end
+  
   # explicit inverse for a 4x4 matrix
   def invert
     values = []
     unless is_singular?
       # compute elementwise inverses
-      
+      transpose
       # b11 to b14
       values << at(2,2)*at(3,3)*at(4,4) + at(2,3)*at(3,4)*at(4,2) + at(2,4)*at(3,2)*at(4,3) - at(2,2)*at(3,4)*at(4,3) - at(2,3)*at(3,2)*at(4,4) - at(2,4)*at(3,3)*at(4,2)
       values << at(1,2)*at(3,4)*at(4,3) + at(1,3)*at(3,2)*at(4,4) + at(1,4)*at(3,3)*at(4,2) - at(1,2)*at(3,3)*at(4,4) - at(1,3)*at(3,4)*at(4,2) - at(1,4)*at(3,2)*at(4,3)
@@ -142,13 +227,14 @@ require "pry"
       counter = 0
       (1..4).each do |i|
         (1..4).each do |j|
-          setElementAt(j,i, values[counter])
+          setElementAt(i,j, values[counter])
           counter += 1
         end
       end  
       
       build_schema
       scale((1.0/det.to_f))
+      binding.pry
     end
     
   end

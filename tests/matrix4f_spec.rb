@@ -20,6 +20,12 @@ describe Matrix4f do
     v4 = Vector4f.new(13.0, 14.0, 15.0, 16.0)
     @M2 = Matrix4f.new(v1, v2, v3, v4)
     
+    v1 = Vector4f.new(1.0, 3.0, 2.0, 4.0)
+    v2 = Vector4f.new(5.0, 8.0, 7.0, 6.0)
+    v3 = Vector4f.new(10.0, 12.0, 11.0, 9.0)
+    v4 = Vector4f.new(13.0, 14.0, 15.0, 16.0)
+    @M2copy = Matrix4f.new(v1, v2, v3, v4)
+    
     v1 = Vector4f.new(1.0, 0.0, 0.0, 0.0)
     v2 = Vector4f.new(0.0, 1.0, 0.0, 0.0)
     v3 = Vector4f.new(0.0, 0.0, 1.0, 0.0)
@@ -163,6 +169,11 @@ describe Matrix4f do
     v4 = Vector4f.new(1.0, 0.0, 0.0, 5.0)
     A = Matrix4f.new(v1, v2, v3, v4)
     A.det.should eq(66.0)
+  end
+  
+  it "me times inverse is identity" do
+    binding.pry
+    @M2.invert.mult(@M2copy).same_values_as?(@I).should be_true
   end
   
 end
