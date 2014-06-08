@@ -11,7 +11,12 @@ require "pry"
                 :m30, :m31, :m32, :m33
                 
   def initialize(row_x, row_y, row_z, row_w)
-
+    if ([row_x, row_y, row_z, row_w].all? &:nil?)
+      row_x = Vector4f.new(0.0, 0.0, 0.0, 0.0)
+      row_y = Vector4f.new(0.0, 0.0, 0.0, 0.0)
+      row_z = Vector4f.new(0.0, 0.0, 0.0, 0.0)
+      row_w = Vector4f.new(0.0, 0.0, 0.0, 0.0)
+    end
     @m00 = row_x.x; @m01 = row_x.y; @m02 = row_x.z; @m03 = row_x.w;
     @m10 = row_y.x; @m11 = row_y.y; @m12 = row_y.z; @m13 = row_y.w;
     @m20 = row_z.x; @m21 = row_z.y; @m22 = row_z.z; @m23 = row_z.w;
@@ -190,6 +195,41 @@ require "pry"
     end
     lu
   end
+  
+  def L_matrix
+    l = Matrix4f.new
+    lu = lu_decomp
+    
+    (1..4).each do |i|
+      (1..4).each do |j|
+        if (i > j)
+          l.setElementAt(i, j, lu.at(i,j)) 
+        elsif (i==j)
+          l.setElementAt(i, j, 1.0)
+        else
+          l.setElementAt(i, j, 0.0)
+        end
+      end
+    end
+    l
+  end
+  
+  def U_matrix
+    u = Matrix4f.new
+    lu = lu_decomp
+    
+    (1..4).each do |i|
+      (1..4).each do |j|
+        if (i <= j)
+          u.setElementAt(i, j, lu.at(i,j)) 
+        else
+          u.setElementAt(i, j, 0.0)
+        end
+      end
+    end
+    r 
+  end
+  
   
   def invert2
   end
