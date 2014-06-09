@@ -3,7 +3,7 @@
 
 ### run this application:
 1. bundle
-2. ruby rapt.rb
+2. ruby rabpt.rb
 
 
 ### Debugging within the code
