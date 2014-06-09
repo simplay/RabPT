@@ -2,6 +2,11 @@ module Material
   # Materials implement functionality for shading surfaces using their BRDFs. Light sources 
   # are implemented using materials that return an emission term.
   
+  require_relative '../../util/vector3f.rb'
+  require_relative '../hit_record.rb'
+  require_relative '../shading_sample.rb'
+  require_relative '../spectrum.rb'
+  
   # Evaluate BRDF for pair of incoming and outgoing directions. This method
   # is typically called by an integrator when the integrator obtained the incident 
   # direction by sampling a point on a light source

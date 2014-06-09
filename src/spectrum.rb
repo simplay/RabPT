@@ -1,9 +1,10 @@
 class Spectrum
   require_relative '../util/vector3f.rb'  
-
+  require "pry"
   attr_accessor :r, :g, :b
   
   def initialize(args={})
+    
     # graysclae case
     if args.is_a? Float
       @r = args; @g = args; @b = args
@@ -13,7 +14,7 @@ class Spectrum
       @r = args.x; @g = args.y; @b = args.z
     elsif args.is_a? Hash
       @r = args[:r]; @g = args[:g]; @b = args[:b]
-    elsif args_is_a? Spectrum
+    elsif args.is_a? Spectrum
       @r = args.r; @g = args.g; @b = args.b
     else
       @r = 0.0; @g = 0.0; @b = 0.0
