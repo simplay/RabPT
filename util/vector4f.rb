@@ -9,6 +9,11 @@ class Vector4f
     @w = w
   end
   
+  # shallow copy of this vector3f
+  def s_copy
+    Vector4f.new(@x, @y, @z, @w)
+  end
+  
   def to_a
     [@x, @y, @z, @w]
   end

@@ -100,4 +100,14 @@ describe Vector4f do
       c.dot(b).should eq(0.0)
     end
     
+    it "should pefrom a propper shallow copy" do
+      a = Vector4f.new(5.0, 6.0, 7.0, -13.0)
+      c = Vector3f.new(5.0, 6.0, 7.0)
+      b = a.s_copy
+      d = c.s_copy
+      expression = (a != b) && a.same_values_as?(b)
+      expression &&= (c != d) && c.same_values_as?(d)
+      expression.should be_true
+    end
+    
 end

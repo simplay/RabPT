@@ -8,6 +8,11 @@ class Vector3f
     @z = z
   end
   
+  # shallow copy of this vector3f
+  def s_copy
+    Vector3f.new(@x, @y, @z)
+  end
+  
   def to_a
     [@x, @y, @z]
   end
