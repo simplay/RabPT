@@ -219,4 +219,8 @@ describe Matrix4f do
     pred.should be_true
   end
   
+  it "foo" do
+    @I.translate(Vector3f.new(1.0, 2.0, 3.0)).same_values_as?(@T)
+  end
+  
 end

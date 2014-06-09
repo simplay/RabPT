@@ -8,6 +8,10 @@ class Vector3f
     @z = z
   end
   
+  def to_a
+    [@x, @y, @z]
+  end
+  
   # substract other to this
   def sub other
     @x = @x-other.x

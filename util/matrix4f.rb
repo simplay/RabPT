@@ -48,12 +48,26 @@ require "pry"
   end
   
   # set this object to 4x4 identity matrix
+  # move to special matrices
   def make_identity
     v1 = Vector4f.new(1.0, 0.0, 0.0, 0.0)
     v2 = Vector4f.new(0.0, 1.0, 0.0, 0.0)
     v3 = Vector4f.new(0.0, 0.0, 1.0, 0.0)
     v4 = Vector4f.new(0.0, 0.0, 0.0, 1.0)
     ovwrite_me Matrix4f.new(v1, v2, v3, v4)
+  end
+  
+  # translate relying on homogeneous transformation
+  def translate by
+    t = Matrix4f.new(nil, nil, nil, nil).make_identity
+    other = by.to_a
+    other << 1.0
+    
+    (1..4).each do |idx|
+      t.set_at(idx,4, other[idx-1])
+    end
+    t.mult(self)
+    ovwrite_me t
   end
   
   # transpose this matrix
