@@ -1,13 +1,15 @@
 class CameraTestScene
+  # Test scene for pinhole camera specifications.
+  
   require_relative '../scene.rb'
   
   include Scene
+  
   def initialize(width, height, spp)
     @width = width
     @height = height
     @spp = spp
     @output_filename = "camera_test_scene_#{spp}samples"
-    
     
     eye = Vector3f.new(0.0, 0.0, 3.0)
     look_at = Vector3f.new(0.0, 0.3, 3.0)
@@ -24,8 +26,6 @@ class CameraTestScene
             :height => @height}
             
     @camera = Camera.new camera_args
-    
-    
     
   end
 end
