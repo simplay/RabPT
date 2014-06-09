@@ -4,6 +4,11 @@
 
 
 class HitRecord
+  require File.join(File.dirname(__FILE__), '../util/vector2f.rb')
+  require File.join(File.dirname(__FILE__), '../util/vector3f.rb')
+  require File.join(File.dirname(__FILE__), '../util/matrix3f.rb')
+  require File.join(File.dirname(__FILE__), '../materials/material.rb')
+  
   ##
   # :attr_accessor: 
   #   position: Vector3f
@@ -12,7 +17,7 @@ class HitRecord
   #   normal: Vector3f
   #     normal at hit pos
   #
-  #   t1,t2: Vector3f
+  #   tangent, bitangent: Vector3f
   #     tangent and bitangent at hit pos
   #
   #   u,v: vector2f
@@ -40,7 +45,7 @@ class HitRecord
   
   attr_accessor :position,
                 :normal,
-                :t1, :t2,
+                :tangent, :bitangent,
                 :u, :v,
                 :w,
                 :t,
@@ -48,4 +53,21 @@ class HitRecord
                 :material,
                 :p,
                 :tbs
+  
+  # tangent can be assign as an optional value
+  # all other attributes are supposed to be passed
+  def initialize(args={})
+    args.each do |key, value|
+      send("#{key}=",value)
+    end
+    @tangent = Vector3f(0.0, 1.0, 0.0) unless @tangent
+    @bitangent = @tangent.cross(normal)
+    @tbs = Matrix3f.new(nil, nil, nil)
+    @tbs.set_column(1, @tangent)
+    @tbs.set_column(2, @bitangent)
+    @tbs.set_column(3, @normal)    
+  end
+  
+
+  
 end
