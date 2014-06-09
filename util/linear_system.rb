@@ -31,10 +31,14 @@ class LinearSystem
     l_mat = get_l_matrix
     u_mat = get_u_matrix
     
-    (1..4).each do |k|
-    end
+
     
+    
+    # foreward_substitution
+    # backward_substitution
   end
+  
+
   
   # get lu-decomposition matrices
   # Any matrix A can be decomposed into
@@ -188,6 +192,41 @@ class LinearSystem
       p << piv[i-1];
     end
     p
+  end
+  
+  def foreward_substitution(b, l)
+    y = Matrix4f.new(nil, nil, nil, nil)
+    (1..4).each do |j|
+      val = sb.at(1,j)l.to_f / l.at(1,1).to_f; 
+      y.set_at(1,j, val)
+      (2..4).each do |i|
+        sum = 0.0
+        (1..(i-1)).each do |k|
+          sum += l.at(i,k)*y.at(k,j)
+        end
+        val = (b.at(i,j) - sum).to_f/l.at(i,i) 
+        y.set_at(i,j, val) 
+      end
+    end
+    y
+  end
+  
+  def backward_substitution(y,u)
+    x = Matrix4f.new(nil, nil, nil, nil)
+    (1..4).each do |j|
+      val = y.at(4,j)l.to_f / u.at(4,4).to_f; 
+      x.set_at(4,j, val)
+      (1..3).each do |p|
+        i = (4-p)
+        sum = 0.0
+        ((i+1)..4).each do |k|
+          sum += u.at(i,k)*x.at(k,j)
+        end
+        val = (y.at(i,j) - sum).to_f/u.at(i,i) 
+        x.set_at(i,j, val)
+      end
+    end
+    x
   end
   
   
