@@ -42,7 +42,7 @@ module CsgSolid
   # this acts as an inherited enum
   class BoundaryType
     START = :start
-    END = :end
+    FRONT = :end
   end
   
   # this acts as an inherited enum
