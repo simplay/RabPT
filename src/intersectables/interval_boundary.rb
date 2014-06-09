@@ -23,19 +23,5 @@ class IntervalBoundary
   end
   
   protected
-  
-  # cos_theta is angle between suface normal
-  # at point where ray hit onto and ray's direction
-  # vector.
-  def boundary_type(hit_record, ray)
-    cos_theta = hit_record.dot(ray.direction)
-    (cos_theta < 0.0) ? BoundaryType::START : BoundaryType::END
-  end
-
-  # this acts as an inherited enum
-  class BoundaryType
-    START = :start
-    END = :end
-  end
 
 end
