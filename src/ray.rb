@@ -14,6 +14,7 @@ class Ray
     end
   end
   
+  # get point on ray for a given paramter t.
   def point_at t
     dir = @direction.copy_s
     orig = @origin.copy_s
