@@ -24,6 +24,13 @@ require "pry"
     build_schema
   end
   
+  # dimension of this matrix
+  def dim
+    4
+  end
+  
+  # overwrite all entries of this 4x4 matrix
+  # by the elements of a provided other matrix
   def ovwrite_me other
     (1..4).each do |i|
       (1..4).each do |j|
@@ -33,6 +40,7 @@ require "pry"
     self
   end
   
+  # get a copy of this matrix' schema
   def s_copy 
     v1 = Vector4f.new(@m00, @m01, @m02, @m03)
     v2 = Vector4f.new(@m10, @m11, @m12, @m13)
@@ -41,6 +49,16 @@ require "pry"
     Matrix4f.new(v1, v2, v3, v4)
   end
   
+  # set this object to 4x4 identity matrix
+  def make_identity
+    v1 = Vector4f.new(1.0, 0.0, 0.0, 0.0)
+    v2 = Vector4f.new(0.0, 1.0, 0.0, 0.0)
+    v3 = Vector4f.new(0.0, 0.0, 1.0, 0.0)
+    v4 = Vector4f.new(0.0, 0.0, 0.0, 1.0)
+    ovwrite_me Matrix4f.new(v1, v2, v3, v4)
+  end
+  
+  # transpose this matrix
   def transpose
     swap(:m10, :m01)
     swap(:m20, :m02)
@@ -104,14 +122,21 @@ require "pry"
     Vector4f.new(values[0], values[1], values[2], values[3])
   end
   
+  # add other to me
   def add other
     applyBinaryComponentwise(:+, other)
   end
   
+  # substract other from me
   def sub other
     applyBinaryComponentwise(:-, other)
   end
   
+  # is element (i,j) of other matrix
+  # EXACTLY the same as element (i,j)
+  # of this matrix. EXACTLY means there is 
+  # no finite arithmetical difference which 
+  # might slightly alter the values.
   def same_values_as? other
     predicat = true
     (1..4).each do |idx|
@@ -120,6 +145,13 @@ require "pry"
     predicat
   end
   
+  # is element (i,j) of other matrix
+  # approximately the same as element (i,j)
+  # of this matrix. 
+  # we compute deltas between row elements 
+  # of other and self. we compare those deltas 
+  # in a least square sense (
+  # i.e is the sum of squared deltas below a given threshold
   def approx_same_values_as? other
     predicat = true
     (1..4).each do |idx|
@@ -142,6 +174,8 @@ require "pry"
     build_schema  
   end
   
+  # diagonal elements of this matrix
+  # represented as a vectror4f
   def diag
     d = []
     (1..4).each do |k|
@@ -150,7 +184,14 @@ require "pry"
     Vector4f.new(d[0], d[1], d[2], d[3])
   end
   
-  
+  # get sub/block matrix defined by a mask
+  # we are masking by using two indices
+  # a row/ and a column index
+  # given an N x N matrix A, then
+  # masling row i and column j will give us
+  # i.e. A_i,j will give us a (N-1)x(N-1) matrix
+  # consisting of matrix A without having row i
+  # and without having column j.
   def masked_block(row_idx, column_idx) 
     elements = []
     (1..4).each do |i|
@@ -277,12 +318,15 @@ require "pry"
     build_schema
   end
   
+  # swaps two elements of this matrix
   def swap(a, b)  
     tmp = send("#{a}")
     send("#{a}=",send("#{b}"))
     send("#{b}=",tmp)
   end
   
+  # build internal representation
+  # not 100% sure if this could be simplified
   def build_schema
     @schema = [    
     [@m00, @m01, @m02, @m03],

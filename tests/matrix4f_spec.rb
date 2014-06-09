@@ -212,4 +212,8 @@ describe Matrix4f do
     m.invert.mult(m_copy).same_values_as?(@id_3x3).should be_true
   end
   
+  it "same_values_as implies approx_same_values_as" do
+  
+  end
+  
 end
