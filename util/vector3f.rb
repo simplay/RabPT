@@ -63,7 +63,7 @@ class Vector3f
   # get unit vector version of this vector
   def normalize
     normalization_factor = norm_2 self
-    self.scale (1.0 / normalization_factor.to_f)
+    self.scale (1.0 / normalization_factor.to_f) unless normalization_factor==0.0
   end
   
   def same_values_as? other
