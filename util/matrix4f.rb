@@ -118,6 +118,26 @@ require "pry"
     send("m#{i-1}#{j-1}")
   end
   
+  # replace i-th row of this matrix
+  # by a given row
+  def set_row_at(ith, row)
+    col_idx = 1
+    row.to_a.each do |element|
+      set_at(ith, col_idx, element)
+      col_idx += 1
+    end
+  end
+  
+  # replace j-th column of this matrix
+  # by a given column
+  def set_column_at(jth, column)
+    row_idx = 1
+    column.to_a.each do |element|
+      set_at(row_idx, jth, element)
+      row_idx += 1
+    end
+  end
+  
   # assumption: dimensions match
   # perfroms a matrix4f matrix4f multiplication
   def mult other

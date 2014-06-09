@@ -253,4 +253,48 @@ describe Matrix4f do
     @I.approx_same_values_as?(a).should be_true
   end
   
+  it "replacing a row works as expected" do
+    m = Matrix4f.new(nil,nil,nil,nil).make_identity
+    m.set_at(1,1, 2.0)
+    m.set_at(1,2, 3.0)
+    m.set_at(1,3, 4.0)
+    m.set_at(1,4, 5.0)
+    
+    @I.set_row_at(1, Vector4f.new(2.0, 3.0, 4.0, 5.0))
+    @I.same_values_as?(m).should be_true
+  end
+  
+  it "replacing a column works as expected" do
+    m = Matrix4f.new(nil,nil,nil,nil).make_identity
+    m.set_at(1,1, 2.0)
+    m.set_at(2,1, 3.0)
+    m.set_at(3,1, 4.0)
+    m.set_at(4,1, 5.0)
+    
+    @I.set_column_at(1, Vector4f.new(2.0, 3.0, 4.0, 5.0))
+    @I.same_values_as?(m).should be_true
+  end
+  
+  it "replacing a column works as expected" do
+    m = Matrix4f.new(nil,nil,nil,nil).make_identity
+    m.set_at(1,1, 2.0)
+    m.set_at(2,1, 3.0)
+    m.set_at(3,1, 4.0)
+    m.set_at(4,1, 5.0)
+    
+    @I.set_row_at(1, Vector4f.new(2.0, 3.0, 4.0, 5.0))
+    @I.same_values_as?(m).should_not be_true
+  end
+  
+  it "replacing a row works as expected" do
+    m = Matrix4f.new(nil,nil,nil,nil).make_identity
+    m.set_at(1,1, 2.0)
+    m.set_at(1,2, 3.0)
+    m.set_at(1,3, 4.0)
+    m.set_at(1,4, 5.0)
+    
+    @I.set_column_at(1, Vector4f.new(2.0, 3.0, 4.0, 5.0))
+    @I.same_values_as?(m).should_not be_true
+  end
+  
 end
