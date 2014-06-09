@@ -4,8 +4,7 @@ class Matrix4f
   
 require "pry"
   EPSILON = 0.001
-  attr_accessor :schema,
-                :m00, :m01, :m02, :m03,
+  attr_accessor :m00, :m01, :m02, :m03,
                 :m10, :m11, :m12, :m13,
                 :m20, :m21, :m22, :m23,
                 :m30, :m31, :m32, :m33
@@ -21,7 +20,6 @@ require "pry"
     @m10 = row_y.x; @m11 = row_y.y; @m12 = row_y.z; @m13 = row_y.w;
     @m20 = row_z.x; @m21 = row_z.y; @m22 = row_z.z; @m23 = row_z.w;
     @m30 = row_w.x; @m31 = row_w.y; @m32 = row_w.z; @m33 = row_w.w;
-    build_schema
   end
   
   # dimension of this matrix
@@ -66,7 +64,7 @@ require "pry"
     swap(:m21, :m12)
     swap(:m31, :m13)
     swap(:m32, :m23)
-    build_schema
+    self
   end
   
   # first row equal index 
@@ -85,7 +83,7 @@ require "pry"
   # write val into (i,j) element of this matrix
   def setElementAt(i, j, val) 
     send("m#{i-1}#{j-1}=", val)
-    build_schema
+    self
   end
   
   # get val of (i,j) element of this matrix
@@ -109,7 +107,7 @@ require "pry"
         counter += 1
       end
     end  
-    build_schema
+    self
   end
   
   # assumption vec4f is a column vector
@@ -171,7 +169,7 @@ require "pry"
         set_at(i, j, at(i,j)*by) 
       end
     end
-    build_schema  
+    self  
   end
   
   # diagonal elements of this matrix
@@ -241,7 +239,6 @@ require "pry"
         setElementAt(i,j, sign*snapshot.masked_block(i,j).det)
       end
     end  
-    build_schema
     transpose
   end
   
@@ -315,7 +312,7 @@ require "pry"
     @m31 = @m31.send(op, other.m31)
     @m32 = @m32.send(op, other.m32)
     @m33 = @m33.send(op, other.m33)
-    build_schema
+    self
   end
   
   # swaps two elements of this matrix
@@ -323,17 +320,6 @@ require "pry"
     tmp = send("#{a}")
     send("#{a}=",send("#{b}"))
     send("#{b}=",tmp)
-  end
-  
-  # build internal representation
-  # not 100% sure if this could be simplified
-  def build_schema
-    @schema = [    
-    [@m00, @m01, @m02, @m03],
-    [@m10, @m11, @m12, @m13],
-    [@m20, @m21, @m22, @m23],
-    [@m30, @m31, @m32, @m33]]
-    self
   end
     
   alias_method :set_at, :setElementAt 

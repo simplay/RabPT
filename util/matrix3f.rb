@@ -2,8 +2,7 @@ class Matrix3f
   require File.join(File.dirname(__FILE__), 'vector3f.rb')
   require File.join(File.dirname(__FILE__), 'matrix2f.rb')
   
-  attr_accessor :schema,
-                :m00, :m01, :m02,
+  attr_accessor :m00, :m01, :m02,
                 :m10, :m11, :m12,
                 :m20, :m21, :m22
                 
@@ -11,7 +10,6 @@ class Matrix3f
     @m00 = row_x.x; @m01 = row_x.y; @m02 = row_x.z;
     @m10 = row_y.x; @m11 = row_y.y; @m12 = row_y.z;
     @m20 = row_z.x; @m21 = row_z.y; @m22 = row_z.z;
-    build_schema
   end
   
   def s_copy 
@@ -25,7 +23,7 @@ class Matrix3f
     swap(:m10, :m01)
     swap(:m02, :m20)
     swap(:m21, :m12)
-    build_schema
+    self
   end
   
   # first row equal index 
@@ -67,7 +65,7 @@ class Matrix3f
         counter += 1
       end
     end  
-    build_schema
+    self
   end
   
   def masked_block(row_idx, column_idx) 
@@ -118,7 +116,7 @@ class Matrix3f
         setElementAt(i, j, val) 
       end
     end
-    build_schema  
+    self  
   end
   
   
@@ -131,7 +129,6 @@ class Matrix3f
         sign *= -1.0
       end
     end  
-    build_schema
     transpose
   end
   
@@ -193,21 +190,13 @@ class Matrix3f
     @m21 = @m21.send(op, other.m21)
     @m22 = @m22.send(op, other.m22)
 
-    build_schema
+    self
   end
   
   def swap(a, b)  
     tmp = send("#{a}")
     send("#{a}=",send("#{b}"))
     send("#{b}=",tmp)
-  end
-  
-  def build_schema
-    @schema = [    
-    [@m00, @m01, @m02],
-    [@m10, @m11, @m12],
-    [@m20, @m21, @m22]]
-    self
   end
   
   alias_method :at, :element_at 
