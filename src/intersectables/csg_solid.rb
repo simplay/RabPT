@@ -1,4 +1,11 @@
 module CsgSolid
+  # A CSG solid object that can be intersected by a ray. If a CSG object is intersected
+  # by a ray, we determine all intersection intervals and their boundaries, that is, the intervals
+  # along the ray where the ray is either inside or outside the object. Each interval has two 
+  # boundaries, a start and an end, where the ray enters and leaves the solid. The actual 
+  # intersection point with the object is the first interval boundary where the ray enters the 
+  # object the first time.
+  
   require File.join(File.dirname(__FILE__), 'interval_boundary.rb')
   
   attr_accessor :material
@@ -23,6 +30,9 @@ module CsgSolid
     (cos_theta < 0.0) ? BoundaryType::START : BoundaryType::END
   end
   
+  # Compute the boundaries of the intersection intervals of this CSG solid with a ray. 
+  # @param ray the ray that intersects the CSG solid
+  # @return boundaries of intersection intervals 
   def interval_boundaries ray
     raise "not implemented"
   end
