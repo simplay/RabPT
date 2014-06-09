@@ -12,3 +12,5 @@ Place a ```` binding.pry ```` statement in w/e code region
 ### Run a specific test
 ```` rspec tests/my_model_spec.rb ````
 
+### Milestone1
+Implement a debug-ray tracer which can render a simple scene consisting of a pinhole camera, simple csg_solid objects, point-lights - relying on an appriximative sampling strategy (one-samples). 
