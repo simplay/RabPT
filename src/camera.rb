@@ -4,7 +4,7 @@
 
 
 
-require File.join(File.dirname(__FILE__), 'util/vector3f.rb')
+require File.join(File.dirname(__FILE__), '../util/vector3f.rb')
 
 
 

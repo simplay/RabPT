@@ -1,7 +1,8 @@
 class Scene
-  require File.join(File.dirname(__FILE__), 'util/vector3f.rb')
+  require File.join(File.dirname(__FILE__), '../util/vector3f.rb')
+  require File.join(File.dirname(__FILE__), '../util/matrix4f.rb')
   require File.join(File.dirname(__FILE__), 'camera.rb')
-  require File.join(File.dirname(__FILE__), 'util/matrix4f.rb')
+
   
   attr_accessor :SPP, :width, :height, :camera
   

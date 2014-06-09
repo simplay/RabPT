@@ -1,7 +1,7 @@
 require "rubygems"
 require "imageruby"
 require "pry"
-require File.join(File.dirname(__FILE__), 'renderer.rb')
+require File.join(File.dirname(__FILE__), 'src/renderer.rb')
 
 #require 'path/to/mycode.jar'
 
