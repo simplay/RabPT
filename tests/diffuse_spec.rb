@@ -1,9 +1,22 @@
 require_relative '../src/materials/diffuse.rb'
+require_relative '../util/vector2f.rb'
 require 'pry'
 
 describe Diffuse do
   before(:each) do
     @diffuse_material = Diffuse.new(nil)
+    
+    hit_record_args = {
+      :position => Vector3f.new(1.0, 2.0, 1.0),
+      :normal => Vector3f.new(1.0, 0.0, 0.0),
+      :u => Vector2f.new(0.5, 0.5),
+      :v => Vector2f.new(0.5, 0.5),
+      :w => Vector3f.new(0.5, 2.0, 1.0).normalize,
+      :intersectable => nil,
+      :material => @diffuse_material,
+      :p => 1.0}
+      
+    @hit_record = HitRecord.new hit_record_args
   end
   
   it "should allow to evaluate a brdf" do
@@ -38,7 +51,7 @@ describe Diffuse do
   
   it "should allow to get shading sample" do
     (@diffuse_material.respond_to? :shading_sample).should be_true
-    lambda { @diffuse_material.shading_sample(nil,nil) }.should_not raise_error
+    lambda { @diffuse_material.shading_sample(@hit_record, [0.5, 3.2]) }.should_not raise_error
   end
   
   it "should allow to get emission sample" do

@@ -24,10 +24,12 @@ class ShadingSample
                 :p
   
   def initialize(args = {})
-    @brdf = args[:brdf].clone_s
-    @emission = args[:emission].clone_s
-    @w = args[:w].clone_s
-    @is_specular = args[:is_specular]
-    @p = args[:p]
+    unless args.empty?
+      @brdf = args[:brdf].s_copy
+      @emission = args[:emission].s_copy
+      @w = args[:w].s_copy
+      @is_specular = args[:is_specular]
+      @p = args[:p]
+    end
   end
 end

@@ -7,6 +7,11 @@ class Matrix3f
                 :m20, :m21, :m22
                 
   def initialize(row_x, row_y, row_z)
+    if ([row_x, row_y, row_z].all? &:nil?)
+      row_x = Vector3f.new(0.0, 0.0, 0.0)
+      row_y = Vector3f.new(0.0, 0.0, 0.0)
+      row_z = Vector3f.new(0.0, 0.0, 0.0)
+    end
     @m00 = row_x.x; @m01 = row_x.y; @m02 = row_x.z;
     @m10 = row_y.x; @m11 = row_y.y; @m12 = row_y.z;
     @m20 = row_z.x; @m21 = row_z.y; @m22 = row_z.z;
@@ -47,6 +52,26 @@ class Matrix3f
   # get val of (i,j) element of this matrix
   def element_at(i, j) 
     send("m#{i-1}#{j-1}")
+  end
+  
+  # replace i-th row of this matrix
+  # by a given row
+  def set_row_at(ith, row)
+    col_idx = 1
+    row.to_a.each do |element|
+      set_at(ith, col_idx, element)
+      col_idx += 1
+    end
+  end
+  
+  # replace j-th column of this matrix
+  # by a given column
+  def set_column_at(jth, column)
+    row_idx = 1
+    column.to_a.each do |element|
+      set_at(row_idx, jth, element)
+      row_idx += 1
+    end
   end
   
   # assumption: dimensions match

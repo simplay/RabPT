@@ -7,7 +7,7 @@ class Vector3f
     @y = y
     @z = z
   end
-  
+
   # shallow copy of this vector3f
   def s_copy
     Vector3f.new(@x, @y, @z)
@@ -31,6 +31,12 @@ class Vector3f
     @y = @y+other.y
     @z = @z+other.z
     self
+  end
+  
+  # applied a tranformation matrix 
+  # to this vector and overwrite its values
+  def transform t
+    ovwrite_me t.vectormult(self)
   end
   
    # compute euclidian scalar product between this and other
@@ -89,6 +95,15 @@ class Vector3f
   
   def to_s
     "(#{@x},#{@y},#{@y})"
+  end
+  
+  private
+  
+  def ovwrite_me other
+    @x = other.x
+    @y = other.y
+    @z = other.z
+    self
   end
   
 end

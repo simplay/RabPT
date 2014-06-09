@@ -21,7 +21,7 @@ class Spectrum
     end
   end
   
-  def copy_s
+  def s_copy
     Spectrum.new(to_a)
   end
   
@@ -90,5 +90,8 @@ class Spectrum
     0.299*@r + 0.587*@g + 0.114*@b
   end
   
+  def to_s
+    "rgb: (#{@r}, #{@g}, #{@b})"
+  end
   
 end
