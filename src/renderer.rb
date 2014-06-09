@@ -1,5 +1,5 @@
 class Renderer
-  require File.join(File.dirname(__FILE__), 'scene.rb')
+  require File.join(File.dirname(__FILE__), 'scenes/debug_scene.rb')
   include ImageRuby
 
   attr_accessor :image, :dimN, :dimM, :scene
@@ -9,7 +9,7 @@ class Renderer
     @dimN = args[:N]
     @dimM = args[:M]
     
-    @scene = Scene.new({:SPP => args[:SPP] || 1,
+    @scene = DebugScene.new({:SPP => args[:SPP] || 1,
                         :width => @dimM,
                         :height => @dimN
                         })
