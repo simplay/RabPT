@@ -3,7 +3,7 @@ class Matrix4f
   require File.join(File.dirname(__FILE__), 'matrix3f.rb')
   
 require "pry"
-  
+  EPSILON = 0.001
   attr_accessor :schema,
                 :m00, :m01, :m02, :m03,
                 :m10, :m11, :m12, :m13,
@@ -27,9 +27,10 @@ require "pry"
   def ovwrite_me other
     (1..4).each do |i|
       (1..4).each do |j|
-        setElementAt(i, j, other.at(i,j)) 
+        set_at(i, j, other.at(i,j)) 
       end
     end
+    self
   end
   
   def s_copy 
@@ -119,73 +120,26 @@ require "pry"
     predicat
   end
   
+  def approx_same_values_as? other
+    predicat = true
+    (1..4).each do |idx|
+      delta_vec = row(idx).sub(other.row(idx)).to_a
+      delta = delta_vec.inject(0.0) do |result, element| 
+        result + element**2.0 
+      end
+      predicat &&= (delta < EPSILON)
+    end
+    predicat
+  end
+  
   # scale every element of this matrix by given value
-  def scale by
+  def scale by  
     (1..4).each do |i|
       (1..4).each do |j|
-        val = elementAt(i,j)*by
-        setElementAt(i, j, val) 
+        set_at(i, j, at(i,j)*by) 
       end
     end
     build_schema  
-  end
-  
- 
-  # Lower triangular matrix L resulting by 
-  # lu decomposition: A = L*R
-  def get_l_matrix
-    l = Matrix4f.new(nil, nil, nil, nil)
-    lu = lu_decomp[0]
-    (1..4).each do |i|
-      (1..4).each do |j|
-        if (i > j)
-          l.setElementAt(i, j, lu.at(i,j)) 
-        elsif (i==j)
-          l.setElementAt(i, j, 1.0)
-        else
-          l.setElementAt(i, j, 0.0)
-        end
-      end
-    end
-    l
-  end
-  
-  # Upper triangular matrix U resulting by 
-  # lu decomposition: A = L*R
-  def get_u_matrix
-    u = Matrix4f.new(nil, nil, nil, nil)
-    lu = lu_decomp[0]
-    (1..4).each do |i|
-      (1..4).each do |j|
-        if (i <= j)
-          u.setElementAt(i, j, lu.at(i,j)) 
-        else
-          u.setElementAt(i, j, 0.0)
-        end
-      end
-    end
-    u 
-  end
-  
-  def get_p_matrix
-    rows = []
-    lu_decomp_permutation_vec.each do |pidx|
-      row = nil
-      case pidx
-      when 1
-        row = Vector4f.new(1.0, 0.0, 0.0, 0.0)
-      when 2
-        row = Vector4f.new(0.0, 1.0, 0.0, 0.0)
-      when 3
-        row = Vector4f.new(0.0, 0.0, 1.0, 0.0)
-      when 4
-        row = Vector4f.new(0.0, 0.0, 0.0, 1.0)
-      else
-        puts "error, index greater than 4 or smaller than 1"
-      end
-      rows << row
-    end
-    Matrix4f.new(rows[0], rows[1], rows[2], rows[3])
   end
   
   def diag
@@ -196,35 +150,29 @@ require "pry"
     Vector4f.new(d[0], d[1], d[2], d[3])
   end
   
-  # Given an equation system Ax = y
-  # assumption A is N x N matrix, N=4
-  # where x the unknown
-  # and x, y are both N x 1 vectors.
-  # Apply LU-Decomposition on A, then we 
-  # get [L,U] = lu(A), i.e.
-  # A = LU 
-  # Thus, we can reformulate our system 
-  # as: (LU)x = y
-  # which gives us a system of equation systems [SeS]:
-  # 1. || Lc = y || Foreward subst
-  # 2. || Ux = x || Backward subst
-  # which allows us to solve for the vector x
-  # Our goal: Compute A^-1 of our given A
-  # by using this trick from above:
-  # Let I denote the 4x4 identiy matrix
-  # and [e1, e2, e3, e4] its column vectors
-  # foreach e_k do
-  #   set x = e_k and solve then [SeS]
-  #   x is then k-th column of A-^1
-  def invert2
-    e1 = Vector4f.new(1.0, 0.0, 0.0, 0.0)
-    l_mat = get_l_matrix
-    u_mat = get_u_matrix
-    
-    (1..4).each do |k|
+  
+  def masked_block(row_idx, column_idx) 
+    elements = []
+    (1..4).each do |i|
+      (1..4).each do |j|
+        if(i != row_idx && j != column_idx)
+          elements << at(i,j)
+        end
+      end
     end
     
+    # here assumption 3x3
+    a1 = elements[0..2]
+    a2 = elements[3..5]
+    a3 = elements[6..8]
+    
+    v1 = Vector3f.new(a1[0], a1[1], a1[2])
+    v2 = Vector3f.new(a2[0], a2[1], a2[2])
+    v3 = Vector3f.new(a3[0], a3[1], a3[2])
+    Matrix3f.new(v1, v2, v3)
   end
+  
+
   
   # note this is highly unstable for some matrices
   # and has a runtime of O(N^3 N!)
@@ -234,51 +182,26 @@ require "pry"
     values = []
     unless is_singular?
       # compute elementwise inverses
-      ovwrite_me adj
-      scale((1.0/det.to_f))
-      binding.pry
+      initial_det = det
+      f = (1.0/initial_det.to_f)
+      adj
+      scale(f)
+      self
     end   
   end
   
   # Adjugate of this matrix
   def adj
-    tmp = s_copy
-    values = []
-    # b11 to b14
-    values << at(2,2)*at(3,3)*at(4,4) + at(2,3)*at(3,4)*at(4,2) + at(2,4)*at(3,2)*at(4,3) - at(2,2)*at(3,4)*at(4,3) - at(2,3)*at(3,2)*at(4,4) - at(2,4)*at(3,3)*at(4,2)
-    values << at(1,2)*at(3,4)*at(4,3) + at(1,3)*at(3,2)*at(4,4) + at(1,4)*at(3,3)*at(4,2) - at(1,2)*at(3,3)*at(4,4) - at(1,3)*at(3,4)*at(4,2) - at(1,4)*at(3,2)*at(4,3)
-    values << at(1,2)*at(2,3)*at(4,4) + at(1,3)*at(2,4)*at(4,2) + at(1,4)*at(2,2)*at(4,3) - at(1,2)*at(2,4)*at(4,3) - at(1,3)*at(2,2)*at(4,4) - at(1,4)*at(2,3)*at(4,2)
-    values << at(1,2)*at(2,4)*at(3,3) + at(1,3)*at(2,2)*at(3,4) + at(1,4)*at(2,3)*at(3,2) - at(1,2)*at(2,3)*at(3,4) - at(1,3)*at(2,4)*at(3,2) - at(1,4)*at(2,2)*at(3,3)
-    
-    # b21 to b24
-    values << at(2,1)*at(3,4)*at(4,3) + at(2,3)*at(3,1)*at(4,4) + at(2,4)*at(3,3)*at(4,1) - at(2,1)*at(3,3)*at(4,4) - at(2,3)*at(3,4)*at(4,1) - at(2,4)*at(3,1)*at(4,3)
-    values << at(1,1)*at(3,3)*at(4,4) + at(1,3)*at(3,4)*at(4,1) + at(1,4)*at(3,1)*at(4,3) - at(1,1)*at(3,4)*at(4,3) - at(1,3)*at(3,1)*at(4,4) - at(1,4)*at(3,3)*at(4,1)
-    values << at(1,1)*at(2,4)*at(4,3) + at(1,3)*at(2,1)*at(4,4) + at(1,4)*at(2,3)*at(4,1) - at(1,1)*at(2,3)*at(4,4) - at(1,3)*at(2,4)*at(4,1) - at(1,4)*at(2,1)*at(4,3)
-    values << at(1,1)*at(2,3)*at(3,4) + at(1,3)*at(2,4)*at(3,1) + at(1,4)*at(2,1)*at(3,3) - at(1,1)*at(2,4)*at(3,3) - at(1,3)*at(2,1)*at(3,4) - at(1,4)*at(2,3)*at(3,1)
-    
-    # b31 to b34
-    values << at(2,1)*at(3,2)*at(4,4) + at(2,2)*at(3,4)*at(4,1) + at(2,4)*at(3,1)*at(4,2) - at(2,1)*at(3,4)*at(4,2) - at(2,2)*at(3,1)*at(4,4) - at(2,4)*at(3,2)*at(4,1)
-    values << at(1,1)*at(3,4)*at(4,2) + at(1,2)*at(3,1)*at(4,4) + at(1,4)*at(3,2)*at(4,1) - at(1,1)*at(3,2)*at(4,4) - at(1,2)*at(3,4)*at(4,1) - at(1,4)*at(3,1)*at(4,2)
-    values << at(1,1)*at(2,2)*at(4,4) + at(1,2)*at(2,4)*at(4,1) + at(1,4)*at(2,1)*at(4,2) - at(1,1)*at(2,4)*at(4,2) - at(1,2)*at(2,1)*at(4,4) - at(1,4)*at(2,2)*at(4,1)
-    values << at(1,1)*at(2,4)*at(3,2) + at(1,2)*at(2,1)*at(3,4) + at(1,4)*at(2,2)*at(3,1) - at(1,1)*at(2,2)*at(3,4) - at(1,2)*at(2,4)*at(3,1) - at(1,4)*at(2,1)*at(3,2)
-    
-    # b41 to b44
-    values << at(2,1)*at(3,3)*at(4,2) + at(2,2)*at(3,1)*at(4,3) + at(2,3)*at(3,2)*at(4,1) - at(2,1)*at(3,2)*at(4,3) - at(2,2)*at(3,3)*at(4,1) - at(2,3)*at(3,1)*at(4,2)
-    values << at(1,1)*at(3,2)*at(4,3) + at(1,2)*at(3,3)*at(4,1) + at(1,3)*at(3,1)*at(4,2) - at(1,1)*at(3,3)*at(4,2) - at(1,2)*at(3,1)*at(4,3) - at(1,3)*at(3,2)*at(4,1)
-    values << at(1,1)*at(2,3)*at(4,2) + at(1,2)*at(2,1)*at(4,3) + at(1,3)*at(2,2)*at(4,1) - at(1,1)*at(2,2)*at(4,3) - at(1,2)*at(2,3)*at(4,1) - at(1,3)*at(2,1)*at(4,2)
-    values << at(1,1)*at(2,2)*at(3,3) + at(1,2)*at(2,3)*at(3,1) + at(1,3)*at(2,1)*at(3,2) - at(1,1)*at(2,3)*at(3,2) - at(1,2)*at(2,1)*at(3,3) - at(1,3)*at(2,2)*at(3,1)
-    
-    counter = 0
+    snapshot = s_copy
+    sign = 1.0
     (1..4).each do |i|
       (1..4).each do |j|
-        setElementAt(i,j, values[counter])
-        counter += 1
+        sign = ((i+j)%2 == 0)? 1 : -1
+        setElementAt(i,j, sign*snapshot.masked_block(i,j).det)
       end
     end  
     build_schema
-    tmp2 = s_copy
-    ovwrite_me tmp
-    tmp2
+    transpose
   end
   
   def is_singular?
@@ -288,6 +211,7 @@ require "pry"
   # recursive det calculation
   def det
     s1 = at(1,1)
+    
     r11 = Vector3f.new(at(2,2),at(2,3),at(2,4))
     r12 = Vector3f.new(at(3,2),at(3,3),at(3,4))
     r13 = Vector3f.new(at(4,2),at(4,3),at(4,4))
@@ -367,89 +291,7 @@ require "pry"
     [@m30, @m31, @m32, @m33]]
     self
   end
-  
-  def lu_decomp
-    lu = s_copy
-    piv = []
     
-    (1..4).each do |idx| 
-      piv << idx
-    end
-    pivsign = 1;
-    
-    #double[] 
-    lu_row_i = [];
-    
-    # double[] new double[m];
-    lu_col_j = []
-    
-    (1..4).each do |j|
-      # Make a copy of the j-th column to localize references.
-      # i-th element of j-th column of LU is ith index in array LUcolj
-      lu_col_j = []
-      (1..4).each do |i|
-        lu_col_j << lu.at(i,j);
-      end
-      
-      # Apply previous transformations.
-      (1..4).each do |i|
-        
-        # LUrowi = LU[i];
-        row_i_lu = lu.row(i)
-        lu_row_i = []
-        lu_row_i << row_i_lu.x
-        lu_row_i << row_i_lu.y
-        lu_row_i << row_i_lu.z
-        lu_row_i << row_i_lu.w
-
-        # Most of the time is spent in the following dot product.
-        kmax = [i, j].min
-        s = 0.0;
-        (1..kmax).each do |k|
-          s += lu_row_i[k-1] * lu_col_j[k-1];
-        end
-        lu_row_i[j-1] = lu_col_j[i-1] -= s;
-      end
-
-      # Find pivot and exchange if necessary.
-      p = j
-      ((j+1)..4).each do |i|
-        p = i if(lu_col_j[i-1].abs > lu_col_j[p-1].abs)
-      end
-      # binding.pry
-      if (p != j)
-        (1..4).each do |k|
-          t = lu.at(p,k)
-          lu.setElementAt(p,k, lu.at(j,k))
-          lu.setElementAt(j,k, t)          
-        end
-        k = piv[p-1]
-        piv[p-1] = piv[j-1]
-        piv[j-1] = k
-        pivsign = -pivsign
-      end
-      
-      # Compute multipliers.   
-      if(j < 4 && lu.at(j,j) != 0.0)
-        ((j+1)..4).each do |i|
-          lu_ii = lu.at(j,j)
-          lu_ij = lu.at(i,j)
-          normalized_val = lu_ij.to_f / lu_ii.to_f
-          lu.setElementAt(i, j, normalized_val)           
-        end
-      end
-    end
-    [lu,piv]
-  end
-  
-  def lu_decomp_permutation_vec
-    piv = lu_decomp[1]
-    p = []
-    (1..4).each do |i|
-      p << piv[i-1];
-    end
-    p
-  end
-  
+  alias_method :set_at, :setElementAt 
   alias_method :at, :elementAt
 end

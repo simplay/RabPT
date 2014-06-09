@@ -1,6 +1,6 @@
 class Matrix3f
   require File.join(File.dirname(__FILE__), 'vector3f.rb')
-
+  require File.join(File.dirname(__FILE__), 'matrix2f.rb')
   
   attr_accessor :schema,
                 :m00, :m01, :m02,
@@ -12,6 +12,13 @@ class Matrix3f
     @m10 = row_y.x; @m11 = row_y.y; @m12 = row_y.z;
     @m20 = row_z.x; @m21 = row_z.y; @m22 = row_z.z;
     build_schema
+  end
+  
+  def s_copy 
+    v1 = Vector3f.new(@m00, @m01, @m02)
+    v2 = Vector3f.new(@m10, @m11, @m12)
+    v3 = Vector3f.new(@m20, @m21, @m22)
+    Matrix3f.new(v1, v2, v3)
   end
   
   def transpose
@@ -63,6 +70,20 @@ class Matrix3f
     build_schema
   end
   
+  def masked_block(row_idx, column_idx) 
+    elements = []
+    (1..3).each do |i|
+      (1..3).each do |j|
+        if(i != row_idx && j != column_idx)
+          elements << at(i,j)
+        end
+      end
+    end
+    
+    Matrix2f.new(elements[0], elements[1], 
+                elements[2], elements[3])
+  end
+  
   # assumption vec4f is a column vector
   # performs a matrix3f vector3f multiplaction
   def vectormult vec3f
@@ -89,9 +110,41 @@ class Matrix3f
     predicat
   end
   
+  # scale every element of this matrix by given value
+  def scale by
+    (1..3).each do |i|
+      (1..3).each do |j|
+        val = at(i,j)*by
+        setElementAt(i, j, val) 
+      end
+    end
+    build_schema  
+  end
+  
+  
+  def adj
+    snapshot = s_copy
+    sign = 1.0
+    (1..3).each do |i|
+      (1..3).each do |j|
+        setElementAt(i,j, sign*snapshot.masked_block(i,j).det)
+        sign *= -1.0
+      end
+    end  
+    build_schema
+    transpose
+  end
+  
   def invert
     values = []
-    
+    unless is_singular?
+      # compute elementwise inverses
+      initial_det = det
+      f = (1.0/initial_det.to_f)
+      adj
+      scale(f)
+      self
+    end   
   end
   
   def det
@@ -158,4 +211,5 @@ class Matrix3f
   end
   
   alias_method :at, :element_at 
+  alias_method :set_at, :setElementAt 
 end

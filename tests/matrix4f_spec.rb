@@ -20,17 +20,16 @@ describe Matrix4f do
     v4 = Vector4f.new(13.0, 14.0, 15.0, 16.0)
     @M2 = Matrix4f.new(v1, v2, v3, v4)
     
-    v1 = Vector4f.new(1.0, 3.0, 2.0, 4.0)
-    v2 = Vector4f.new(5.0, 8.0, 7.0, 6.0)
-    v3 = Vector4f.new(10.0, 12.0, 11.0, 9.0)
-    v4 = Vector4f.new(13.0, 14.0, 15.0, 16.0)
-    @M2copy = Matrix4f.new(v1, v2, v3, v4)
-    
     v1 = Vector4f.new(1.0, 0.0, 0.0, 0.0)
     v2 = Vector4f.new(0.0, 1.0, 0.0, 0.0)
     v3 = Vector4f.new(0.0, 0.0, 1.0, 0.0)
     v4 = Vector4f.new(0.0, 0.0, 0.0, 1.0)
     @I = Matrix4f.new(v1, v2, v3, v4)
+    
+    v1 = Vector3f.new(1.0, 0.0, 0.0)
+    v2 = Vector3f.new(0.0, 1.0, 0.0)
+    v3 = Vector3f.new(0.0, 0.0, 1.0)
+    @id_3x3 = Matrix3f.new(v1, v2, v3)
     
     v1 = Vector4f.new(2.0, 4.0, 6.0, 8.0)
     v2 = Vector4f.new(10.0, 12.0, 14.0, 16.0)
@@ -69,6 +68,12 @@ describe Matrix4f do
     v4 = Vector4f.new(441.0, 555.0, 529.0, 527.0)
     @EnumTimesM2 = Matrix4f.new(v1, v2, v3, v4)
     
+    v1 = Vector4f.new(1.0, 3.0, 1.0, 1.0)
+    v2 = Vector4f.new(2.0, 1.0, 5.0, 2.0)
+    v3 = Vector4f.new(1.0, -1.0, 2.0, 3.0)
+    v4 = Vector4f.new(4.0, 1.0, -3.0, 7.0)
+    @Ma = Matrix4f.new(v1, v2, v3, v4)
+    @Ma_copy = Matrix4f.new(v1, v2, v3, v4)
     
   end
   
@@ -172,22 +177,39 @@ describe Matrix4f do
   end
   
   it "me times inverse is identity" do
-    # binding.pry
-    @M2.invert.mult(@M2copy).same_values_as?(@I).should be_true
+    prod = @Ma.invert.mult(@Ma_copy)
+    prod.approx_same_values_as?(@I).should be_true
   end
   
-  it "permutation matrix has |det| = 1" do
-    @M2.get_p_matrix.det.abs.should eq(1.0)
+  it "adj operator for 3x3 matrix is correctly computed" do
+    v1 = Vector3f.new(1.0, 0.0, 2.0)
+    v2 = Vector3f.new(2.0, 1.0, 3.0)
+    v3 = Vector3f.new(0.0, 3.0, 1.0)
+    m = Matrix3f.new(v1, v2, v3)
+    v1 = Vector3f.new(-8.0, 6.0, -2.0)
+    v2 = Vector3f.new(-2.0, 1.0, 1.0)
+    v3 = Vector3f.new(6.0, -3.0, 1.0)
+    m_adj = Matrix3f.new(v1, v2, v3)
+    
+    m.adj.same_values_as?(m_adj).should be_true
   end
   
-  it "L matrix has ones in its diagonal" do
-    l = @M2.get_l_matrix
-    (1..4).each do |d|
-      l_diag = l.at(d,d)
-      l_diag.should eq(1.0)
-    end
+  it "det operator for 3x3 matrix is corretly computed" do
+    v1 = Vector3f.new(1.0, 0.0, 2.0)
+    v2 = Vector3f.new(2.0, 1.0, 3.0)
+    v3 = Vector3f.new(0.0, 3.0, 1.0)
+    m = Matrix3f.new(v1, v2, v3)
+    m_copy = Matrix3f.new(v1, v2, v3)
+    m.det.should eq(4)
   end
   
-  
+  it "A 3x3 times its inverses gives id" do
+    v1 = Vector3f.new(1.0, 0.0, 2.0)
+    v2 = Vector3f.new(2.0, 1.0, 3.0)
+    v3 = Vector3f.new(0.0, 3.0, 1.0)
+    m = Matrix3f.new(v1, v2, v3)
+    m_copy = Matrix3f.new(v1, v2, v3)
+    m.invert.mult(m_copy).same_values_as?(@id_3x3).should be_true
+  end
   
 end
