@@ -70,6 +70,19 @@ require "pry"
     ovwrite_me t
   end
   
+  # apply a rotation matrix around
+  # given axis by given degree cclw. 
+  # angle is an angle in degree.
+  # internally, it will be recomputed 
+  # to a angle in radians
+  # axis is a symbol representing the
+  # target axis
+  def rotate(angle, axis)
+    rot = send("rotate_#{axis}_axis_by", angle)
+    rot.mult(self)
+    ovwrite_me rot
+  end
+  
   # transpose this matrix
   def transpose
     swap(:m10, :m01)
@@ -335,6 +348,44 @@ require "pry"
     send("#{a}=",send("#{b}"))
     send("#{b}=",tmp)
   end
+  
+  # counter clock wise rotation
+  # Math::cos(Math::PI) is -1.0
+  def rotate_z_axis_by degree
+    rot = Matrix4f.new(nil, nil, nil, nil).make_identity
+    pi = Math::PI
+    angle = (degree.to_f*pi) / 180.0
+    rot.set_at(1, 1, Math::cos(angle))
+    rot.set_at(2, 2, Math::cos(angle))
+    rot.set_at(1, 2, Math::sin(-angle))
+    rot.set_at(2, 1, Math::sin(angle))
+    rot
+  end
+  
+  # counter clock wise rotation
+  def rotate_y_axis_by degree
+    rot = Matrix4f.new(nil, nil, nil, nil).make_identity
+    pi = Math::PI
+    angle = (degree.to_f*pi) / 180.0
+    rot.set_at(1, 1, Math::cos(angle))
+    rot.set_at(3, 3, Math::cos(angle))
+    rot.set_at(3, 1, Math::sin(-angle))
+    rot.set_at(1, 3, Math::sin(angle))
+    rot
+  end
+  
+  # counter clock wise rotation
+  def rotate_x_axis_by degree
+    rot = Matrix4f.new(nil, nil, nil, nil).make_identity
+    pi = Math::PI
+    angle = (degree.to_f*pi) / 180.0
+    rot.set_at(2, 2, Math::cos(angle))
+    rot.set_at(3, 3, Math::cos(angle))
+    rot.set_at(2, 3, Math::sin(-angle))
+    rot.set_at(3, 2, Math::sin(angle))
+    rot
+  end
+  
     
   alias_method :set_at, :setElementAt 
   alias_method :at, :elementAt

@@ -219,8 +219,38 @@ describe Matrix4f do
     pred.should be_true
   end
   
-  it "foo" do
-    @I.translate(Vector3f.new(1.0, 2.0, 3.0)).same_values_as?(@T)
+  it "translations are correctly applied" do
+    @I.translate(Vector3f.new(1.0, 2.0, 3.0)).same_values_as?(@T).should be_true
+  end
+  
+  it "rotation around x axis should yield expected result" do 
+    v1 = Vector4f.new(1.0, 0.0, 0.0, 0.0)
+    v2 = Vector4f.new(0.0, -1.0, 0.0, 0.0)
+    v3 = Vector4f.new(0.0, 0.0, -1.0, 0.0)
+    v4 = Vector4f.new(0.0, 0.0, 0.0, 1.0)
+    a = Matrix4f.new(v1, v2, v3, v4)
+    @I.rotate(180.0, :x)
+    @I.approx_same_values_as?(a).should be_true
+  end
+  
+  it "rotation around y axis should yield expected result" do 
+    v1 = Vector4f.new(-1.0, 0.0, 0.0, 0.0)
+    v2 = Vector4f.new(0.0, 1.0, 0.0, 0.0)
+    v3 = Vector4f.new(0.0, 0.0, -1.0, 0.0)
+    v4 = Vector4f.new(0.0, 0.0, 0.0, 1.0)
+    a = Matrix4f.new(v1, v2, v3, v4)
+    @I.rotate(180.0, :y)
+    @I.approx_same_values_as?(a).should be_true
+  end
+  
+  it "rotation around z axis should yield expected result" do 
+    v1 = Vector4f.new(-1.0, 0.0, 0.0, 0.0)
+    v2 = Vector4f.new(0.0, -1.0, 0.0, 0.0)
+    v3 = Vector4f.new(0.0, 0.0, 1.0, 0.0)
+    v4 = Vector4f.new(0.0, 0.0, 0.0, 1.0)
+    a = Matrix4f.new(v1, v2, v3, v4)
+    @I.rotate(180.0, :z)
+    @I.approx_same_values_as?(a).should be_true
   end
   
 end
