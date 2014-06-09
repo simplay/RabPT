@@ -213,7 +213,10 @@ describe Matrix4f do
   end
   
   it "same_values_as implies approx_same_values_as" do
-  
+    pred = @T.transpose.same_values_as?(@Tt)
+    @T.transpose
+    pred &&= @T.transpose.approx_same_values_as?(@Tt)
+    pred.should be_true
   end
   
 end
