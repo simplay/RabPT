@@ -43,6 +43,15 @@ class Vector3f
     norm_2(self)
   end
   
+  # compute cross product between this an another vector
+  # returns a new instance
+  def cross other
+    c_x = @y*other.z - @z*other.y
+    c_y = @z*other.x - @x*other.z
+    c_z = @x*other.y - @y*other.x
+    Vector3f.new(c_x,c_y,c_z)
+  end
+  
   # scale this vector by a constant
   def scale by
     @x = @x*by

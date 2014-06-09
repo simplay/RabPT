@@ -1,4 +1,5 @@
 require_relative '../util/vector4f.rb'
+require_relative '../util/vector3f.rb'
 describe Vector4f do
   let(:v1) { Vector4f.new(1.0, 2.0, 4.0, 1.0) }
   let(:v1_orig) { Vector4f.new(1.0, 2.0, 4.0, 1.0) }
@@ -64,6 +65,39 @@ describe Vector4f do
     
     it "v1 dot v2 yields expected value 12" do
       v1.dot(v2).should eq(12.0)
+    end
+    
+    it "dot product is commulative" do
+      v1.dot(v2).should eq(v2.dot(v1))
+    end
+    
+    it "cross operator works as expected" do
+       a = Vector3f.new(2.0, 3.0, 4.0)
+       b = Vector3f.new(5.0, 6.0, 7.0)
+       a_cross_b = Vector3f.new(-3.0, 6.0, -3.0)
+       a.cross(b).same_values_as?(a_cross_b).should be_true
+    end
+    
+    it "cross operator is not commulative" do
+       a = Vector3f.new(2.0, 3.0, 4.0)
+       b = Vector3f.new(5.0, 6.0, 7.0)
+       a_cross_b = Vector3f.new(-3.0, 6.0, -3.0)
+       b.cross(a).same_values_as?(a_cross_b).should_not be_true
+    end
+    
+    it "cross a,b == -cross b,a" do
+       a = Vector3f.new(2.0, 3.0, 4.0)
+       b = Vector3f.new(5.0, 6.0, 7.0)
+       a_cross_b = Vector3f.new(-3.0, 6.0, -3.0)
+       b.cross(a).same_values_as?(a_cross_b.scale(-1.0)).should be_true
+    end
+    
+    it "cross product gives an ortogonal vector" do
+      a = Vector3f.new(2.0, 3.0, 4.0)
+      b = Vector3f.new(5.0, 6.0, 7.0)
+      c = b.cross(a)
+      c.dot(a).should eq(0.0)
+      c.dot(b).should eq(0.0)
     end
     
 end
