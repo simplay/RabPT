@@ -1,8 +1,8 @@
 class Matrix4f
   require File.join(File.dirname(__FILE__), 'vector4f.rb')
-  require File.join(File.dirname(__FILE__), 'matrix3f.rb')
+  require File.join(File.dirname(__FILE__), 'matrix3f.rb') 
+  require "pry"
   
-require "pry"
   EPSILON = 0.001
   attr_accessor :m00, :m01, :m02, :m03,
                 :m10, :m11, :m12, :m13,

@@ -15,9 +15,10 @@ class CsgPlane
                 :normal,
                 :distance
                 
-  def initialize(normal, distance)
-    @normal = normal
-    @distance = distance
+  def initialize(args = {})
+    args.each do |key, value|
+      send("#{key}=", value)
+    end
   end
   
 end
