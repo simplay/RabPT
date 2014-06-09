@@ -65,6 +65,11 @@ class Vector3f
     self
   end
   
+  # invertes direction of this vector
+  def negate
+    scale(-1.0)
+  end
+  
   # get unit vector version of this vector
   def normalize
     normalization_factor = norm_2 self

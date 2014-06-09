@@ -7,7 +7,7 @@ class HitRecord
   require File.join(File.dirname(__FILE__), '../util/vector2f.rb')
   require File.join(File.dirname(__FILE__), '../util/vector3f.rb')
   require File.join(File.dirname(__FILE__), '../util/matrix3f.rb')
-  require File.join(File.dirname(__FILE__), '../materials/material.rb')
+  require File.join(File.dirname(__FILE__), 'materials/material.rb')
   
   ##
   # :attr_accessor: 
