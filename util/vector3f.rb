@@ -1,5 +1,5 @@
 class Vector3f
-
+  EPSILON = 0.001
   attr_accessor :x, :y, :z
   
   def initialize(x, y, z)
@@ -73,6 +73,17 @@ class Vector3f
   
   def same_values_as? other
     (@x == other.x) && (@y == other.y) && (@z == other.z)
+  end
+  
+  def approx_same_values_as? other
+    delta = copy_s.sub(other).to_a.inject(0.0) do |result, element| 
+      result + element**2.0 
+    end
+    delta < EPSILON
+  end
+  
+  def to_s
+    "(#{@x},#{@y},#{@y})"
   end
   
 end
