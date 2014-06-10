@@ -3,7 +3,7 @@
 
 ### run this application:
 1. bundle
-2. ruby rabpt.rb
+2. ruby rabpt.rb img_width img_height samples
 
 
 ### Debugging within the code
