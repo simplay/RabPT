@@ -36,6 +36,12 @@ class Vector4f
     self
   end
   
+  # applied a tranformation matrix 
+  # to this vector and overwrite its values
+  def transform t
+    ovwrite_me t.vectormult(self)
+  end
+  
    # compute euclidian scalar product between this and other
   def dot other
     @x*other.x + @y*other.y + @z*other.z + @w*other.w
@@ -79,6 +85,16 @@ class Vector4f
   
   def to_s
     "(#{@x},#{@y},#{@y},#{@w})"
+  end
+  
+  private
+  
+  def ovwrite_me other
+    @x = other.x
+    @y = other.y
+    @z = other.z
+    @w = other.w
+    self
   end
   
 end

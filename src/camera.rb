@@ -3,8 +3,12 @@
 # Cinv is transofrmation matrix from world coordinates to camera space.
 
 require File.join(File.dirname(__FILE__), '../util/vector3f.rb')
+require_relative '../util/vector4f.rb'
 
 class Camera
+  # Given the specification of a ray in image space, a camera constructs 
+  # a corresponding ray in world space. 
+  
   attr_accessor :eye,
                 :look_at,
                 :up,
@@ -34,6 +38,36 @@ class Camera
     end
     compute_camera_matrix
     compute_image_corners
+  end
+  
+  # Given a ray in image space, make a ray in world space according 
+  # to the camera specifications. The method receives a sample that 
+  # the camera can use to generate the ray. Typically the first two
+  # sample dimensions are used to sample a location in the current 
+  # pixel. The samples are assumed to be in the range [0,1].
+  # 
+  # @param i pixel column index: Integer, start counting at 1
+  # @param j pixel row index: Integer, start counting at 1
+  # @param sample random sample that the camera can use to generate a ray
+  # float array.   
+  # @return the ray in world coordinates
+  # TODO check this transformation busines carefully
+  def make_world_space_ray(i, j, sample)
+    u_ij = @l + ((@r-@l)*((i-1)+sample[0]) / @width.to_f)
+    v_ij = @b + ((@t-@b)*((j-1)+sample[1]) / @heigt.to_f)
+    w_ij = -1.0
+    p_uvw = Vector4f.new(u_ij, v_ij, w_ij, 0.0)
+    dir = Vector4f.new(0.0, 0.0, 0.0, 0.0)
+    dir = dir.transform(@camera_matrix)
+    p_uvw = p_uvw.transform(@camera_matrix)
+    
+    ray_args = {
+      :origin => @eye.s_copy,
+      :direction => Vector3f.new(dir.x, dir.y, dir.z),
+      :t => Random.rand(1.0)
+    }
+    Ray.new ray_args
+  
   end
   
   private

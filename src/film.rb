@@ -14,23 +14,4 @@ module Film
     raise "not implemented yet"
   end
   
-  # Returns the image stored in the film.
-  # 
-  # @return the image
-  def image
-    raise "not implemented yet"
-  end
-  
-  # Returns width (in pixels) of film.
-  # @return width in pixels
-  def width
-    raise "not implemented yet"
-  end
-  
-  # Returns height (in pixels) of film.
-  # @return height in pixels
-  def height
-    raise "not implemented yet"
-  end
-  
 end

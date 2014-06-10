@@ -12,8 +12,8 @@ class DebugIntegrator
   end
   
   # Return some value useful for debugging.
-  def integrate primary_ray
-    hit_record = @scene.get_intersectable.intersect(ray)
+  def integrate ray
+    hit_record = @scene.root.intersect(ray)
     contribution = Spectrum.new(0.0)
     unless hit_record.nil?
       if hit_record.t > 0.0

@@ -44,18 +44,38 @@ class Renderer
       print "Could no generate the image"
     end
     
+    init_rendering_process
   end
   
   private 
   
   def init_rendering_process
     
+    run
+    
+    film_img = @scene.film.image
+    puts "foo"
+    # write into image
+    idx_n = 0
+    idx_m = 0
+    film_img.each do |row|
+      row.each do |pixel|
+        binding.pry
+        x = Renderer.toInt256(pixel.r)
+        y = Renderer.toInt256(pixel.g)
+        z = Renderer.toInt256(pixel.b)
+        pixel_rgb_color = Color.from_rgb(x,y,z)
+        @image[idx_m, idx_n] = pixel_rgb_color 
+        idx_m += 1
+      end
+      idx_n += 1
+    end
   end
   
   def run
     # foreach pixel
-    (1..@width).each do |j|
-      (1..@height).each do |i|
+    (1..@scene.width).each do |j|
+      (1..@scene.height).each do |i|
         samples = @integrator.make_pixel_samples(@sampler, @scene.spp);
         # for N sampels per pixel
         (1..samples.length).each do |k|
