@@ -14,7 +14,8 @@ module Scene
                 :integratior_factory,
                 :sampler_factory,
                 :root,
-                :light_list
+                :light_list,
+                :film
   
   def prepare
     raise "not implemented yet"
