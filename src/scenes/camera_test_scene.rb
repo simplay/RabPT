@@ -5,7 +5,7 @@ class CameraTestScene
   require_relative '../films/box_filter_film.rb'
   require_relative '../integrators/debug_factory.rb'
   require_relative '../samplers/one_sampler_factory.rb'
-  require_relative '../intersectables/csg_plane.rb'
+  require_relative '../intersectables/plane.rb'
   
   include Scene
   
@@ -34,5 +34,12 @@ class CameraTestScene
     
     @integratorFactory = DebugFactory.new
     @sampler_factory = OneSamplerFactory.new
+    
+    plane1 = Plane.new(Vector3f.new(1.0, 0.0, 0.0), 1.0)
+    plane2 = Plane.new(Vector3f.new(-1.0, 0.0, 0.0), 1.0)
+    plane3 = Plane.new(Vector3f.new(0.0, 1.0, 0.0), 1.0)
+    plane4 = Plane.new(Vector3f.new(1.0, -1.0, 0.0), 1.0)
+    plane5 = Plane.new(Vector3f.new(1.0, 0.0, 1.0), 1.0)
+    
   end
 end
