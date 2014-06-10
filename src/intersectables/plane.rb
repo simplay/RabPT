@@ -18,10 +18,10 @@ class Plane
                 :normal,
                 :distance
                 
-  def initialize(args = {})
-    args.each do |key, value|
-      send("#{key}=", value)
-    end
+  def initialize(material, normal, distance)
+    @material = material
+    @normal = normal
+    @distance = distance
   end
   
   # plane-ray intersection

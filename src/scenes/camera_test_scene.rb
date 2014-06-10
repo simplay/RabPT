@@ -6,6 +6,11 @@ class CameraTestScene
   require_relative '../integrators/debug_factory.rb'
   require_relative '../samplers/one_sampler_factory.rb'
   require_relative '../intersectables/plane.rb'
+  require_relative '../intersectable_list.rb'
+  require_relative '../light_list.rb'
+  require_relative '../spectrum.rb'
+  require_relative '../lightsources/point_light.rb'
+  require_relative '../materials/diffuse.rb'
   
   include Scene
   
@@ -35,11 +40,23 @@ class CameraTestScene
     @integratorFactory = DebugFactory.new
     @sampler_factory = OneSamplerFactory.new
     
-    plane1 = Plane.new(Vector3f.new(1.0, 0.0, 0.0), 1.0)
-    plane2 = Plane.new(Vector3f.new(-1.0, 0.0, 0.0), 1.0)
-    plane3 = Plane.new(Vector3f.new(0.0, 1.0, 0.0), 1.0)
-    plane4 = Plane.new(Vector3f.new(1.0, -1.0, 0.0), 1.0)
-    plane5 = Plane.new(Vector3f.new(1.0, 0.0, 1.0), 1.0)
+    material = Diffuse.new(Spectrum.new(1.0));
+    
+    intersectable_list = IntersectableList.new
+    intersectable_list.put(material,Plane.new(Vector3f.new(1.0, 0.0, 0.0), 1.0))
+    intersectable_list.put(material,Plane.new(Vector3f.new(-1.0, 0.0, 0.0), 1.0))
+    intersectable_list.put(material,Plane.new(Vector3f.new(0.0, 1.0, 0.0), 1.0))
+    intersectable_list.put(material,Plane.new(Vector3f.new(1.0, -1.0, 0.0), 1.0))
+    intersectable_list.put(material,Plane.new(Vector3f.new(1.0, 0.0, 1.0), 1.0))
+    
+    @root = intersectable_list
+    
+    @light_list = LightList.new
+    
+    @light_list.put(PointLight.new(Vector3f.new(0.5, 0.5, 2.0), Spectrum.new(1.0)))
+    
+    
+    
     
   end
 end
