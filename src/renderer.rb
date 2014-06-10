@@ -8,71 +8,54 @@ class Renderer
                 :integrator, :sampler
   
   def initialize(args={})
-    
     @dimN = args[:N]
     @dimM = args[:M]
-    
-    # @scene = DebugScene.new({:SPP => args[:SPP] || 1,
-                        # :width => @dimM,
-                        # :height => @dimN
-                        # })
-                        # 
+
     @scene = CameraTestScene.new(@dimM, @dimN, args[:SPP].to_i || 1)
     @integrator = @scene.integrator_factory.make(@scene)
     @sampler = @scene.sampler_factory.make
     
     puts "dimensions (#{@dimN}, #{@dimM}),"
-    
     @image = Image.new(@dimN, @dimM)
-    val1 = 25
-    val2 = 100
-    val3 = 240
-
-    
-    colors = []
-    color = Color.from_rgb(val1,val2,val3)
-    (@dimN*@dimM).times do
-      colors << color
-    end
 
     puts "start rendering pixels"
-    render_cluster([0, @dimM-1], [0, @dimN-1], colors)
+    init_rendering_process
     
     begin
-      @image.save("output/raytraced.bmp", :bmp)
+      @image.save("output/raytraced_t.bmp", :bmp)
     rescue
       print "Could no generate the image"
     end
-    
-    init_rendering_process
   end
   
   private 
   
   def init_rendering_process
-    
-    run
-    
+    compute_contribution
+    write_image
+
+  end
+  
+  def write_image
     film_img = @scene.film.image
-    puts "foo"
     # write into image
-    idx_n = 0
-    idx_m = 0
+    idn = 0
+    idm = 0
     film_img.each do |row|
       row.each do |pixel|
-        binding.pry
         x = Renderer.toInt256(pixel.r)
         y = Renderer.toInt256(pixel.g)
         z = Renderer.toInt256(pixel.b)
-        pixel_rgb_color = Color.from_rgb(x,y,z)
-        @image[idx_m, idx_n] = pixel_rgb_color 
-        idx_m += 1
+        pix = Image.new(1,1)
+        pix[0,0] = Color.from_rgb(x,y,z)
+        @image.draw!(idm, idn, pix) 
+        idm += 1
       end
-      idx_n += 1
+      idn += 1
     end
   end
   
-  def run
+  def compute_contribution
     # foreach pixel
     (1..@scene.width).each do |j|
       (1..@scene.height).each do |i|
@@ -90,9 +73,6 @@ class Renderer
         end
       end
     end
-  
-  
-
   end
   
   
