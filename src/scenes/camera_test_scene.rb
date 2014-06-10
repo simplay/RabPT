@@ -4,6 +4,7 @@ class CameraTestScene
   require_relative '../scene.rb'
   require_relative '../films/box_filter_film.rb'
   require_relative '../integrators/debug_integrator_factory.rb'
+  require_relative '../integrators/point_light_integrator_factory.rb'
   require_relative '../samplers/one_sampler_factory.rb'
   require_relative '../intersectables/plane.rb'
   require_relative '../intersectable_list.rb'
@@ -36,8 +37,8 @@ class CameraTestScene
             
     @camera = Camera.new camera_args
     @film = BoxFilterFilm.new(width, height)
-    
-    @integrator_factory = DebugIntegratorFactory.new
+    # @integrator_factory = DebugIntegratorFactory.new
+    @integrator_factory = PointLightIntegratorFactory.new
     @sampler_factory = OneSamplerFactory.new
     
     material = Diffuse.new(Spectrum.new(1.0));

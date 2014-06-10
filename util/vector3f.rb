@@ -45,6 +45,10 @@ class Vector3f
     @x*other.x + @y*other.y + @z*other.z
   end
   
+  def dotted
+    dot self
+  end
+  
   # compute euclidian distance between this and other
   def norm_2 other
     dot = dot(other)

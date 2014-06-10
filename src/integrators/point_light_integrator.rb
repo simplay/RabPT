@@ -1,15 +1,15 @@
 class PointLightIntegrator
-  
-  
   require_relative '../integrator.rb'
+  require_relative '../ray.rb'
+  require_relative '../spectrum.rb'
+  
   include Integrator
   
   attr_accessor :root, :light_list
   
   def initialize scene
-    binding.pry
     @root = scene.root
-    @light_list = scene.light_list
+    @light_list = scene.light_list.container
   end
   
   # Basic Point Light integrator 
@@ -21,7 +21,6 @@ class PointLightIntegrator
   # @param CameraRay primary camera ray
   # @return total contribution of this primary ray 
   def integrate ray
-    binding.pry
     hit_record = @root.intersect(ray)
     contribution = Spectrum.new(0.0)
     
@@ -51,7 +50,7 @@ class PointLightIntegrator
   # @param t parameter of ray equation p_uvw(t) = 0 + t(s_uvw-0).
   # @return returns current spectrum of light source at intersaction point.
   def contribution_of(light_source, hit_record, t)
-		light_hit = light_source.sample(nil);
+		light_hit = light_source.sample;
     light_dir = light_hit.position.s_copy
     light_dir.sub(hit_record.position)
     
@@ -61,10 +60,11 @@ class PointLightIntegrator
     return Spectrum.new(0.0) if occluded?(hit_record.position, light_dir, t, d2)
     
     brdf_contribution = hit_record.material.evaluate_brdf(hit_record, hit_record.w, light_dir)
+    
+    # shading: brdf * emission * dot(normal,light_dir) * geom_term
     contribution = Spectrum.new(brdf_contribution)
     
-    
-    l = lightDir.s_copy
+    l = light_dir.s_copy
     l.negate
     light_emission = light_hit.material.evaluate_emission(light_hit, l)
     
@@ -83,7 +83,16 @@ class PointLightIntegrator
   # @return is light source occluded by object at hitPostion? 
   def occluded?(hit_position, light_dir, t, eps)
      is_shaddowed = false
-     shadow_ray = Ray.new(hit_position, light_dir, 0.0, true, t)
+     
+     ray_args = {
+       :origin => hit_position,
+       :direction => light_dir,
+       :t => t
+     }
+  
+     shadow_ray = Ray.new ray_args
+     
+     
      shadow_hit = @root.intersect(shadow_ray)
      
      if(shadow_hit != nil)

@@ -103,10 +103,12 @@ class Renderer
     
   end
   
+  # TODO write a toneMAPPER istead using this shit
   # mapping from float unit range
   # to int 0-255 range
   # f: [0.0,1.0] -> [0,255]
   def self.toInt256 f_value
+    f_value = 1.0 if f_value > 1.0
     (f_value*255).to_i
   end
   

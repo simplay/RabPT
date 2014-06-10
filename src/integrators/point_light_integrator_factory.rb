@@ -1,4 +1,4 @@
-class DebugIntegratorFactory
+class PointLightIntegratorFactory
   require_relative '../integrator_factory.rb'
   require_relative 'point_light_integrator.rb'
   include IntegratorFactory

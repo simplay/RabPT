@@ -42,6 +42,10 @@ class Vector4f
     ovwrite_me t.vectormult(self)
   end
   
+  def dotted
+    dot self
+  end
+  
    # compute euclidian scalar product between this and other
   def dot other
     @x*other.x + @y*other.y + @z*other.z + @w*other.w

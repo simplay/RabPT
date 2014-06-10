@@ -40,8 +40,10 @@ class Plane
       w_in.normalize
       hit_normal = @normal.s_copy
       
+      
       # TODO implement texture coordinates for planes 
       hash = {:t => t,
+              :position => intersection_position,
               :normal => hit_normal,
               :w => w_in,
               :intersectable => self,
