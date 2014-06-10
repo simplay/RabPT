@@ -1,5 +1,7 @@
 class Renderer
   require File.join(File.dirname(__FILE__), 'scenes/debug_scene.rb')
+  require_relative 'scenes/camera_test_scene.rb'
+  require 'pry'
   include ImageRuby
 
   attr_accessor :image, :dimN, :dimM, :scene
@@ -9,10 +11,13 @@ class Renderer
     @dimN = args[:N]
     @dimM = args[:M]
     
-    @scene = DebugScene.new({:SPP => args[:SPP] || 1,
-                        :width => @dimM,
-                        :height => @dimN
-                        })
+    # @scene = DebugScene.new({:SPP => args[:SPP] || 1,
+                        # :width => @dimM,
+                        # :height => @dimN
+                        # })
+                        #
+    binding.pry     
+    @scene = CameraTestScene.new(@dimM, @dimN, args[:SPP].to_i || 1)
     
     puts "dimensions (#{@dimN}, #{@dimM}),"
     

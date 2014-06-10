@@ -2,7 +2,7 @@ class DebugIntegrator
   # Use this integrator for debugging purposes. For example, you can simply return a white spectrum
   # if the ray hits something, and black otherwise. Any other visualization of data associated
   # with a hit record may be useful.  
-  
+  require_relative '../integrator.rb'
   include Integrator
   
   attr_accessor :scene

@@ -3,7 +3,7 @@ class CameraTestScene
   
   require_relative '../scene.rb'
   require_relative '../films/box_filter_film.rb'
-  require_relative '../integrators/debug_factory.rb'
+  require_relative '../integrators/debug_integrator_factory.rb'
   require_relative '../samplers/one_sampler_factory.rb'
   require_relative '../intersectables/plane.rb'
   require_relative '../intersectable_list.rb'
@@ -37,17 +37,17 @@ class CameraTestScene
     @camera = Camera.new camera_args
     @film = BoxFilterFilm.new(width, height)
     
-    @integratorFactory = DebugFactory.new
+    @integratorFactory = DebugIntegratorFactory.new
     @sampler_factory = OneSamplerFactory.new
     
     material = Diffuse.new(Spectrum.new(1.0));
     
     intersectable_list = IntersectableList.new
-    intersectable_list.put(material,Plane.new(Vector3f.new(1.0, 0.0, 0.0), 1.0))
-    intersectable_list.put(material,Plane.new(Vector3f.new(-1.0, 0.0, 0.0), 1.0))
-    intersectable_list.put(material,Plane.new(Vector3f.new(0.0, 1.0, 0.0), 1.0))
-    intersectable_list.put(material,Plane.new(Vector3f.new(1.0, -1.0, 0.0), 1.0))
-    intersectable_list.put(material,Plane.new(Vector3f.new(1.0, 0.0, 1.0), 1.0))
+    intersectable_list.put(Plane.new(material, Vector3f.new(1.0, 0.0, 0.0), 1.0))
+    intersectable_list.put(Plane.new(material, Vector3f.new(-1.0, 0.0, 0.0), 1.0))
+    intersectable_list.put(Plane.new(material, Vector3f.new(0.0, 1.0, 0.0), 1.0))
+    intersectable_list.put(Plane.new(material, Vector3f.new(1.0, -1.0, 0.0), 1.0))
+    intersectable_list.put(Plane.new(material, Vector3f.new(1.0, 0.0, 1.0), 1.0))
     
     @root = intersectable_list
     

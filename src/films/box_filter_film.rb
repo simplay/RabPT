@@ -8,7 +8,7 @@ class BoxFilterFilm
                 :unnormalized,
                 :n_samples
                 
-  def initialize(wdith, height)
+  def initialize(width, height)
     @width = width
     @height = height
     
@@ -17,7 +17,7 @@ class BoxFilterFilm
     @n_samples = []
     
     # initialize containers
-    (0..width-1).each do |i|
+    (0..(@width-1)).each do |i|
       image_row = []
       unnorm_row = []
       sample_row = []
@@ -46,18 +46,6 @@ class BoxFilterFilm
       @image[x_idx][y_idx].g = @unnormalized[x_idx][y_idx].g / @n_samples[x_idx][y_idx].to_f
       @image[x_idx][y_idx].b = @unnormalized[x_idx][y_idx].b / @n_samples[x_idx][y_idx].to_f      
     end
-  end
-  
-  def width
-    @width
-  end
-  
-  def height
-    @height
-  end
-  
-  def image
-    @image
   end
    
 end
