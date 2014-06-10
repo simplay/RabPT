@@ -22,7 +22,7 @@ class Renderer
     init_rendering_process
     
     begin
-      @image.save("output/raytraced_t.bmp", :bmp)
+      @image.save("output/raytraced_t2.bmp", :bmp)
     rescue
       print "Could no generate the image"
     end
@@ -33,22 +33,20 @@ class Renderer
   def init_rendering_process
     compute_contribution
     write_image
-
   end
   
   def write_image
     film_img = @scene.film.image
-    # write into image
     idn = 0
     idm = 0
+    # write pixelwise into image
     film_img.each do |row|
+      idm = 0
       row.each do |pixel|
         x = Renderer.toInt256(pixel.r)
         y = Renderer.toInt256(pixel.g)
         z = Renderer.toInt256(pixel.b)
-        pix = Image.new(1,1)
-        pix[0,0] = Color.from_rgb(x,y,z)
-        @image.draw!(idm, idn, pix) 
+        @image[idm, idn] =  Color.from_rgb(x,y,z)
         idm += 1
       end
       idn += 1
@@ -62,6 +60,7 @@ class Renderer
         samples = @integrator.make_pixel_samples(@sampler, @scene.spp);
         # for N sampels per pixel
         (1..samples.length).each do |k|
+          
           # make ray
           ray = @scene.camera.make_world_space_ray(i, j, samples[k-1])
           
@@ -104,8 +103,11 @@ class Renderer
     
   end
   
+  # mapping from float unit range
+  # to int 0-255 range
+  # f: [0.0,1.0] -> [0,255]
   def self.toInt256 f_value
-    (f_value*256).to_i
+    (f_value*255).to_i
   end
   
 end

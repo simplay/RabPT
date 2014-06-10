@@ -61,7 +61,7 @@ class HitRecord
       send("#{key}=",value)
     end
     
-    unless @normal.nil
+    unless @normal.nil?
       @tangent = Vector3f.new(0.0, 1.0, 0.0) unless @tangent
       @bitangent = @tangent.cross(normal)
       @tbs = Matrix3f.new(nil, nil, nil)

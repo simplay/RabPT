@@ -1,11 +1,12 @@
+require 'pry'
 class Vector3f
   EPSILON = 0.001
   attr_accessor :x, :y, :z
   
-  def initialize(x, y, z)
-    @x = x
-    @y = y
-    @z = z
+  def initialize(x_f, y_f, z_f)
+    self.x = x_f
+    self.y = y_f
+    self.z = z_f
   end
 
   # shallow copy of this vector3f
@@ -14,7 +15,7 @@ class Vector3f
   end
   
   def to_a
-    [@x, @y, @z]
+    [@x, @y, @zz]
   end
   
   # substract other to this
@@ -83,7 +84,7 @@ class Vector3f
   end
   
   def same_values_as? other
-    (@x == other.x) && (@y == other.y) && (@z == other.z)
+    (@x == other.x) && (@y == other.y) && (@zz == other.zz)
   end
   
   def approx_same_values_as? other
@@ -94,7 +95,7 @@ class Vector3f
   end
   
   def to_s
-    "(#{@x},#{@y},#{@y})"
+    "(#{@x},#{@y},#{@z})"
   end
   
   private

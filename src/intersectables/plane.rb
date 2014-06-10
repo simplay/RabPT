@@ -32,13 +32,13 @@ class Plane
   def intersect ray
     cos_theta = @normal.dot(ray.direction)
     if (cos_theta != 0.0)
-      t = -(@normal.dot(@ray.origin) + @distance) / cos_theta;
-      ray_dir = ray.direction.copy_s
+      t = -(@normal.dot(ray.origin) + @distance) / cos_theta;
+      ray_dir = ray.direction.s_copy
       intersection_position = ray_dir.scale(t).add(ray.origin)
-      w_in = ray.direction.copy_s
+      w_in = ray.direction.s_copy
       w_in.negate
       w_in.normalize
-      hit_normal = @normal.copy_s
+      hit_normal = @normal.s_copy
       
       # TODO implement texture coordinates for planes 
       hash = {:t => t,

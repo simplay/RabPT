@@ -53,13 +53,13 @@ class Camera
   # @return the ray in world coordinates
   # TODO check this transformation busines carefully
   def make_world_space_ray(i, j, sample)
-    u_ij = @l + ((@r-@l)*((i-1)+sample[0]) / @width.to_f)
-    v_ij = @b + ((@t-@b)*((j-1)+sample[1]) / @heigt.to_f)
+    u_ij = @l + (@r-@l)*(((i-1)+sample[0]) / @width.to_f)
+    v_ij = @b + (@t-@b)*(((j-1)+sample[1]) / @height.to_f)
     w_ij = -1.0
     p_uvw = Vector4f.new(u_ij, v_ij, w_ij, 0.0)
     dir = Vector4f.new(0.0, 0.0, 0.0, 0.0)
+    dir.add(p_uvw)
     dir = dir.transform(@camera_matrix)
-    p_uvw = p_uvw.transform(@camera_matrix)
     
     ray_args = {
       :origin => @eye.s_copy,

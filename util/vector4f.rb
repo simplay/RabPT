@@ -2,11 +2,11 @@ class Vector4f
   EPSILON = 0.001
   attr_accessor :x, :y, :z, :w
   
-  def initialize(x, y, z, w)
-    @x = x
-    @y = y
-    @z = z
-    @w = w
+  def initialize(x_f, y_f, z_f, w_f)
+    self.x = x_f
+    self.y = y_f
+    self.z = z_f
+    self.w = w_f
   end
   
   # shallow copy of this vector3f
@@ -84,7 +84,7 @@ class Vector4f
   end  
   
   def to_s
-    "(#{@x},#{@y},#{@y},#{@w})"
+    "(#{@x},#{@y},#{@z},#{@w})"
   end
   
   private
