@@ -15,8 +15,7 @@ class Renderer
                         # :width => @dimM,
                         # :height => @dimN
                         # })
-                        #
-    binding.pry     
+                        #  
     @scene = CameraTestScene.new(@dimM, @dimN, args[:SPP].to_i || 1)
     
     puts "dimensions (#{@dimN}, #{@dimM}),"
@@ -45,6 +44,34 @@ class Renderer
   end
   
   private 
+  
+  def init_rendering_process
+    
+  end
+  
+  def run
+    # foreach pixel
+    (1..@width).each do |j|
+      (1..@height).each do |i|
+        # for N sampels per pixel
+        (1..samples.length) do |k|
+          # make ray
+          ray = task.scene.camera.make_world_space_ray(i, j, samples[k-1])
+          
+          # evaluate ray
+          ray_spectrum = task.integrator.integrate(ray)
+          
+          # write to film
+          task.scene.film.add_sample(i.to_f+samples[k][0].to_f, j.to_f+samples[k][1].to_f, ray_spectrum)
+        end
+      end
+    end
+  
+  
+
+  end
+  
+  
   
   # renders an n x m pixel region
   # which is spanned bz 
