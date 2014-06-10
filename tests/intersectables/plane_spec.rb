@@ -5,9 +5,7 @@ require "pry"
 
 describe Plane do
   before(:each) do
-    hash = {:distance => 1.0,
-            :normal => Vector3f.new(1.0, 0.0, 0.0)}
-    @plane = Plane.new hash
+    @plane = Plane.new(nil, Vector3f.new(1.0, 0.0, 0.0), 1.0)
   end
   
   it "can be intersected" do
