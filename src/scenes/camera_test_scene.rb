@@ -37,7 +37,7 @@ class CameraTestScene
     @camera = Camera.new camera_args
     @film = BoxFilterFilm.new(width, height)
     
-    @integratorFactory = DebugIntegratorFactory.new
+    @integrator_factory = DebugIntegratorFactory.new
     @sampler_factory = OneSamplerFactory.new
     
     material = Diffuse.new(Spectrum.new(1.0));

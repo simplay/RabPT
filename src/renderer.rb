@@ -4,7 +4,8 @@ class Renderer
   require 'pry'
   include ImageRuby
 
-  attr_accessor :image, :dimN, :dimM, :scene
+  attr_accessor :image, :dimN, :dimM, :scene,
+                :integrator, :sampler
   
   def initialize(args={})
     
@@ -15,8 +16,10 @@ class Renderer
                         # :width => @dimM,
                         # :height => @dimN
                         # })
-                        #  
+                        # 
     @scene = CameraTestScene.new(@dimM, @dimN, args[:SPP].to_i || 1)
+    @integrator = @scene.integrator_factory.make(@scene)
+    @sampler = @scene.sampler_factory.make
     
     puts "dimensions (#{@dimN}, #{@dimM}),"
     
@@ -53,16 +56,17 @@ class Renderer
     # foreach pixel
     (1..@width).each do |j|
       (1..@height).each do |i|
+        samples = @integrator.make_pixel_samples(@sampler, @scene.spp);
         # for N sampels per pixel
-        (1..samples.length) do |k|
+        (1..samples.length).each do |k|
           # make ray
-          ray = task.scene.camera.make_world_space_ray(i, j, samples[k-1])
+          ray = @scene.camera.make_world_space_ray(i, j, samples[k-1])
           
           # evaluate ray
-          ray_spectrum = task.integrator.integrate(ray)
+          ray_spectrum = @integrator.integrate(ray)
           
           # write to film
-          task.scene.film.add_sample(i.to_f+samples[k][0].to_f, j.to_f+samples[k][1].to_f, ray_spectrum)
+          @scene.film.add_sample(i.to_f+samples[k-1][0].to_f, j.to_f+samples[k-1][1].to_f, ray_spectrum)
         end
       end
     end

@@ -7,7 +7,7 @@ class DebugIntegratorFactory
   end
   
   def make scene
-    DebugIntegrator.new(scenes)
+    DebugIntegrator.new(scene)
   end
   
 end

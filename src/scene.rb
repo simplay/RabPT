@@ -11,7 +11,7 @@ module Scene
                 :width,
                 :height,
                 :camera,
-                :integratior_factory,
+                :integrator_factory,
                 :sampler_factory,
                 :root,
                 :light_list,
