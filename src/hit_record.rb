@@ -60,12 +60,15 @@ class HitRecord
     args.each do |key, value|
       send("#{key}=",value)
     end
-    @tangent = Vector3f.new(0.0, 1.0, 0.0) unless @tangent
-    @bitangent = @tangent.cross(normal)
-    @tbs = Matrix3f.new(nil, nil, nil)
-    @tbs.set_column_at(1, @tangent)
-    @tbs.set_column_at(2, @bitangent)
-    @tbs.set_column_at(3, @normal)    
+    
+    unless @normal.nil
+      @tangent = Vector3f.new(0.0, 1.0, 0.0) unless @tangent
+      @bitangent = @tangent.cross(normal)
+      @tbs = Matrix3f.new(nil, nil, nil)
+      @tbs.set_column_at(1, @tangent)
+      @tbs.set_column_at(2, @bitangent)
+      @tbs.set_column_at(3, @normal)
+    end    
   end
   
 
