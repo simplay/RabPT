@@ -10,23 +10,24 @@ java_import 'java.util.concurrent.TimeUnit'
 
 
 class RenderingTask
-  attr_accessor :shared_image,
-                :shared_colors,
-                :x_range, :y_range
+  attr_accessor :x_range, :y_range,
+                :scene,
+                :integrator
                 
   include Callable
   
-  def initialize(block, image)
+  def initialize(block, scene, integtrator)
     unless block.nil?
       @x_range = (block[:xmin]..block[:xmax])
       @y_range = (block[:ymin]..block[:ymax])
     end
-    @shared_image = image
+    @scene = scene
+    @integrator = integtrator
   end
   
   # execute task
   def call
-    puts "#TaskNumber #{@shared_image} is executed"
+    puts "#TaskNumber is executed"
   end
   
   private
@@ -64,5 +65,48 @@ class RenderingTask
     f_value = 1.0 if f_value > 1.0
     (f_value*255).to_i
   end
+  
+  
+  
+  
+  
+  
+  def compute_contribution
+    # foreach pixel
+    # counter = 0
+    # print "Progress: "
+    @x_range.each do |j|
+      @y_range.each do |i|
+        samples = @integrator.make_pixel_samples(@sampler, @scene.spp);
+        # for N sampels per pixel
+        (1..samples.length).each do |k|
+          
+          # make ray
+          ray = @scene.camera.make_world_space_ray(i, j, samples[k-1])
+          
+          # evaluate ray
+          ray_spectrum = @integrator.integrate(ray)
+          
+          # write to film
+          @scene.film.add_sample(i.to_f+samples[k-1][0].to_f, j.to_f+samples[k-1][1].to_f, ray_spectrum)
+          
+        end
+        # counter += 1
+        # print progress(counter)
+      end     
+    end
+  end
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
 end

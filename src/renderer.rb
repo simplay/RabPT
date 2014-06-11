@@ -77,16 +77,18 @@ class Renderer
     num_tasks = (@scene.height / delta_height).to_i
     reminder_rows = @scene.height - num_tasks*delta_height
     num_tasks.times do |k|
-      block[:ymin] = k*delta_height
+      block[:ymin] = k*delta_height+1
       block[:ymax] = (k+1)*delta_height
-      tasks << FutureTask.new(RenderingTask.new(block, Random.rand(200) ))
+      puts "row from:" + block[:ymin].to_s + " to:" + block[:ymax].to_s
+      tasks << FutureTask.new(RenderingTask.new(block, @scene, @integrator))
     end
     
     # handle reminder rows
     if (reminder_rows > 0)
-      block[:ymin] = @scene.height-reminder_rows
-      block[:ymax] = @scene.height
-      tasks << FutureTask.new(RenderingTask.new(block, Random.rand(200) ))
+      block[:ymin] = @scene.height-reminder_rows+1
+      block[:ymax] = @scene.height+1
+      puts "row from:" + block[:ymin].to_s + " to:" + block[:ymax].to_s
+      tasks << FutureTask.new(RenderingTask.new(block, @scene, @integrator))
     end
     
     tasks.each do |task|
