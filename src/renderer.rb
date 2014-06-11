@@ -1,9 +1,21 @@
 class Renderer
   require File.join(File.dirname(__FILE__), 'scenes/debug_scene.rb')
   require_relative 'scenes/camera_test_scene.rb'
-  require 'java' if (RUBY_PLATFORM == "java")
+  require_relative 'rendering_task.rb'
   require 'pry'
   include ImageRuby
+  
+  
+  if (RUBY_PLATFORM == "java")
+    require 'java'
+    # 'java_import' is used to import java classes
+    java_import 'java.util.concurrent.Callable'
+    java_import 'java.util.concurrent.FutureTask'
+    java_import 'java.util.concurrent.LinkedBlockingQueue'
+    java_import 'java.util.concurrent.ThreadPoolExecutor'
+    java_import 'java.util.concurrent.TimeUnit'
+  end
+  
 
   attr_accessor :image, :dimN, :dimM, :scene,
                 :integrator, :sampler
@@ -46,8 +58,34 @@ class Renderer
   # TODO: java multithreading magic goes here.
   def render_parallel
     puts "rendering in java mode"
-    compute_contribution
-    write_image
+    # compute_contribution
+    # write_image
+    # Create a thread pool
+    executor = ThreadPoolExecutor.new(4, # core_pool_treads
+                                      4, # max_pool_threads
+                                      60, # keep_alive_time
+                                      TimeUnit::SECONDS,
+                                      LinkedBlockingQueue.new)
+    num_tests = 20
+    num_threads = 4
+    total_time = 0.0
+    
+    num_tests.times do |i|
+      tasks = []
+      num_threads.times do
+      task = FutureTask.new(RenderingTask.new)
+        executor.execute(task)
+        tasks << task
+      end
+      
+      tasks.each do |t|
+        t.get
+      end
+      
+      
+    end
+    executor.shutdown()
+
   end
   
   def write_image
