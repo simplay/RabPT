@@ -27,6 +27,7 @@ class Renderer
     rescue
       print "Could no generate the image"
     end
+    puts "\nimages created"
   end
   
   private 
@@ -69,6 +70,8 @@ class Renderer
   
   def compute_contribution
     # foreach pixel
+    counter = 0
+    print "Progress: "
     (1..@scene.width).each do |j|
       (1..@scene.height).each do |i|
         samples = @integrator.make_pixel_samples(@sampler, @scene.spp);
@@ -83,12 +86,24 @@ class Renderer
           
           # write to film
           @scene.film.add_sample(i.to_f+samples[k-1][0].to_f, j.to_f+samples[k-1][1].to_f, ray_spectrum)
+          
         end
-      end
+        counter += 1
+        print progress(counter)
+      end     
     end
   end
   
+  def interval
+    stars = 20
+    pixel_count = @scene.width * @scene.height
+    pixels_per_star = (pixel_count / stars).to_i
+    (pixels_per_star < 1)? 1 : pixels_per_star
+  end
   
+  def progress pixels
+    (pixels % interval == 0) ? "* " : ""
+  end
   
   # renders an n x m pixel region
   # which is spanned bz 
