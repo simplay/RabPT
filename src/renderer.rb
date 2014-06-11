@@ -31,11 +31,9 @@ class Renderer
     @scene = CameraTestScene.new(@dimM, @dimN, args[:SPP].to_i || 1)
     @integrator = @scene.integrator_factory.make(@scene)
     @sampler = @scene.sampler_factory.make
-    
-    puts "dimensions (#{@dimN}, #{@dimM}),"
     @image = Image.new(@dimN, @dimM)
 
-    puts "start rendering pixels"
+    puts "start rendering pixels (#{@dimN}, #{@dimM})"
     init_rendering_process
     
     begin
@@ -52,21 +50,14 @@ class Renderer
     # are we using jruby
     if (RUBY_PLATFORM == "java")
       render_parallel
-      write_image
     else
       compute_contribution
-      write_image
     end
-
+    write_image
   end
   
-  # TODO: java multithreading magic goes here.
   def render_parallel
- 
     puts "rendering in java mode"
-    # compute_contribution
-    # write_image
-    # Create a thread pool
     executor = ThreadPoolExecutor.new(CORE_POOL_THREADS, # core_pool_treads
                                       MAX_POOL_THREADS, # max_pool_threads
                                       60, # keep_alive_time
@@ -82,7 +73,6 @@ class Renderer
     num_tasks.times do |k|
       block[:ymin] = k*delta_height+1
       block[:ymax] = (k+1)*delta_height
-      #puts "row from:" + block[:ymin].to_s + " to:" + block[:ymax].to_s
       tasks << FutureTask.new(RenderingTask.new(block, @scene, @integrator, @sampler))
     end
     
@@ -90,15 +80,16 @@ class Renderer
     if (reminder_rows > 0)
       block[:ymin] = @scene.height-reminder_rows+1
       block[:ymax] = @scene.height+1
-      #puts "row from:" + block[:ymin].to_s + " to:" + block[:ymax].to_s
       tasks << FutureTask.new(RenderingTask.new(block, @scene, @integrator, @sampler))
     end
+    
     print "Progress: "
     tasks.each do |task|
       executor.execute(task)
     end
     
     # Wait for all threads to complete
+    # before writing the output image
     tasks.each do |t|
       t.get
     end
@@ -161,8 +152,6 @@ class Renderer
   def progress pixels
     (pixels % interval == 0) ? "* " : ""
   end
-  
-
   
   # TODO write a toneMAPPER istead using this shit
   # mapping from float unit range
