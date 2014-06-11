@@ -5,6 +5,10 @@ class Renderer
   require 'pry'
   include ImageRuby
   
+  CORE_POOL_THREADS = 8
+  MAX_POOL_THREADS = 16
+  ROW_NUMBER_PER_THREAD = 10
+  PROGRESS_STAR_COUNT = 20
   
   if (RUBY_PLATFORM == "java")
     require 'java'
@@ -63,8 +67,8 @@ class Renderer
     # compute_contribution
     # write_image
     # Create a thread pool
-    executor = ThreadPoolExecutor.new(8, # core_pool_treads
-                                      16, # max_pool_threads
+    executor = ThreadPoolExecutor.new(CORE_POOL_THREADS, # core_pool_treads
+                                      MAX_POOL_THREADS, # max_pool_threads
                                       60, # keep_alive_time
                                       TimeUnit::SECONDS,
                                       LinkedBlockingQueue.new)
@@ -72,7 +76,7 @@ class Renderer
     tasks = []
     block[:xmin] = 1
     block[:xmax] = @scene.width
-    delta_height = 10
+    delta_height = ROW_NUMBER_PER_THREAD
     num_tasks = (@scene.height / delta_height).to_i
     reminder_rows = @scene.height - num_tasks*delta_height
     num_tasks.times do |k|
@@ -148,7 +152,7 @@ class Renderer
   end
   
   def interval
-    stars = 20
+    stars = PROGRESS_STAR_COUNT
     pixel_count = @scene.width * @scene.height
     pixels_per_star = (pixel_count / stars).to_i
     (pixels_per_star < 1)? 1 : pixels_per_star
