@@ -1,6 +1,7 @@
 class Renderer
   require File.join(File.dirname(__FILE__), 'scenes/debug_scene.rb')
   require_relative 'scenes/camera_test_scene.rb'
+  require 'java' if (RUBY_PLATFORM == "java")
   require 'pry'
   include ImageRuby
 
