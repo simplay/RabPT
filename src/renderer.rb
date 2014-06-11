@@ -73,7 +73,7 @@ class Renderer
     num_tests.times do |i|
       tasks = []
       num_threads.times do
-      task = FutureTask.new(RenderingTask.new)
+      task = FutureTask.new(RenderingTask.new(nil, Random.rand(200) ))
         executor.execute(task)
         tasks << task
       end
@@ -143,32 +143,7 @@ class Renderer
     (pixels % interval == 0) ? "* " : ""
   end
   
-  # renders an n x m pixel region
-  # which is spanned bz 
-  # Render all pixel in the rectangle:
-  # (x_min, y_max) * * * (x_max, y_may)
-  #       *                     * 
-  #       *                     *
-  #       *                     *
-  # (x_min, y_min) * * * (x_max, y_min)
-  # spanned by x_interval, y_interval
-  # x_interval = [x_min, x_max]
-  # y_interval = [y_min, y_max]
-  # using the passed color values 
-  def render_cluster(x_interval, y_interval, colors)
-    idx = 0
-    x_intervalE = (x_interval[0]..x_interval[1])
-    y_intervalE = (y_interval[0]..y_interval[1])
-    
-    x_intervalE.each do |n| 
-      y_intervalE.each do |m|  
-        pixel = Image.new(1, 1, colors[idx])
-        @image[m..m, n..n] = pixel 
-        idx = idx + 1
-      end
-    end
-    
-  end
+
   
   # TODO write a toneMAPPER istead using this shit
   # mapping from float unit range
