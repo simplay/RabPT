@@ -1,6 +1,6 @@
 # used to call java code
 require 'java'
-
+require 'pry'
 # 'java_import' is used to import java classes
 java_import 'java.util.concurrent.Callable'
 java_import 'java.util.concurrent.FutureTask'
@@ -16,10 +16,10 @@ class RenderingTask
                 
   include Callable
   
-  def initialize(block_range, image)
-    unless block_range.nil?
-      @x_range = (xmin..xmax)
-      @y_range = (ymin..ymax)
+  def initialize(block, image)
+    unless block.nil?
+      @x_range = (block[:xmin]..block[:xmax])
+      @y_range = (block[:ymin]..block[:ymax])
     end
     @shared_image = image
   end

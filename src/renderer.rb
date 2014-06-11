@@ -57,6 +57,7 @@ class Renderer
   
   # TODO: java multithreading magic goes here.
   def render_parallel
+ 
     puts "rendering in java mode"
     # compute_contribution
     # write_image
@@ -68,26 +69,30 @@ class Renderer
                                       LinkedBlockingQueue.new)
     num_tests = 20
     num_threads = 4
-    
-    
-    #first step set a matrix to 1 (from initial zero values)
-    
-    total_time = 0.0
-    
-    num_tests.times do |i|
-      tasks = []
-      num_threads.times do
-      task = FutureTask.new(RenderingTask.new(nil, Random.rand(200) ))
-        executor.execute(task)
-        tasks << task
-      end
-      
-      # tasks.each do |t|
-      #   t.get
-      # end
-      
-      
+    block = {}
+    tasks = []
+    block[:xmin] = 1
+    block[:xmax] = @scene.width
+    delta_height = 5
+    num_tasks = (@scene.height / delta_height).to_i
+    reminder_rows = @scene.height - num_tasks*delta_height
+    num_tasks.times do |k|
+      block[:ymin] = k*delta_height
+      block[:ymax] = (k+1)*delta_height
+      tasks << FutureTask.new(RenderingTask.new(block, Random.rand(200) ))
     end
+    
+    # handle reminder rows
+    if (reminder_rows > 0)
+      block[:ymin] = @scene.height-reminder_rows
+      block[:ymax] = @scene.height
+      tasks << FutureTask.new(RenderingTask.new(block, Random.rand(200) ))
+    end
+    
+    tasks.each do |task|
+      executor.execute(task)
+    end
+    
     executor.shutdown()
 
   end
