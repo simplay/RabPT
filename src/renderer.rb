@@ -31,6 +31,19 @@ class Renderer
   private 
   
   def init_rendering_process
+    # are we using jruby
+    if (RUBY_PLATFORM == "java")
+      render_parallel
+    else
+      compute_contribution
+      write_image
+    end
+
+  end
+  
+  # TODO: java multithreading magic goes here.
+  def render_parallel
+    puts "rendering in java mode"
     compute_contribution
     write_image
   end
