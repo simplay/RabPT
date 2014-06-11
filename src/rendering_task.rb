@@ -12,22 +12,25 @@ java_import 'java.util.concurrent.TimeUnit'
 class RenderingTask
   attr_accessor :x_range, :y_range,
                 :scene,
-                :integrator
+                :integrator,
+                :sampler
                 
   include Callable
   
-  def initialize(block, scene, integtrator)
+  def initialize(block, scene, integtrator, sampler)
     unless block.nil?
       @x_range = (block[:xmin]..block[:xmax])
       @y_range = (block[:ymin]..block[:ymax])
     end
     @scene = scene
     @integrator = integtrator
+    @sampler = sampler
   end
   
   # execute task
   def call
-    puts "#TaskNumber is executed"
+    compute_contribution
+    print '* '
   end
   
   private

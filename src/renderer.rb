@@ -35,7 +35,7 @@ class Renderer
     init_rendering_process
     
     begin
-      @image.save("output/raytraced_t2.bmp", :bmp)
+      @image.save("output/parallel.bmp", :bmp)
     rescue
       print "Could no generate the image"
     end
@@ -48,6 +48,7 @@ class Renderer
     # are we using jruby
     if (RUBY_PLATFORM == "java")
       render_parallel
+      write_image
     else
       compute_contribution
       write_image
@@ -73,14 +74,14 @@ class Renderer
     tasks = []
     block[:xmin] = 1
     block[:xmax] = @scene.width
-    delta_height = 5
+    delta_height = 1
     num_tasks = (@scene.height / delta_height).to_i
     reminder_rows = @scene.height - num_tasks*delta_height
     num_tasks.times do |k|
       block[:ymin] = k*delta_height+1
       block[:ymax] = (k+1)*delta_height
       puts "row from:" + block[:ymin].to_s + " to:" + block[:ymax].to_s
-      tasks << FutureTask.new(RenderingTask.new(block, @scene, @integrator))
+      tasks << FutureTask.new(RenderingTask.new(block, @scene, @integrator, @sampler))
     end
     
     # handle reminder rows
@@ -88,11 +89,16 @@ class Renderer
       block[:ymin] = @scene.height-reminder_rows+1
       block[:ymax] = @scene.height+1
       puts "row from:" + block[:ymin].to_s + " to:" + block[:ymax].to_s
-      tasks << FutureTask.new(RenderingTask.new(block, @scene, @integrator))
+      tasks << FutureTask.new(RenderingTask.new(block, @scene, @integrator, @sampler))
     end
-    
+    print "Progress: "
     tasks.each do |task|
       executor.execute(task)
+    end
+    
+    
+    tasks.each do |t|
+      t.get
     end
     
     executor.shutdown()
