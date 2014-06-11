@@ -63,24 +63,22 @@ class Renderer
     # compute_contribution
     # write_image
     # Create a thread pool
-    executor = ThreadPoolExecutor.new(4, # core_pool_treads
-                                      4, # max_pool_threads
+    executor = ThreadPoolExecutor.new(8, # core_pool_treads
+                                      16, # max_pool_threads
                                       60, # keep_alive_time
                                       TimeUnit::SECONDS,
                                       LinkedBlockingQueue.new)
-    num_tests = 20
-    num_threads = 4
     block = {}
     tasks = []
     block[:xmin] = 1
     block[:xmax] = @scene.width
-    delta_height = 1
+    delta_height = 10
     num_tasks = (@scene.height / delta_height).to_i
     reminder_rows = @scene.height - num_tasks*delta_height
     num_tasks.times do |k|
       block[:ymin] = k*delta_height+1
       block[:ymax] = (k+1)*delta_height
-      puts "row from:" + block[:ymin].to_s + " to:" + block[:ymax].to_s
+      #puts "row from:" + block[:ymin].to_s + " to:" + block[:ymax].to_s
       tasks << FutureTask.new(RenderingTask.new(block, @scene, @integrator, @sampler))
     end
     
@@ -88,7 +86,7 @@ class Renderer
     if (reminder_rows > 0)
       block[:ymin] = @scene.height-reminder_rows+1
       block[:ymax] = @scene.height+1
-      puts "row from:" + block[:ymin].to_s + " to:" + block[:ymax].to_s
+      #puts "row from:" + block[:ymin].to_s + " to:" + block[:ymax].to_s
       tasks << FutureTask.new(RenderingTask.new(block, @scene, @integrator, @sampler))
     end
     print "Progress: "
@@ -96,7 +94,7 @@ class Renderer
       executor.execute(task)
     end
     
-    
+    # Wait for all threads to complete
     tasks.each do |t|
       t.get
     end
