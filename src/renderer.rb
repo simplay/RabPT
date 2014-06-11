@@ -90,8 +90,11 @@ class Renderer
     
     # Wait for all threads to complete
     # before writing the output image
+    @count = java.util.concurrent.atomic.AtomicInteger.new
     tasks.each do |t|
+      progress2
       t.get
+      
     end
     
     executor.shutdown()
@@ -142,6 +145,16 @@ class Renderer
     end
   end
   
+  def interval2
+    stars = PROGRESS_STAR_COUNT
+    
+    num_tasks = (@scene.height / ROW_NUMBER_PER_THREAD).to_i
+    reminder_rows = @scene.height - num_tasks*ROW_NUMBER_PER_THREAD
+    num_tasks += 1 if reminder_rows > 0
+    pixels_per_star = (num_tasks / stars).to_i
+    (pixels_per_star < 1)? 1 : pixels_per_star
+  end
+  
   def interval
     stars = PROGRESS_STAR_COUNT
     pixel_count = @scene.width * @scene.height
@@ -149,7 +162,12 @@ class Renderer
     (pixels_per_star < 1)? 1 : pixels_per_star
   end
   
-  def progress pixels
+  def progress2
+    (@count.incrementAndGet % interval2 == 0) ? "* " : ""
+    print "* " if (@count.to_s.to_i % interval2 == 0)
+  end
+  
+  def progress(pixels)
     (pixels % interval == 0) ? "* " : ""
   end
   

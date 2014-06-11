@@ -30,7 +30,7 @@ class RenderingTask
   # execute task
   def call
     compute_contribution
-    print '* '
+    # print '* '
   end
   
   private
