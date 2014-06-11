@@ -11,27 +11,28 @@ java_import 'java.util.concurrent.TimeUnit'
 
 class RenderingTask
   attr_accessor :shared_image,
-                :shared_data,
-                :xmin, :xmax,
-                :ymin, :max
+                :shared_colors,
+                :x_range, :y_range
+                
+  include Callable
   
   def initialize(block_range, image)
-    # @xmin = block_range[:xmin]
-    # @xmax = block_range[:xmax]
-    # @ymin = block_range[:ymin]
-    # @ymax = block_range[:ymax]
+    unless block_range.nil?
+      @x_range = (xmin..xmax)
+      @y_range = (ymin..ymax)
+    end
     @shared_image = image
   end
   
-  include Callable
+  # execute task
   def call
-    puts "#Thread #{@shared_image} is running"
+    puts "#TaskNumber #{@shared_image} is executed"
   end
   
   private
   
   # renders an n x m pixel region
-  # which is spanned bz 
+  # which is spanned by
   # Render all pixel in the rectangle:
   # (x_min, y_max) * * * (x_max, y_may)
   #       *                     * 
@@ -39,19 +40,17 @@ class RenderingTask
   #       *                     *
   # (x_min, y_min) * * * (x_max, y_min)
   # spanned by x_interval, y_interval
-  # x_interval = [x_min, x_max]
-  # y_interval = [y_min, y_max]
+  # @x_range = [x_min, x_max]
+  # @y_range = [y_min, y_max]
   # using the passed color values 
   def render_cluster(x_interval, y_interval, colors)
-    idx = 0
-    x_intervalE = (x_interval[0]..x_interval[1])
-    y_intervalE = (y_interval[0]..y_interval[1])
-    
-    x_intervalE.each do |n| 
-      y_intervalE.each do |m|  
-        pixel = Image.new(1, 1, colors[idx])
-        @shared_image[m, n] = pixel 
-        idx = idx + 1
+    @x_range.each do |m| 
+      @y_range.each do |n|
+        pixel_color = @shared_colors[m][n]
+        x = self.toInt256(pixel_color.r)
+        y = self.toInt256(pixel_color.g)
+        z = self.toInt256(pixel_color.b)
+        @shared_image[m, n] = Color.from_rgb(x,y,z) 
       end
     end
     

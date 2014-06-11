@@ -68,6 +68,10 @@ class Renderer
                                       LinkedBlockingQueue.new)
     num_tests = 20
     num_threads = 4
+    
+    
+    #first step set a matrix to 1 (from initial zero values)
+    
     total_time = 0.0
     
     num_tests.times do |i|
@@ -78,9 +82,9 @@ class Renderer
         tasks << task
       end
       
-      tasks.each do |t|
-        t.get
-      end
+      # tasks.each do |t|
+      #   t.get
+      # end
       
       
     end
