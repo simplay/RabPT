@@ -1,7 +1,7 @@
 class Renderer
   require File.join(File.dirname(__FILE__), 'scenes/debug_scene.rb')
   require_relative 'scenes/camera_test_scene.rb'
-  require_relative 'rendering_task.rb'
+
   require 'pry'
   include ImageRuby
   
@@ -9,9 +9,11 @@ class Renderer
   MAX_POOL_THREADS = 16
   ROW_NUMBER_PER_THREAD = 10
   PROGRESS_STAR_COUNT = 20
-  
+
   if (RUBY_PLATFORM == "java")
     require 'java'
+    require_relative 'rendering_task.rb'
+
     # 'java_import' is used to import java classes
     java_import 'java.util.concurrent.Callable'
     java_import 'java.util.concurrent.FutureTask'
