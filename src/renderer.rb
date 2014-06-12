@@ -39,7 +39,7 @@ class Renderer
     init_rendering_process
     
     begin
-      @image.save("output/parallel.bmp", :bmp)
+      @image.save("output/parallel2.bmp", :bmp)
     rescue
       print "Could no generate the image"
     end

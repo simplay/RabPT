@@ -17,7 +17,7 @@ class Ray
 		if (@should_pertubate) 
       @origin = @direction.s_copy.scale(EPSILON).add(@origin)
     end
-    @t = 0.0
+    # @t = 0.0
   end
   
   # get point on ray for a given paramter t.
