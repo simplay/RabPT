@@ -185,6 +185,12 @@ class Matrix3f
     (det == 0)
   end
   
+  def to_s
+    str = ""
+    2.times {|idx| str << "#{row(idx+1).to_s}\n"}
+    str << row(3).to_s
+  end
+  
   private
   
   def entry_parser at 

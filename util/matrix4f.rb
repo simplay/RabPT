@@ -323,6 +323,12 @@ class Matrix4f
     (s1*det1 - s2*det2 + s3*det3 - s4*det4)
   end
   
+  def to_s
+    str = ""
+    3.times {|idx| str << "#{row(idx+1).to_s}\n"}
+    str << row(4).to_s
+  end
+  
   private
   
   def entry_parser at 
