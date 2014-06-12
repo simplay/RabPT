@@ -3,12 +3,16 @@ require "imageruby"
 require "pry"
 require File.join(File.dirname(__FILE__), 'src/renderer.rb')
 
-#require 'path/to/mycode.jar'
+KEYS = [:N, :M, :SPP, :file_name]
 
-hash = {:N => ARGV[0].to_i, 
-        :M => ARGV[1].to_i, 
-        :SPP => ARGV[2],
-        :file_name => ARGV[3]}
+arg_count = ARGV.length
+key_count = KEYS.length
+raise "too few arguments provided" if arg_count < 2
+raise "too many arguments provided" if arg_count > key_count
 
-Renderer.new hash
+user_args = {}
+arg_count.times do |idx|
+  user_args[KEYS[idx]] = ARGV[idx]
+end  
 
+Renderer.new user_args

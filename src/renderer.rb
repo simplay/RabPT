@@ -26,8 +26,8 @@ class Renderer
                 :integrator, :sampler
   
   def initialize(args={})
-    @dimN = args[:N]
-    @dimM = args[:M]
+    @dimN = args[:N].to_i
+    @dimM = args[:M].to_i
     
     @scene = CameraTestScene.new(@dimM, @dimN, args[:SPP].to_i || 1)
     @integrator = @scene.integrator_factory.make(@scene)
