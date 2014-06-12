@@ -1,7 +1,6 @@
 class Renderer
   require File.join(File.dirname(__FILE__), 'scenes/debug_scene.rb')
   require_relative 'scenes/camera_test_scene.rb'
-
   require 'pry'
   include ImageRuby
   
@@ -9,6 +8,7 @@ class Renderer
   MAX_POOL_THREADS = 16
   ROW_NUMBER_PER_THREAD = 10
   PROGRESS_STAR_COUNT = 20
+  OUTPUT_PATH = "output/"
 
   if (RUBY_PLATFORM == "java")
     require 'java'
@@ -21,7 +21,6 @@ class Renderer
     java_import 'java.util.concurrent.ThreadPoolExecutor'
     java_import 'java.util.concurrent.TimeUnit'
   end
-  
 
   attr_accessor :image, :dimN, :dimM, :scene,
                 :integrator, :sampler
@@ -29,7 +28,7 @@ class Renderer
   def initialize(args={})
     @dimN = args[:N]
     @dimM = args[:M]
-
+    
     @scene = CameraTestScene.new(@dimM, @dimN, args[:SPP].to_i || 1)
     @integrator = @scene.integrator_factory.make(@scene)
     @sampler = @scene.sampler_factory.make
@@ -37,9 +36,11 @@ class Renderer
     
     puts "start rendering pixels (#{@dimN}, #{@dimM})"
     init_rendering_process
-    
+
     begin
-      @image.save("output/parallel2.bmp", :bmp)
+      user_input = (args[:file_name].nil?) ? "" : "_#{args[:file_name].to_s}"
+      file_name = @scene.file_name + user_input
+      @image.save("#{OUTPUT_PATH}#{file_name}.bmp", :bmp)
     rescue
       print "Could no generate the image"
     end

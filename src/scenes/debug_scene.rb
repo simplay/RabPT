@@ -28,4 +28,8 @@ class DebugScene
     @camera = Camera.new camera_args
 
   end
+  
+  def base_name
+    "debug_scene"
+  end
 end

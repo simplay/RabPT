@@ -7,7 +7,8 @@ require File.join(File.dirname(__FILE__), 'src/renderer.rb')
 
 hash = {:N => ARGV[0].to_i, 
         :M => ARGV[1].to_i, 
-        :SPP => ARGV[2]}
+        :SPP => ARGV[2],
+        :file_name => ARGV[3]}
 
 Renderer.new hash
 

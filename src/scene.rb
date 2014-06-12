@@ -7,8 +7,7 @@ module Scene
   
   require_relative '../util/matrix4f.rb'
   # Defines scene properties that need to be made accessible to the renderer.
-  attr_accessor :output_filename,
-                :spp,
+  attr_accessor :spp,
                 :width,
                 :height,
                 :camera,
@@ -20,6 +19,14 @@ module Scene
   
   def prepare
     raise "not implemented yet"
+  end
+  
+  def base_name
+    raise "not implemented yet"
+  end
+  
+  def file_name
+    "#{base_name}_#{@spp}spp_#{@width}w_#{@height}h"
   end
   
 end

@@ -19,7 +19,6 @@ class CameraTestScene
     @width = width
     @height = height
     @spp = spp
-    @output_filename = "camera_test_scene_#{spp}samples"
 
     eye = Vector3f.new(0.5, 0.5, 3.0)
     look_at = Vector3f.new(0.5, 0.0, 0.0)
@@ -54,5 +53,9 @@ class CameraTestScene
     
     @light_list = LightList.new
     @light_list.put(PointLight.new(Vector3f.new(0.0, 0.0, 3.0), Spectrum.new(10.0)))
+  end
+  
+  def base_name
+    "camera_test_scene"
   end
 end
