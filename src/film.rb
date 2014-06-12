@@ -4,6 +4,8 @@ module Film
   # filtered using some filter (depending on the implementation of this 
   # interface) when added.
   
+  require_relative 'tone_mapper.rb'
+  
   # Add a sample to the film at a specified floating point position. The position
   # coordinates are assumed to be in image space.
   # 
@@ -12,6 +14,15 @@ module Film
   # @param spectrum sample to be added 
   def add_sample(x, y, spectrum)
     raise "not implemented yet"
+  end
+  
+  def post_process method
+    case method
+    when :clamp
+      ToneMapper.new(self)
+    else
+      puts "Error: No post-processing #{method} available"
+    end
   end
   
 end

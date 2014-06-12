@@ -55,6 +55,7 @@ class Renderer
     else
       compute_contribution
     end
+    @scene.film.post_process(:clamp)
     write_image
   end
   
@@ -178,7 +179,6 @@ class Renderer
   # to int 0-255 range
   # f: [0.0,1.0] -> [0,255]
   def self.toInt256 f_value
-    f_value = 1.0 if f_value > 1.0
     (f_value*255).to_i
   end
   
