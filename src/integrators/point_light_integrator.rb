@@ -87,16 +87,15 @@ class PointLightIntegrator
      ray_args = {
        :origin => hit_position,
        :direction => light_dir,
-       :t => t
+       :t => t,
+       :should_pertubate => true
      }
   
      shadow_ray = Ray.new ray_args
-     
-     
      shadow_hit = @root.intersect(shadow_ray)
      
      if(shadow_hit != nil)
-       dist_shad_hit_view_hit2 = shadow_hit.position.dot(hit_position)
+       dist_shad_hit_view_hit2 = shadow_hit.position.dist_to_sqr(hit_position)
        if(shadow_hit.material.casts_shadows? && dist_shad_hit_view_hit2 < eps)
          is_shaddowed = true
        end

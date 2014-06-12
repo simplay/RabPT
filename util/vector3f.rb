@@ -49,6 +49,14 @@ class Vector3f
     dot self
   end
   
+  # computed squared dotproduct of 
+  # distance vector, whereat
+  # distacne is from me to other 
+  # <(self-other),(self-other)>^2
+  def dist_to_sqr(other)
+    s_copy.sub(other).dotted
+  end
+  
   # compute euclidian distance between this and other
   def norm_2 other
     dot = dot(other)

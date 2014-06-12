@@ -51,23 +51,17 @@ class Camera
   # @param sample random sample that the camera can use to generate a ray
   # float array.   
   # @return the ray in world coordinates
-  # TODO check this transformation busines carefully
   def make_world_space_ray(i, j, sample)
-    u_ij = @l + (@r-@l)*(((i-1)+sample[0]) / @width.to_f)
-    v_ij = @b + (@t-@b)*(((j-1)+sample[1]) / @height.to_f)
+    u_ij = @l + (@r-@l)*((i-1) + sample[0])/@width
+    v_ij = @b + (@t-@b)*((j-1) + sample[1])/@height
     w_ij = -1.0
-    p_uvw = Vector4f.new(u_ij, v_ij, w_ij, 0.0)
-    dir = Vector4f.new(0.0, 0.0, 0.0, 0.0)
-    dir.add(p_uvw)
-    dir = dir.transform(@camera_matrix)
-    
+    p_uvw = Vector4f.new(u_ij, v_ij, w_ij, 0.0).transform(@camera_matrix)
     ray_args = {
       :origin => @eye.s_copy,
-      :direction => Vector3f.new(dir.x, dir.y, dir.z),
+      :direction => Vector3f.new(p_uvw.x, p_uvw.y, p_uvw.z),
       :t => Random.rand(1.0)
     }
     Ray.new ray_args
-  
   end
   
   private

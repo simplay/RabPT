@@ -1,10 +1,11 @@
 # a ray is defined as a parametric line p(t) = origin + t*direction
 # where t is a real-valued scalar.
-
+# TODO: Note that we bruteforcely set t to 0.0
 class Ray
+  EPSILON = 0.00001
   attr_accessor :origin,
                 :direction,
-                :depth,
+                :should_pertubate,
                 :t
   
   def initialize(args={})
@@ -12,6 +13,11 @@ class Ray
     args.each do |key, value|
       send("#{key}=", value)
     end
+    
+		if (@should_pertubate) 
+      @origin = @direction.s_copy.scale(EPSILON).add(@origin)
+    end
+    @t = 0.0
   end
   
   # get point on ray for a given paramter t.

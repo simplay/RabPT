@@ -20,7 +20,7 @@ class Plane
                 
   def initialize(material, normal, distance)
     @material = material
-    @normal = normal
+    @normal = normal.s_copy
     @distance = distance
   end
   
@@ -39,7 +39,6 @@ class Plane
       w_in.negate
       w_in.normalize
       hit_normal = @normal.s_copy
-      
       
       # TODO implement texture coordinates for planes 
       hash = {:t => t,

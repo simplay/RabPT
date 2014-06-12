@@ -35,8 +35,6 @@ class Renderer
     @sampler = @scene.sampler_factory.make
     @image = Image.new(@dimN, @dimM)
     
-    puts @scene.camera.camera_matrix.to_s
-    
     puts "start rendering pixels (#{@dimN}, #{@dimM})"
     init_rendering_process
     

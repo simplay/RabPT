@@ -47,17 +47,12 @@ class CameraTestScene
     intersectable_list.put(Plane.new(material, Vector3f.new(1.0, 0.0, 0.0), 1.0))
     intersectable_list.put(Plane.new(material, Vector3f.new(-1.0, 0.0, 0.0), 1.0))
     intersectable_list.put(Plane.new(material, Vector3f.new(0.0, 1.0, 0.0), 1.0))
-    intersectable_list.put(Plane.new(material, Vector3f.new(1.0, -1.0, 0.0), 1.0))
-    intersectable_list.put(Plane.new(material, Vector3f.new(1.0, 0.0, 1.0), 1.0))
+    intersectable_list.put(Plane.new(material, Vector3f.new(0.0, -1.0, 0.0), 1.0))
+    intersectable_list.put(Plane.new(material, Vector3f.new(0.0, 0.0, 1.0), 1.0))
     
     @root = intersectable_list
     
     @light_list = LightList.new
-    
-    @light_list.put(PointLight.new(Vector3f.new(0.5, 0.5, 2.0), Spectrum.new(1.0)))
-    
-    
-    
-    
+    @light_list.put(PointLight.new(Vector3f.new(0.0, 0.0, 3.0), Spectrum.new(10.0)))
   end
 end
