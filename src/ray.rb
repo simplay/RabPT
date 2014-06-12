@@ -5,7 +5,7 @@ class Ray
   EPSILON = 0.00001
   attr_accessor :origin,
                 :direction,
-                :should_pertubate,
+                :should_perturbate,
                 :t
   
   def initialize(args={})
@@ -14,7 +14,7 @@ class Ray
       send("#{key}=", value)
     end
     
-		if (@should_pertubate) 
+		if (@should_perturbate) 
       @origin = @direction.s_copy.scale(EPSILON).add(@origin)
     end
     # @t = 0.0

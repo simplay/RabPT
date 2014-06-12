@@ -88,7 +88,7 @@ class PointLightIntegrator
        :origin => hit_position,
        :direction => light_dir,
        :t => t,
-       :should_pertubate => true
+       :should_perturbate => true
      }
   
      shadow_ray = Ray.new ray_args
