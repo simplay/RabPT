@@ -60,7 +60,26 @@ class HitRecord
     args.each do |key, value|
       send("#{key}=",value)
     end
-    
+    compute_tangents_and_tbs
+  end
+  
+  private 
+  
+  # compute surface tangent and bitangent
+  # at given hit point iff there is a normal 
+  # at this hitpoint provided.
+  # IF the passed tangent is lin. dependent,
+  # on the passed normal, then change the value
+  # of the provided tangent by some value 
+  # which is for sure not lin. dependent.
+  # strategy: assign another value for the tangent
+  # TODO: nice to have:
+  # perturbate the provided lin. dependent tangent
+  # and assign cross(n, t_pert) the cross product
+  # local space transformation (TBS) matrix:
+  # tbs = [tangent,bitangent, normal]
+  # used to caputure small local surface details 
+  def compute_tangents_and_tbs
     unless @normal.nil?
       @tangent = Vector3f.new(1.0, 0.0, 0.0) unless @tangent
       @tangent = @tangent.cross(normal)
@@ -72,7 +91,7 @@ class HitRecord
       @tbs.set_column_at(1, @tangent)
       @tbs.set_column_at(2, @bitangent)
       @tbs.set_column_at(3, @normal)
-    end    
+    end 
   end
   
 
