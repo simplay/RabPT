@@ -42,7 +42,6 @@ class Plane
          
       tangent = Vector3f.new(1.0, 0.0, 0.0).cross(hit_normal)
       
-      # TODO implement texture coordinates for planes 
       hash = {:t => t,
               :position => intersection_position,
               :normal => hit_normal,
