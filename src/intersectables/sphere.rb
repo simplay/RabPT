@@ -26,12 +26,13 @@ class Sphere
   # @param ray incident hitting us: Ray
   # @return HitRecord
   def intersect ray
-    zeros = (find_intersection_parameter ray).sort
-    
+    # binding.pry
+    zeros = (find_intersection_parameter ray)
+    return nil if zeros.nil?
+    zeros.sort
     (zeros.first > 0.0) ? make_hit_record(ray, zeros.first) 
                         : ((zeros.last > 0.0) ? make_hit_record(ray, zeros.last) 
                                               : nil) 
-  
   end
   
   private
@@ -46,7 +47,7 @@ class Sphere
     w_in = ray.direction.s_copy.normalize.negate
     
     u = 0.5 + Math::atan2(hit_point.z, hit_point.x)/(2.0*Math::PI)
-    v = 0.5 - Math::asin(hit_point.y)/Math::PI
+    v = 0.5 - Math::asin(hit_point.y%1)/Math::PI
     
     hit_recod_hash = {
       :position => hit_point,
@@ -66,9 +67,9 @@ class Sphere
   # a*t^2 + b*t + c = 0 for t
   def find_intersection_parameter ray
     a = ray.direction.dotted
-    b = 2.0*ray.origin.s_copy.dot(@center)
-    c = @center.dotted - @radius*@radius
-    solve_quadric(a, b, c).map &:to_f
+    b = 2.0*ray.direction.s_copy.dot(ray.origin.s_copy.sub(@center))
+    c = ray.origin.s_copy.sub(@center).dotted - @radius*@radius
+    solve_quadric(a, b, c)
   end
   
   # export me asap
@@ -77,8 +78,9 @@ class Sphere
   # t_1, t_2 = -b +- sqrt(b^2 - 4ac) / 2a
   def solve_quadric(a, b, c)
     left = -b
-    right = Math::sqrt(b*b-4.0*a*c)
-    [left-right, left+right].map {|arg| arg / 2.0*a}
+    right = (b*b-4.0*a*c < 0.0)? nil : Math::sqrt(b*b-4.0*a*c)
+    return nil if right.nil?
+    [left-right, left+right].map {|arg| arg / (2.0*a)}
   end
   
 end
