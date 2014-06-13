@@ -62,8 +62,12 @@ class HitRecord
     end
     
     unless @normal.nil?
-      @tangent = Vector3f.new(0.0, 1.0, 0.0) unless @tangent
-      @bitangent = @tangent.cross(normal)
+      @tangent = Vector3f.new(1.0, 0.0, 0.0) unless @tangent
+      @tangent = @tangent.cross(normal)
+      @tangent = Vector3f.new(0.0, 1.0, 0.0).cross(normal) if @tangent.length == 0.0
+      @tangent.normalize
+      @bitangent = @tangent.cross(@normal)
+      
       @tbs = Matrix3f.new(nil, nil, nil)
       @tbs.set_column_at(1, @tangent)
       @tbs.set_column_at(2, @bitangent)
