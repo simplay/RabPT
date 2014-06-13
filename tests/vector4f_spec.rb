@@ -110,4 +110,50 @@ describe Vector4f do
       expression.should be_true
     end
     
+    it "to_a should work properly" do
+      v = Vector3f.new(-0.01452, 2.22, 3.4)
+      v_toaed = v.to_a
+      expr = (v_toaed[0] == v.x) && (v_toaed[1] == v.y) && (v_toaed[2] == v.z)
+      expr.should be_true
+    end
+    
+    it "to_s should work properly" do
+      v = Vector3f.new(-0.01452, 2.22, 3.4)
+      # from code "(#{@x},#{@y},#{@z})"
+      expr = "(-0.01452,2.22,3.4)".eql?(v.to_s)
+      expr.should be_true
+    end
+    
+    it "negate should work as expected" do
+      v = Vector3f.new(-0.01452, 2.22, -3.4)
+      v.negate
+      expr = (v.x == 0.01452) && (v.y == -2.22) && (v.z == 3.4)
+      expr.should be_true
+    end
+    
+    it "approx same as should work as expected" do
+      v = Vector3f.new(-0.01452, 2.22, -3.4)
+      a = Vector3f.new(-0.0145, 2.22, -3.401)
+      expr = !v.same_values_as?(a) && v.approx_same_values_as?(a)
+      expr.should be_true
+    end
+    
+    it "approx same is a symmetric relation" do
+      v = Vector3f.new(-0.01452, 2.22, -3.4)
+      a = Vector3f.new(-0.0145, 2.22, -3.401)
+      expr = v.approx_same_values_as?(a) && a.approx_same_values_as?(v)
+      expr.should be_true
+    end
+    
+    it "dotted works as expected" do
+      v = Vector3f.new(2.0, 3.0, 4.0)
+      # v.dotted = 2^2 + 3^2 + 4^2 =  4 + 9 + 16
+      v.dotted.should eq(29.0)
+    end
+    
+    it "im approximitely the same as myself" do
+      v = Vector3f.new(-0.01452, 2.22, -3.4)
+      v.approx_same_values_as?(v).should be_true
+    end
+    
 end
