@@ -1,9 +1,9 @@
-# Stores information about a ray-surface intersection. This information 
-# is typically used for shading.
-
-
+# TODO: make bitangent only be accessable but non-writtable.
 
 class HitRecord
+  # Stores information about a ray-surface intersection. This information 
+  # is typically used for shading.
+  
   require File.join(File.dirname(__FILE__), '../util/vector2f.rb')
   require File.join(File.dirname(__FILE__), '../util/vector3f.rb')
   require File.join(File.dirname(__FILE__), '../util/matrix3f.rb')
@@ -86,7 +86,6 @@ class HitRecord
       @tangent = Vector3f.new(0.0, 1.0, 0.0).cross(normal) if @tangent.length == 0.0
       @tangent.normalize
       @bitangent = @tangent.cross(@normal)
-      
       @tbs = Matrix3f.new(nil, nil, nil)
       @tbs.set_column_at(1, @tangent)
       @tbs.set_column_at(2, @bitangent)

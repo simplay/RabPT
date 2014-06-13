@@ -39,17 +39,28 @@ class Plane
       w_in.negate
       w_in.normalize
       hit_normal = @normal.s_copy
+         
+      tangent = Vector3f.new(1.0, 0.0, 0.0).cross(hit_normal)
       
       # TODO implement texture coordinates for planes 
       hash = {:t => t,
               :position => intersection_position,
               :normal => hit_normal,
+              :tangent => tangent,
               :w => w_in,
               :intersectable => self,
               :material => @material,
               :u => 0.0,
               :v => 0.0}
+
       hit_record = HitRecord.new hash
+      tbs_inv = hit_record.tbs.s_copy.invert
+      localspace_position = intersection_position.s_copy.transform(tbs_inv)
+      
+      # apply clipping by applying modulo 1
+      hit_record.u = localspace_position.x.abs % 1 
+      hit_record.v = localspace_position.y.abs % 1 
+      
       return (t > 0.0) ? hit_record : nil 
     end
     return nil

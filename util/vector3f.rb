@@ -15,7 +15,7 @@ class Vector3f
   end
   
   def to_a
-    [@x, @y, @zz]
+    [@x, @y, @z]
   end
   
   # substract other to this
@@ -96,7 +96,7 @@ class Vector3f
   end
   
   def same_values_as? other
-    (@x == other.x) && (@y == other.y) && (@zz == other.zz)
+    (@x == other.x) && (@y == other.y) && (@z == other.z)
   end
   
   def approx_same_values_as? other
