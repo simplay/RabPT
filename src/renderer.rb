@@ -1,6 +1,7 @@
 class Renderer
   require File.join(File.dirname(__FILE__), 'scenes/debug_scene.rb')
   require_relative 'scenes/camera_test_scene.rb'
+  require_relative 'scenes/blinn_test_scene.rb'
   require 'pry'
   include ImageRuby
   
@@ -29,7 +30,10 @@ class Renderer
     @dimN = args[:N].to_i
     @dimM = args[:M].to_i
     
-    @scene = CameraTestScene.new(@dimM, @dimN, args[:SPP].to_i || 1)
+    # @scene = CameraTestScene.new(@dimM, @dimN, args[:SPP].to_i || 1)
+    
+    @scene = BlinnTestScene.new(@dimM, @dimN, args[:SPP].to_i || 1)
+    
     @integrator = @scene.integrator_factory.make(@scene)
     @sampler = @scene.sampler_factory.make
     @image = Image.new(@dimN, @dimM)

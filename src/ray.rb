@@ -22,8 +22,8 @@ class Ray
   
   # get point on ray for a given paramter t.
   def point_at t
-    dir = @direction.copy_s
-    orig = @origin.copy_s
+    dir = @direction.s_copy
+    orig = @origin.s_copy
     tmp = dir.scale(t).add(orig)
     Vector3f.new(tmp.x, tmp.y, tmp.z)
   end

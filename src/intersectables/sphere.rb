@@ -1,4 +1,5 @@
 class Sphere
+  require 'pry'
   require_relative '../intersectable.rb'
   require_relative '../ray.rb'
   require_relative '../hit_record.rb'
@@ -9,10 +10,13 @@ class Sphere
                 :radius,
                 :material
   
-  def initialize args
-    args.each do |key, value|
-      send("#{key}=", value)
-    end
+  # @param material:Material material of sphere
+  # @param center:Vector3f center of sphere
+  # @param radius:Float radius of sphere
+  def initialize(material, center, radius)
+    @material = material
+    @center = center
+    @radius = radius
   end
   
   # ray: r(t) = orig + t*dir
@@ -23,7 +27,11 @@ class Sphere
   # @return HitRecord
   def intersect ray
     zeros = (find_intersection_parameter ray).sort
-    (zeros.min > 0.0) ? make_hit_record(ray, zeros.min) : nil    
+    
+    (zeros.first > 0.0) ? make_hit_record(ray, zeros.first) 
+                        : ((zeros.last > 0.0) ? make_hit_record(ray, zeros.last) 
+                                              : nil) 
+  
   end
   
   private
@@ -59,7 +67,7 @@ class Sphere
   def find_intersection_parameter ray
     a = ray.direction.dotted
     b = 2.0*ray.origin.s_copy.dot(@center)
-    c = @origin.dotted - @radius*@radius
+    c = @center.dotted - @radius*@radius
     solve_quadric(a, b, c).map &:to_f
   end
   
