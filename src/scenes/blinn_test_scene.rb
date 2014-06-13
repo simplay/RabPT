@@ -13,6 +13,7 @@ class BlinnTestScene
   require_relative '../spectrum.rb'
   require_relative '../lightsources/point_light.rb'
   require_relative '../materials/diffuse.rb'
+  require_relative '../materials/blinn.rb'
   
   include Scene
   
@@ -41,16 +42,20 @@ class BlinnTestScene
     @integrator_factory = PointLightIntegratorFactory.new
     @sampler_factory = OneSamplerFactory.new
     
-    red = Diffuse.new(Spectrum.new(Vector3f.new(1.0, 0.0, 0.0)));
+    red = Diffuse.new(Spectrum.new(Vector3f.new(1.0, 0.0, 1.0)));
+    
+    
+    blinn = Blinn.new(Spectrum.new(Vector3f.new(1.0, 0.0, 0.0)), Spectrum.new(0.6), 50.0)
+    
     
     intersectable_list = IntersectableList.new
-    intersectable_list.put(Sphere.new(red, Vector3f.new(0.0, 0.0, 0.0), 1.0))
+    intersectable_list.put(Sphere.new(blinn, Vector3f.new(0.0, 0.0, 0.0), 1.0))
     
     @root = intersectable_list
     
     @light_list = LightList.new
-    @light_list.put(PointLight.new(Vector3f.new(0.5, 0.5, 2.0), Spectrum.new(10.0)))
-    @light_list.put(PointLight.new(Vector3f.new(-0.75, 0.75, 2.0), Spectrum.new(10.0)))
+    @light_list.put(PointLight.new(Vector3f.new(0.5, 0.5, 2.0), Spectrum.new(1.0)))
+    @light_list.put(PointLight.new(Vector3f.new(-0.75, 0.75, 2.0), Spectrum.new(1.0)))
   end
   
   def base_name
