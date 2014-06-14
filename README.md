@@ -15,15 +15,15 @@ where the passed arugments are:
 
 Example: ````ruby rabpt.rb 300 400 7 abc 3````
 
-Will render a **300** by **400** pixel image using **7** samples per pixel of the  **3**-th test-scene. The output file wil be stored in ````../output```` and will be called **instancing_test_scene_1spp_300w_300h_abcd.bmp**
+Will render a **300** by **400** pixel image using **7** samples per pixel of the  **3**-th test-scene. The output file wil be stored in ````../output```` and will be called **instancing_test_scene_7spp_300w_400h_abc.bmp**.
 
 Note that only the first 3 arguments are required in order to successfully render an image. If there are less provided an exception will be raised _too few arguments_.
 
 ### Available scene list:
-1. CameraTestScene: showing that the camera setup works
-2. BlinnTestScene: showing that the blinn material works
-3. InstancingTestScene: showing that instancing works
-Else CameraTestScene: default fall-back
+1. **CameraTestScene**: showing that the camera setup works. Filname-Prefix: **camera_test_scene**
+2. **BlinnTestScene**: showing that the blinn material works. Filname-Prefix: **blinn_test_scene**
+3. **InstancingTestScene**: showing that instancing works. Filname-Prefix: **instancing_test_scene**
+Else **CameraTestScene**: default fall-back. Filname: **instancing_test_scene**
 
 ### Debugging within the code
 Place a ```` binding.pry ```` statement in w/e code region
