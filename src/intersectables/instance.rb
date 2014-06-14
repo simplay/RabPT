@@ -81,7 +81,7 @@ class Instance
   
   def assembly_hit_record hit_record
     transf_position = hit_record.position.s_copy.transform(@transf)
-    transf_normal hit_record.normal.s_copy.transform(@inv_transf).normalize
+    transf_normal = hit_record.normal.s_copy.transform(@inv_transf).normalize
     transf_w_in = hit_record.w.transform(@trasp_inv_transf).normalize
     hit_record_args = {
       :position => transf_position,

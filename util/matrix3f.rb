@@ -24,6 +24,15 @@ class Matrix3f
     Matrix3f.new(v1, v2, v3)
   end
   
+  # set this object to 4x4 identity matrix
+  # move to special matrices
+  def make_identity
+    v1 = Vector4f.new(1.0, 0.0, 0.0)
+    v2 = Vector4f.new(0.0, 1.0, 0.0)
+    v3 = Vector4f.new(0.0, 0.0, 1.0)
+    ovwrite_me Matrix3f.new(v1, v2, v3)
+  end
+  
   def transpose
     swap(:m10, :m01)
     swap(:m02, :m20)

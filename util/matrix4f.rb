@@ -57,6 +57,16 @@ class Matrix4f
     ovwrite_me Matrix4f.new(v1, v2, v3, v4)
   end
   
+  # return identity matrix
+  # @return identity matrix:Matrix4f
+  def self.identity
+    v1 = Vector4f.new(1.0, 0.0, 0.0, 0.0)
+    v2 = Vector4f.new(0.0, 1.0, 0.0, 0.0)
+    v3 = Vector4f.new(0.0, 0.0, 1.0, 0.0)
+    v4 = Vector4f.new(0.0, 0.0, 0.0, 1.0)
+    Matrix4f.new(v1, v2, v3, v4)
+  end
+  
   # translate relying on homogeneous transformation
   def translate by
     t = Matrix4f.new(nil, nil, nil, nil).make_identity
