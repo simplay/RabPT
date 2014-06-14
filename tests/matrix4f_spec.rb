@@ -297,4 +297,9 @@ describe Matrix4f do
     @I.same_values_as?(m).should_not be_true
   end
   
+  it "should be possible to make an identity matrix instance" do 
+    Matrix4f.identity.same_values_as?(@I).should be_true
+    Matrix3f.identity.same_values_as?(@id_3x3).should be_true
+  end
+  
 end
