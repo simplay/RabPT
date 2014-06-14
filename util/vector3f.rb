@@ -1,4 +1,6 @@
 require 'pry'
+require_relative 'Vector4f.rb'
+
 class Vector3f
   EPSILON = 0.001
   attr_accessor :x, :y, :z
@@ -20,6 +22,10 @@ class Vector3f
   # @return array of components of this vector
   def to_a
     [@x, @y, @z]
+  end
+  
+  def to_vec4f(w=0.0)
+    Vector4f.new(@x, @y, @z, w)
   end
   
   # me = me - other

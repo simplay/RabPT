@@ -156,4 +156,23 @@ describe Vector4f do
       v.approx_same_values_as?(v).should be_true
     end
     
+    it "Vector3f should be extendable to a Vector4f" do
+      target = Vector4f.new(1.0, 2.0, 3.0, 4.0)
+      us = Vector3f.new(1.0, 2.0, 3.0)
+      us.to_vec4f(4.0).same_values_as?(target).should be_true
+      us.to_vec4f().same_values_as?(target).should be_false
+      us.to_vec4f(0.0).same_values_as?(target).should be_false
+    end
+    
+    it "default value for extended Vector3f (to Vector4f) should 0.0" do
+      us = Vector3f.new(1.0, 2.0, 3.0)
+      (us.to_vec4f().w == 0.0).should be_true
+    end
+    
+    it "to_vec3f for vec4f works as expected" do
+      target = Vector4f.new(1.0, 2.0, 3.0, 4.0)
+      us = Vector3f.new(1.0, 2.0, 3.0)
+      target.to_vec3f().same_values_as?(us).should be_true
+    end
+    
 end

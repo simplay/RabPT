@@ -1,3 +1,5 @@
+require_relative 'Vector3f.rb'
+ 
 class Vector4f
   EPSILON = 0.001
   attr_accessor :x, :y, :z, :w
@@ -16,6 +18,10 @@ class Vector4f
   
   def to_a
     [@x, @y, @z, @w]
+  end
+  
+  def to_vec3f
+    Vector3f.new(@x, @y, @z)
   end
   
   # substract other to this
