@@ -69,10 +69,11 @@ class Matrix4f
   
   # translate relying on homogeneous transformation
   # overwrites and returns self
-  # @param by:Vector4f representing translation vector
+  # @param by:Vector3f representing translation vector
   # @return updated self
   def translate by
     t = Matrix4f.new(nil, nil, nil, nil).make_identity
+    
     other = by.to_a
     other << 1.0
     

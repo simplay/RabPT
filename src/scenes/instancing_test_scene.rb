@@ -47,8 +47,8 @@ class InstancingTestScene
     intersectable_list = IntersectableList.new
     sphere = Sphere.new(blinn, Vector3f.new(0.0, 0.0, 0.0), 1.0)
     
-    translation_right = Matrix4f.identity.translate(Vector4f.new(0.0, 2.0, 0.0, 1.0))
-    translation_left = Matrix4f.identity.translate(Vector4f.new(0.0, -2.0, 0.0, 1.0))
+    translation_right = Matrix4f.identity.translate(Vector3f.new(0.0, 2.0, 0.0))
+    translation_left = Matrix4f.identity.translate(Vector3f.new(0.0, -2.0, 0.0))
     
     center_instance = Instance.new(sphere, Matrix4f.identity)
     right_instance = Instance.new(sphere, translation_right)
