@@ -66,25 +66,34 @@ class Instance
   def intersect ray
     instance_origin = ray.origin.s_copy.to_vec4f(1.0)
     instance_direction = ray.direction.s_copy.to_vec4f
-    
-    instance_origin.transform(Tinv)
-    instance_direction.transform(Tinv)
-    
+    instance_origin.transform(@inv_transf)
+    instance_direction.transform(@inv_transf)
+
     ray_args = {:origin => instance_origin.s_copy, 
                 :direction => instance_direction.s_copy, 
                 :t => ray.t}
     instance_ray = Ray.new ray_args
-    
-
 		hit_record = @intersectable.intersect(instance_ray);
-		return nil if (hit_record == nil)
-		return assembly_hit_record(hit_record)
+		(hit_record == nil) ? nil : assembly_hit_record(hit_record)
   end
   
   private
   
-  def assembly_hit_record
-    raise "not implemented yet"
+  def assembly_hit_record hit_record
+    transf_position = hit_record.position.s_copy.transform(@transf)
+    transf_normal hit_record.normal.s_copy.transform(@inv_transf).normalize
+    transf_w_in = hit_record.w.transform(@trasp_inv_transf).normalize
+    hit_record_args = {
+      :position => transf_position,
+      :normal => transf_normal,
+      :w => transf_w_in,
+      :intersectable => hit_record.intersectable,
+      :material => hit_record.material,
+      :u => hit_record.u,
+      :v => hit_record.v,
+      :t => hit_record.t
+    }
+    HitRecord.new hit_record_args
   end
   
 end
