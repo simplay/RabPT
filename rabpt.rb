@@ -3,7 +3,7 @@ require "imageruby"
 require "pry"
 require File.join(File.dirname(__FILE__), 'src/renderer.rb')
 
-KEYS = [:N, :M, :SPP, :file_name]
+KEYS = [:N, :M, :SPP, :file_name, :selected_scene]
 
 arg_count = ARGV.length
 key_count = KEYS.length

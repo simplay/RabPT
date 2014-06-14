@@ -29,11 +29,7 @@ class Renderer
   def initialize(args={})
     @dimN = args[:N].to_i
     @dimM = args[:M].to_i
-    
-    # @scene = CameraTestScene.new(@dimM, @dimN, args[:SPP].to_i || 1)
-    
-    @scene = BlinnTestScene.new(@dimM, @dimN, args[:SPP].to_i || 1)
-    
+    @scene = scene_instance_from(args[:selected_scene] || 1, args[:SPP].to_i || 1)    
     @integrator = @scene.integrator_factory.make(@scene)
     @sampler = @scene.sampler_factory.make
     @image = Image.new(@dimN, @dimM)
@@ -52,6 +48,17 @@ class Renderer
   end
   
   private 
+  
+  def scene_instance_from selection, spp
+    case selection
+    when 1
+      CameraTestScene.new(@dimM, @dimN, spp)
+    when 2
+      BlinnTestScene.new(@dimM, @dimN, spp)
+    else
+      CameraTestScene.new(@dimM, @dimN, spp)
+    end
+  end
   
   def init_rendering_process
     # are we using jruby
