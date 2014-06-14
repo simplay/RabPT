@@ -36,24 +36,24 @@ class Instance
   #   intersectable: Intersectable
   #     a reference of an instance of an intersectable,
   #     such as a sphere or a plane for example.
-  #
-  #   material: Material
-  #     Material of instance 
   
   attr_accessor :transf,
                 :inv_transf,
                 :trasp_inv_transf,
-                :intersectable,
-                :material
-    
+                :intersectable
+          
+  # stores intersectable and its transformation 
   # @param intersectable:Intersectable 
   #        instance of an intersectable
   # @param transformation: Matrix4f
   #        homogeneous transformation
-  #        applied on this intersectable              
+  #        applied on this intersectable               
   def initialize(intersectable, transformation)
     @intersectable = intersectable
     @transf = transformation
+    
+    @inv_transf = transformation.s_copy.inv
+    @trasp_inv_transf = @inv_transf.s_copy.transpose    
   end
   
   # intersect ray with given encapsulated instance
@@ -64,7 +64,27 @@ class Instance
   # @param ray:Ray
   # @return HitRecord provided by intersectable
   def intersect ray
+    instance_origin = ray.origin.s_copy.to_vec4f(1.0)
+    instance_direction = ray.direction.s_copy.to_vec4f
     
+    instance_origin.transform(Tinv)
+    instance_direction.transform(Tinv)
+    
+    ray_args = {:origin => instance_origin.s_copy, 
+                :direction => instance_direction.s_copy, 
+                :t => ray.t}
+    instance_ray = Ray.new ray_args
+    
+
+		hit_record = @intersectable.intersect(instance_ray);
+		return nil if (hit_record == nil)
+		return assembly_hit_record(hit_record)
+  end
+  
+  private
+  
+  def assembly_hit_record
+    raise "not implemented yet"
   end
   
 end
