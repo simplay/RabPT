@@ -2,6 +2,7 @@ class Renderer
   require File.join(File.dirname(__FILE__), 'scenes/debug_scene.rb')
   require_relative 'scenes/camera_test_scene.rb'
   require_relative 'scenes/blinn_test_scene.rb'
+  require_relative 'scenes/instancing_test_scene.rb'
   require 'pry'
   include ImageRuby
   
@@ -49,12 +50,14 @@ class Renderer
   
   private 
   
-  def scene_instance_from selection, spp
+  def scene_instance_from(selection, spp)
     case selection
-    when 1
+    when "1"
       CameraTestScene.new(@dimM, @dimN, spp)
-    when 2
+    when "2"
       BlinnTestScene.new(@dimM, @dimN, spp)
+    when "3"
+      InstancingTestScene.new(@dimM, @dimN, spp)
     else
       CameraTestScene.new(@dimM, @dimN, spp)
     end

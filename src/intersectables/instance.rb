@@ -69,8 +69,8 @@ class Instance
     instance_origin.transform(@inv_transf)
     instance_direction.transform(@inv_transf)
 
-    ray_args = {:origin => instance_origin.s_copy, 
-                :direction => instance_direction.s_copy, 
+    ray_args = {:origin => instance_origin.s_copy.to_vec3f, 
+                :direction => instance_direction.s_copy.to_vec3f, 
                 :t => ray.t}
     instance_ray = Ray.new ray_args
 		hit_record = @intersectable.intersect(instance_ray);
@@ -80,13 +80,13 @@ class Instance
   private
   
   def assembly_hit_record hit_record
-    transf_position = hit_record.position.s_copy.transform(@transf)
-    transf_normal = hit_record.normal.s_copy.transform(@inv_transf).normalize
-    transf_w_in = hit_record.w.transform(@trasp_inv_transf).normalize
+    transf_position = hit_record.position.s_copy.to_vec4f(1.0).transform(@transf)
+    transf_normal = hit_record.normal.s_copy.to_vec4f.transform(@inv_transf).normalize
+    transf_w_in = hit_record.w.to_vec4f.transform(@trasp_inv_transf).normalize
     hit_record_args = {
-      :position => transf_position,
-      :normal => transf_normal,
-      :w => transf_w_in,
+      :position => transf_position.to_vec3f,
+      :normal => transf_normal.to_vec3f,
+      :w => transf_w_in.to_vec3f,
       :intersectable => hit_record.intersectable,
       :material => hit_record.material,
       :u => hit_record.u,

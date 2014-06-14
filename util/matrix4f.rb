@@ -68,6 +68,9 @@ class Matrix4f
   end
   
   # translate relying on homogeneous transformation
+  # overwrites and returns self
+  # @param by:Vector4f representing translation vector
+  # @return updated self
   def translate by
     t = Matrix4f.new(nil, nil, nil, nil).make_identity
     other = by.to_a
@@ -425,4 +428,5 @@ class Matrix4f
     
   alias_method :set_at, :setElementAt 
   alias_method :at, :elementAt
+  alias_method :inv, :invert
 end
