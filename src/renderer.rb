@@ -1,5 +1,7 @@
 class Renderer
   require File.join(File.dirname(__FILE__), 'scenes/debug_scene.rb')
+
+  require_relative '../util/obj_reader.rb'
   require_relative 'scenes/camera_test_scene.rb'
   require_relative 'scenes/blinn_test_scene.rb'
   require_relative 'scenes/instancing_test_scene.rb'
@@ -34,6 +36,9 @@ class Renderer
     @integrator = @scene.integrator_factory.make(@scene)
     @sampler = @scene.sampler_factory.make
     @image = Image.new(@dimN, @dimM)
+    
+    reader = ObjReader.new "teapot.obj"
+    binding.pry
     
     puts "start rendering pixels (#{@dimN}, #{@dimM})"
     init_rendering_process
