@@ -5,6 +5,8 @@ class Renderer
   require_relative 'scenes/camera_test_scene.rb'
   require_relative 'scenes/blinn_test_scene.rb'
   require_relative 'scenes/instancing_test_scene.rb'
+  require_relative 'scenes/mesh_loading_test_scene.rb'
+  
   require 'pry'
   include ImageRuby
   
@@ -37,9 +39,6 @@ class Renderer
     @sampler = @scene.sampler_factory.make
     @image = Image.new(@dimN, @dimM)
     
-    reader = ObjReader.new "teapot.obj"
-    binding.pry
-    
     puts "start rendering pixels (#{@dimN}, #{@dimM})"
     init_rendering_process
 
@@ -63,6 +62,8 @@ class Renderer
       BlinnTestScene.new(@dimM, @dimN, spp)
     when "3"
       InstancingTestScene.new(@dimM, @dimN, spp)
+    when "4"
+      MeshLoadingTestScene.new(@dimM, @dimN, spp)
     else
       CameraTestScene.new(@dimM, @dimN, spp)
     end
