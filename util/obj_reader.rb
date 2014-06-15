@@ -7,7 +7,7 @@ class ObjReader
   # http://en.wikipedia.org/wiki/Wavefront_.obj_file
   
   ObjReader::BASEPATH = "meshes/"
-  attr_reader :mesh,
+  attr_reader :mesh_data,
               :x_min, :x_max,
               :y_min, :y_max,
               :z_min, :z_max
@@ -73,7 +73,7 @@ class ObjReader
       key  > vertices.max.first
     end
     
-    @mesh = {
+    @mesh_data = {
       :vertices => vertices,
       :normals => normals,
       :faces => faces
