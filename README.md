@@ -20,9 +20,12 @@ Will render a **300** by **400** pixel image using **7** samples per pixel of th
 Note that only the first 3 arguments are required in order to successfully render an image. If there are less provided an exception will be raised _too few arguments_.
 
 ### Available scene list:
+The following list contains all currently available _scenes_ encoded as the **sel_scene** argument used when starting this application:
+
 1. **CameraTestScene**: showing that the camera setup works. Filname-Prefix: **camera_test_scene**
 2. **BlinnTestScene**: showing that the blinn material works. Filname-Prefix: **blinn_test_scene**
 3. **InstancingTestScene**: showing that instancing works. Filname-Prefix: **instancing_test_scene**
+4. **MeshLoadingTestScene**: showing that instancing works. Filname-Prefix: **mesh_loading_test_scene**
 Else **CameraTestScene**: default fall-back. Filname: **instancing_test_scene**
 
 ### Debugging within the code
