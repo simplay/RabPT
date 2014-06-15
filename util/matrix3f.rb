@@ -17,6 +17,10 @@ class Matrix3f
     @m20 = row_z.x; @m21 = row_z.y; @m22 = row_z.z;
   end
   
+  # make a shallow copy of this matrix
+  # copy all of its components and mak
+  # a new instance of itself
+  # @return Matrix4f shallow copy of itself
   def s_copy 
     v1 = Vector3f.new(@m00, @m01, @m02)
     v2 = Vector3f.new(@m10, @m11, @m12)

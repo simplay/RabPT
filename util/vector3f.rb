@@ -18,6 +18,13 @@ class Vector3f
     Vector3f.new(@x, @y, @z)
   end
   
+  
+  # make an instance of vector3f from a given array
+  # @array: Array containing 3 Float arguments
+  def self.make_from_float array
+    Vector3f.new(array[0], array[1], array[2])
+  end
+  
   # makes an array of the this vector
   # @return array of components of this vector
   def to_a
