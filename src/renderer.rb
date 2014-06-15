@@ -43,7 +43,7 @@ class Renderer
     init_rendering_process
 
     begin
-      user_input = (args[:file_name].nil?) ? "" : "_#{args[:file_name].to_s}"
+      user_input = (args[:file_name].nil? || args[:file_name].empty?) ? "" : "_#{args[:file_name].to_s}"
       file_name = @scene.file_name + user_input
       @image.save("#{OUTPUT_PATH}#{file_name}.bmp", :bmp)
     rescue
