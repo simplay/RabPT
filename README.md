@@ -39,7 +39,7 @@ Implement a debug-ray tracer which can render a simple scene consisting of a pin
 
 
 ### JRUBY support 
-For multithreading purposes there is jruby support provided (runtime check whether you are using ruby or jrby). Steps to let the application running:
+For multithreading purposes there is jruby support provided (runtime check whether you are using ruby or jrby). In the following a list of required steps to perform in order to let the application run using JRuby:
 
 1. Install jruby
 2. rvm use jrby #VERSION
