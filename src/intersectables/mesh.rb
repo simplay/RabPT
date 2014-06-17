@@ -40,11 +40,12 @@ class Mesh < IntersectableList
   # Make a mesh from a loaded obj file data,
   # stroring vertices, normals and indices.
   # @param mesh_data mesh data provided by ObjReader.
-  def initialize(mesh_data)
+  def initialize(mesh_data, material)
     flush
     @vertices = mesh_data[:vertices]
     @normals = mesh_data[:normals]
     @indices = mesh_data[:faces]
+    @material = material
     
     @indices.length.times do |idx|
       self.put(MeshTriangle.new(self, idx))
