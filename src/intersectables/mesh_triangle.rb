@@ -13,12 +13,7 @@ class MeshTriangle
   # compute triangle spanning vertices
   # TODO explain beta_gama
   def initialize(mesh, index)
-    binding.pry
-    
-    idxs = mesh.indices.values_at(index, index+1, index+2)
-    verts = mesh.vertices.values_at(idxs[0], idxs[1], idxs[2]).map do |v|
-      Vector3f.make_from_floats(v)
-    end
+    verts = mesh.indices.values_at(3*index+1, 3*index+2, 3*index+3)
     
     # spanning triangle points
     @p_x = verts[0]
@@ -27,6 +22,7 @@ class MeshTriangle
   end
   
   def intersect ray
+    binding.pry
     hit_record = nil
     
     a_to_b = @p_x.s_copy.sub(@p_y)
@@ -62,8 +58,8 @@ class MeshTriangle
   # was triangle intersected
   def inside_triangle? (beta, gamma)
     unit_range = [0.0, 1.0]
-    no_triangle_hit = ([beta,gamma].all? do |expression| 
-      is_between(expression, unit_range, "<=")})
+    no_triangle_hit = [beta,gamma].all? do |expression| 
+      is_between(expression, unit_range, "<=")
     end
     
     # inside or outhsie triangle but not ON triangle (i.e. hit)
@@ -77,7 +73,6 @@ class MeshTriangle
   # @param operation, i.e. comparission operator, as string 
   # @return condition:Boolean state 
   def is_between?(value, range, operation)
-    (value <= range.last) && (value >= )
     value.send(operation, range.last) && range.first.send(operation, value)
   end
   

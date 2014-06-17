@@ -6,7 +6,7 @@ class IntersectableList
   attr_accessor :container
   
   def initialize
-    @container = []
+    flush
   end
   
   def put intersectable
@@ -30,6 +30,12 @@ class IntersectableList
       end
     end
     hit_record
+  end
+  
+  protected
+  
+  def flush
+    @container = []
   end
   
   

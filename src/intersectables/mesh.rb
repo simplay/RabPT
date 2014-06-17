@@ -4,7 +4,7 @@ class Mesh < IntersectableList
   require_relative '../hit_record.rb'
   require_relative 'mesh_triangle.rb'
   
-  include Intersectable
+  # include Intersectable
   
   # A triangle mesh. The mesh internally stores the triangles using vertex and
   # index arrays. The mesh also instantiates a {@link MeshTriangle} for each
@@ -41,12 +41,13 @@ class Mesh < IntersectableList
   # stroring vertices, normals and indices.
   # @param mesh_data mesh data provided by ObjReader.
   def initialize(mesh_data)
+    flush
     @vertices = mesh_data[:vertices]
     @normals = mesh_data[:normals]
     @indices = mesh_data[:faces]
-
+    
     @indices.length.times do |idx|
-      self.put(MeshTriangle.new(self, idx)
+      self.put(MeshTriangle.new(self, idx))
     end
   end
   
