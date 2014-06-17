@@ -21,7 +21,7 @@ class Vector3f
   
   # make an instance of vector3f from a given array
   # @array: Array containing 3 Float arguments
-  def self.make_from_float array
+  def self.make_from_floats array
     Vector3f.new(array[0], array[1], array[2])
   end
   

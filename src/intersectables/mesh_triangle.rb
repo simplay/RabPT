@@ -22,11 +22,14 @@ class MeshTriangle
     indices = mesh.indices
     
     spanning_vertices_idx = indices.values_at(index, index+1, index+2)
-    spanning_vertices = vertices.values_at(index, index+1, index+2)
     @spanning_vertices = []
-    @spanning_vertices << Vector3f.make_from_float(spanning_vertices[0])
-    @spanning_vertices << Vector3f.make_from_float(spanning_vertices[1])
-    @spanning_vertices << Vector3f.make_from_float(spanning_vertices[2])
+    @spanning_vertices = vertices.values_at(index, index+1, index+2).map do |v|
+      Vector3f.make_from_floats(v)
+    end
+    # 
+    # 3.times do |i|
+    #   @spanning_vertices << Vector3f.make_from_floats(spanning_vertices[i])
+    # end
     
     # do further stuff here, prepare for intersection testing
     # prepare for later boundung box init

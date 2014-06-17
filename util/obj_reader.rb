@@ -40,7 +40,7 @@ class ObjReader
       case arguments[0]
       when "v"
         # vertex data
-        vertex = Vector3f.make_from_float(arguments[1..3].map &:to_f)
+        vertex = Vector3f.make_from_floats(arguments[1..3].map &:to_f)
         vertices[vertex_counter] = vertex
         update_vertex_extrema_of(vertex) 
         vertex_counter += 1
@@ -49,13 +49,13 @@ class ObjReader
         # face data
         indices = []
         triangle_indices = (arguments[1..3].map{|e| e.split("/")}.map &:first).map &:to_i
-        indices = Vector3f.make_from_float triangle_indices
+        indices = Vector3f.make_from_floats triangle_indices
         faces[face_counter] = indices
         face_counter += 1
         
       when "vn"
         # vertex normal data
-				normal = Vector3f.make_from_float(arguments[1..3].map &:to_f)
+				normal = Vector3f.make_from_floats(arguments[1..3].map &:to_f)
         normals[normal_counter] = normal.normalize
         normal_counter += 1
         
