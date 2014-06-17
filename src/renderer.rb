@@ -26,6 +26,8 @@ class Renderer
     java_import 'java.util.concurrent.LinkedBlockingQueue'
     java_import 'java.util.concurrent.ThreadPoolExecutor'
     java_import 'java.util.concurrent.TimeUnit'
+    java_import 'java.lang.Runtime'
+    CORE_POOL_THREADS = Runtime.getRuntime.availableProcessors
   end
 
   attr_accessor :image, :dimN, :dimM, :scene,
