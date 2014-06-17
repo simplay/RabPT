@@ -8,6 +8,7 @@ class MeshLoadingTestScene
   require_relative '../samplers/one_sampler_factory.rb'
   require_relative '../intersectables/plane.rb'
   require_relative '../intersectables/sphere.rb'
+  require_relative '../intersectables/mesh.rb'
   require_relative '../intersectable_list.rb'
   require_relative '../light_list.rb'
   require_relative '../spectrum.rb'
@@ -46,6 +47,7 @@ class MeshLoadingTestScene
     # assuming you do have a teapot.obj file in your meshes folder
     reader = ObjReader.new "teapot.obj"
     binding.pry
+    mesh = Mesh.new(reader.mesh_data)
     
     intersectable_list = IntersectableList.new
     intersectable_list.put(Sphere.new(blinn, Vector3f.new(0.0, 0.0, 0.0), 1.0))
