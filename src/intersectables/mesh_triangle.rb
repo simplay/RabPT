@@ -8,37 +8,56 @@ class MeshTriangle
   # Defines a triangle by referring back to a Mesh and its vertex and
   # index arrays.
   
-  attr_accessor :mesh,
-                :index,
-                :spanning_vertices,
-                :spanning_normal
+  attr_accessor :p_x, :p_y, :p_z
   
+  # compute triangle spanning vertices
+  # TODO explain beta_gama
   def initialize(mesh, index)
-    @mesh = mesh
-    @index = index
+    binding.pry
     
-    # build triangle
-    vertices = mesh.vertices
-    indices = mesh.indices
-    
-    spanning_vertices_idx = indices.values_at(index, index+1, index+2)
-    @spanning_vertices = []
-    @spanning_vertices = vertices.values_at(index, index+1, index+2).map do |v|
+    idxs = mesh.indices.values_at(index, index+1, index+2)
+    verts = mesh.vertices.values_at(idxs[0], idxs[1], idxs[2]).map do |v|
       Vector3f.make_from_floats(v)
     end
-    # 
-    # 3.times do |i|
-    #   @spanning_vertices << Vector3f.make_from_floats(spanning_vertices[i])
-    # end
     
-    # do further stuff here, prepare for intersection testing
-    # prepare for later boundung box init
-    # store as much as possible
+    # spanning triangle points
+    @p_x = verts[0]
+    @p_y = verts[1]
+    @p_z = verts[2]
   end
+  
+  def intersect ray
+    hit_record = nil
+    
+    a_to_b = @p_x.s_copy.sub(@p_y)
+    a_to_c = @p_x.s_copy.sub(@p_z)
+    
+    triangle = Matrix3f.new(nil, nil, nil)
+		triangle.set_column_at(1, a_to_b);
+		triangle.set_column_at(2, a_to_c);
+    triangle.set_column_at(3, ray.direction);    
+    b = @p_x.s_copy.sub(ray.origin)
+    
+    # solve system
+    # beta_gamma_triangle = System.solve3x3System(triangle, b)
+    # TODO please extand functionalitz in oder to work with a 
+    # LUP or Cholesky solver
+    # highly unstable under certain circumstances
+    beta_gamma_triangle = triangle.invert.mult(b)
+    if beta_gamma_triangle.nil?
+      return nil
+    elsif inside_triangle?(beta_gamma_triangle)
+      # compute hit_record data
+    end
+    hit_record
+  end
+  
+  
   
   private 
   
   # use BC coordinates
+  # was triangle intersected
   def inside_triangle? (beta, gamma)
     unit_range = [0.0, 1.0]
     no_triangle_hit = ([beta,gamma].all? do |expression| 
@@ -59,7 +78,6 @@ class MeshTriangle
     (value <= range.last) && (value >= )
     value.send(operation, range.last) && range.first.send(operation, value)
   end
-  
   
   
 end
