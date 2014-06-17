@@ -43,7 +43,9 @@ class MeshTriangle
     # TODO please extand functionalitz in oder to work with a 
     # LUP or Cholesky solver
     # highly unstable under certain circumstances
-    beta_gamma_triangle = triangle.invert.mult(b)
+    t_inv = triangle.invert
+    raise "this matrix is singular" if t_inv.is_singular?
+    beta_gamma_triangle = t_inv.mult(b)
     if beta_gamma_triangle.nil?
       return nil
     elsif inside_triangle?(beta_gamma_triangle)

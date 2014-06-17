@@ -1,7 +1,8 @@
-class Mesh
+class Mesh < IntersectableList
   require_relative '../intersectable.rb'
   require_relative '../ray.rb'
   require_relative '../hit_record.rb'
+  require_relative 'mesh_triangle.rb'
   
   include Intersectable
   
@@ -43,12 +44,14 @@ class Mesh
     @vertices = mesh_data[:vertices]
     @normals = mesh_data[:normals]
     @indices = mesh_data[:faces]
-    
-    # TODO build triangles
+
+    @indices.length.times do |idx|
+      self.put(MeshTriangle.new(self, idx)
+    end
   end
   
-  def intersect ray
-    raise "Not implemented yet"
+  def triangles
+    @container
   end
   
 end
