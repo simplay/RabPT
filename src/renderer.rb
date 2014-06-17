@@ -41,9 +41,11 @@ class Renderer
     @sampler = @scene.sampler_factory.make
     @image = Image.new(@dimN, @dimM)
     
-    puts "start rendering pixels (#{@dimN}, #{@dimM})"
+    puts "Start rendering \'#{@scene.base_name}\' at #{@dimN} by #{@dimM} pixels."
+    tic = Time.now
     init_rendering_process
-
+    toc = Time.now
+    
     begin
       user_input = (args[:file_name].nil? || args[:file_name].empty?) ? "" : "_#{args[:file_name].to_s}"
       file_name = @scene.file_name + user_input
@@ -51,7 +53,7 @@ class Renderer
     rescue
       print "Could no generate the image"
     end
-    puts "\nimages created"
+    puts "\nIt took #{(toc-tic)*1000.0} ms to render this scene."
   end
   
   private 
