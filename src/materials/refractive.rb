@@ -1,14 +1,14 @@
-class Reflective
+class Refractive
   # A basic diffuse material.
   require_relative 'material.rb'
   require 'pry'
   
   include Material
-  attr_accessor :k_d 
+  attr_accessor :refractive_idx 
   
-  
-  def initialize(k_d)
-    @k_d = k_d
+  # @param refractive_idx:Float refractive index
+  def initialize(refractive_idx)
+    @refractive_idx = refractive_idx
   end
   
   def evaluate_brdf(hit_record, w_out, w_in)
