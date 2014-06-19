@@ -68,7 +68,6 @@ class MeshTriangle
               # binding.pry
     
               t = bgt.z
-              binding.pry
 
               
               ray_dir = ray.direction.s_copy
@@ -91,7 +90,6 @@ class MeshTriangle
                       :v => 0.0}
 
               hit_record = HitRecord.new hash            
-
     end
     hit_record
   end
