@@ -39,13 +39,17 @@ class MeshLoadingTestScene
             
     @camera = Camera.new camera_args
     @film = BoxFilterFilm.new(width, height)
-    @integrator_factory = PointLightIntegratorFactory.new
+    # @integrator_factory = PointLightIntegratorFactory.new
+    
+    
+    @integrator_factory = DebugIntegratorFactory.new
+    
     @sampler_factory = OneSamplerFactory.new
     
     blinn = Blinn.new(Spectrum.new(Vector3f.new(1.0, 0.0, 0.0)), Spectrum.new(0.6), 50.0)
     
     # assuming you do have a teapot.obj file in your meshes folder
-    reader = ObjReader.new "teapot.obj"
+    reader = ObjReader.new "triangle.obj"
     # binding.pry
     mesh = Mesh.new(reader.mesh_data, blinn)
     intersectable_list = IntersectableList.new

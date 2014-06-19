@@ -21,7 +21,7 @@ class MeshTriangle
     verts = mesh.vertices.values_at(facs.x, facs.y, facs.z)
     norms = mesh.normals.values_at(facs.x, facs.y, facs.z)
     
-    puts facs.to_s + " " + verts.to_s + " " + index.to_s
+    puts facs.to_s + " " + (verts.map &:to_s).inspect + " " + index.to_s
     
     # spanning triangle points
     @p_x = verts[0]
@@ -52,20 +52,25 @@ class MeshTriangle
     # TODO please extand functionalitz in oder to work with a 
     # LUP or Cholesky solver
     # highly unstable under certain circumstances
-    t_inv = triangle.invert
+    
+    
+    t_inv = triangle.s_copy.invert
     
     return nil if t_inv.nil?
     
     
     bgt = t_inv.vectormult(b)
-    
+    # puts bgt.to_s
     
     if bgt.nil?
       return nil
     elsif inside_triangle?(bgt.x, bgt.y)
               # binding.pry
-              
+    
               t = bgt.z
+              binding.pry
+
+              
               ray_dir = ray.direction.s_copy
               intersection_position = ray_dir.scale(t).add(ray.origin)
         			hit_normal = make_normal(bgt)
@@ -107,13 +112,14 @@ class MeshTriangle
   # use BC coordinates
   # was triangle intersected
   def inside_triangle? (beta, gamma)
+    # binding.pry
     unit_range = [0.0, 1.0]
-    no_triangle_hit = [beta,gamma].all? do |expression| 
+    no_triangle_hit = [beta,gamma].any? do |expression| 
       is_between?(expression, unit_range, "<=")
     end
     
     # inside or outhsie triangle but not ON triangle (i.e. hit)
-    no_triangle_hit ? false : is_between?((gamma+beta), unit_range, "<")
+    no_triangle_hit ? false : is_between?((gamma+beta), unit_range, ">")
   end
   
   # is given  value fulfilling condition
@@ -123,7 +129,7 @@ class MeshTriangle
   # @param operation, i.e. comparission operator, as string 
   # @return condition:Boolean state 
   def is_between?(value, range, operation)
-    value.send(operation, range.last) && range.first.send(operation, value)
+    value.send(operation, range.first) || range.last.send(operation, value)
   end
   
   
