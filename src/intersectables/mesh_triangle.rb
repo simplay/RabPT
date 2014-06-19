@@ -9,16 +9,20 @@ class MeshTriangle
   # index arrays.
   
   attr_accessor :p_x, :p_y, :p_z,
-                :n_x, :n_y, :n_z
+                :n_x, :n_y, :n_z,
+                :mesh
   
   # compute triangle spanning vertices
   # TODO explain beta_gama
   def initialize(mesh, index)
     facs = mesh.indices[index+1]
-    puts facs.to_s
+    @mesh = mesh
+
+    verts = mesh.vertices.values_at(facs.x, facs.y, facs.z)
+    norms = mesh.normals.values_at(facs.x, facs.y, facs.z)
     
-    verts = mesh.vertices.values_at(3*facs.x+1, 3*facs.y+2, 3*facs.z+3)
-    norms = mesh.normals.values_at(3*facs.x+1, 3*facs.y+2, 3*facs.z+3)
+    puts facs.to_s + " " + verts.to_s + " " + index.to_s
+    
     # spanning triangle points
     @p_x = verts[0]
     @p_y = verts[1]
@@ -49,12 +53,17 @@ class MeshTriangle
     # LUP or Cholesky solver
     # highly unstable under certain circumstances
     t_inv = triangle.invert
-
+    
+    return nil if t_inv.nil?
+    
+    
     bgt = t_inv.vectormult(b)
+    
+    
     if bgt.nil?
       return nil
     elsif inside_triangle?(bgt.x, bgt.y)
-              binding.pry
+              # binding.pry
               
               t = bgt.z
               ray_dir = ray.direction.s_copy

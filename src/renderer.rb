@@ -85,7 +85,7 @@ class Renderer
   end
   
   def render_parallel
-    puts "rendering in java mode"
+    puts "rendering in java mode using #{CORE_POOL_THREADS} threads" 
     executor = ThreadPoolExecutor.new(CORE_POOL_THREADS, # core_pool_treads
                                       MAX_POOL_THREADS, # max_pool_threads
                                       60, # keep_alive_time

@@ -46,7 +46,7 @@ class MeshLoadingTestScene
     
     # assuming you do have a teapot.obj file in your meshes folder
     reader = ObjReader.new "teapot.obj"
-    binding.pry
+    # binding.pry
     mesh = Mesh.new(reader.mesh_data, blinn)
     intersectable_list = IntersectableList.new
     intersectable_list.put(Instance.new(mesh, Matrix4f.identity))
