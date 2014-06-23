@@ -57,9 +57,35 @@ class Refractive
 		w_in.negate();
     
     sin2_thata_t = (refraction_ratio**2.0)*(1.0-(cos_theta_i**2.0))
+    cos_theta_t = Math::sqrt(1.0 - sin2_thata_t)
+    
     total_internal_refraction = (sin2_thata_t > 1)
     
+    # schlick approximation for refraction coefficient R 
+    r_schlick = 1.0
+    unless (total_internal_refraction)
+      r_0 = ((n_1 - n_2) / (n_1 + n_2))**2
+      x = (n_1 <= n_2) ? (1.0 - cos_theta_i) : (1.0 - cos_theta_t)
+  		r_schlick = r_0 + (1.0 - r_0)*(x**5.0)
+    else
+      return nil
+    end
     
+    # t from the paper
+    t_vec = w_in.s_copy
+    t_vec.scale(refraction_ratio)
+    scale_factor = refraction_ratio*cos_theta_i - cos_theta_t
+    tranformed_normal = normal.s_copy.scale(scale_factor)
+    t_vec.add(tranformed_normal)
+      
+    brdf_contribution = Spectrum.new(1.0)
+    brdf_contribution.mult(1.0 - r_schlick)  
+    args = {:brdf => brdf_contribution,
+            :emission => Spectrum.new(0.0),
+            :w => t_vec,
+            :is_specular => true,
+            :p => 1.0-r_schlick}
+		ShadingSample.new args
   end
   
   def shading_sample(hit_record, sample)
