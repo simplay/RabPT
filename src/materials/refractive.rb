@@ -26,20 +26,10 @@ class Refractive
   def evaluate_specular_reflection(hit_record)
     normal = hit_record.normal.s_copy
     w_in = hit_record.normal.s_copy
+    refraction_ratio = compute_refractive_ratio(w_in, normal)
     
-    n_1 = 1.0
-    n_2 = @refractive_idx
-    
-    # is hit not inside refractive material
-    unless inside_material?(normal, w_in)
-      n_1 = @refractive_idx
-      n_2 = 1.0
-      normal.negate
-    end
-    
-    refraction_ratio = n_1/n_2
     cos_theta_i = w_in.dot(normal)
-		w_in.negate();
+		w_in.negate
     
     sin2_thata_t = (refraction_ratio**2.0)*(1.0-(cos_theta_i**2.0))
     cos_theta_t = Math::sqrt(1.0 - sin2_thata_t)
@@ -76,20 +66,10 @@ class Refractive
   def evaluate_specular_refraction(hit_record)
     normal = hit_record.normal.s_copy
     w_in = hit_record.normal.s_copy
-    
-    n_1 = 1.0
-    n_2 = @refractive_idx
-    
-    # is hit not inside refractive material
-    unless inside_material?(normal, w_in)
-      n_1 = @refractive_idx
-      n_2 = 1.0
-      normal.negate
-    end
-    
-    refraction_ratio = n_1/n_2
+
+    refraction_ratio = compute_refractive_ratio(w_in, normal)
     cos_theta_i = w_in.dot(normal)
-		w_in.negate();
+		w_in.negate
     
     sin2_thata_t = (refraction_ratio**2.0)*(1.0-(cos_theta_i**2.0))
     cos_theta_t = Math::sqrt(1.0 - sin2_thata_t)
@@ -98,22 +78,22 @@ class Refractive
     
     # schlick approximation for refraction coefficient R     
     return nil if total_internal_refraction
-    r_schlick = compute_schlick_r(n_1, n_2, cos_theta_i, cos_theta_t)  
+    refractive_part = 1.0 - compute_schlick_r(n_1, n_2, cos_theta_i, cos_theta_t)  
     
     # t from the paper
-    t_vec = w_in.s_copy
-    t_vec.scale(refraction_ratio)
     scale_factor = refraction_ratio*cos_theta_i - cos_theta_t
-    tranformed_normal = normal.s_copy.scale(scale_factor)
-    t_vec.add(tranformed_normal)
+    scaled_normal = normal.s_copy.scale(scale_factor)
+    
+    t_dir = w_in.s_copy.scale(refraction_ratio)
+    t_dir.add(scaled_normal)
       
     brdf_contribution = Spectrum.new(1.0)
-    brdf_contribution.mult(1.0 - r_schlick)  
+    brdf_contribution.mult(refractive_part)  
     args = {:brdf => brdf_contribution,
             :emission => Spectrum.new(0.0),
-            :w => t_vec,
+            :w => t_dir,
             :is_specular => true,
-            :p => 1.0-r_schlick}
+            :p => refractive_part}
 		ShadingSample.new args
   end
   
@@ -158,6 +138,20 @@ class Refractive
     r_0 = ((n_1 - n_2) / (n_1 + n_2))**2.0
     x = (n_1 <= n_2) ? (1.0 - cos_theta_i) : (1.0 - cos_theta_t)
 		r_0 + (1.0 - r_0)*(x**5.0)
+  end
+  
+  def compute_refractive_ratio(normal, w_in)
+    n_1 = 1.0
+    n_2 = @refractive_idx
+    
+    # is hit not inside refractive material
+    unless inside_material?(normal, w_in)
+      n_1 = @refractive_idx
+      n_2 = 1.0
+      normal.negate
+    end
+    
+    n_1/n_2
   end
   
 end
