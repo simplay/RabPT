@@ -35,11 +35,31 @@ class Refractive
   end
   
   def has_specular_refraction?
-    false
+    true
   end
   
   def evaluate_specular_refraction(hit_record)
-    nil
+    normal = hit_record.normal.s_copy
+    w_in = hit_record.normal.s_copy
+    
+    n_1 = 1.0
+    n_2 = @refractive_idx
+    
+    # is hit not inside refractive material
+    unless inside_material?(normal, w_in)
+      n_1 = @refractive_idx
+      n_2 = 1.0
+      normal.negate
+    end
+    
+    refraction_ratio = n_1/n_2
+    cos_theta_i = w_in.dot(normal)
+		w_in.negate();
+    
+    sin2_thata_t = (refraction_ratio**2.0)*(1.0-(cos_theta_i**2.0))
+    total_internal_refraction = (sin2_thata_t > 1)
+    
+    
   end
   
   def shading_sample(hit_record, sample)
@@ -60,6 +80,17 @@ class Refractive
   
   def to_s
     "reflective material with k_d: #{@k_d.to_s}"
+  end
+  
+  private 
+  
+  # are we tracing a hit inside a specific material?
+  # examines angles between surface normal 
+  # and incident light direction
+  # @param normal at surface hit
+  # @param w_in incident light direction.
+  def inside_material?(normal, w_in)
+    normal.dot(w_in) > 0.0
   end
   
   
