@@ -92,7 +92,7 @@ class Refractive
   end
   
   def to_s
-    "reflective material with k_d: #{@k_d.to_s}"
+    "refractive material using a refractive index equal to: #{@refractive_idx}"
   end
   
   private 
@@ -106,11 +106,16 @@ class Refractive
     normal.dot(w_in) > 0.0
   end
   
+  # compute an approximation of the fresnel coefficient
+  # used as the weight for refraction
+  # @param n_1 'from' material refraction index 
+  # @param n_2 'to' material refraction idex
+  # @param cos_tehta_i angle between hit normal and incident light.
+  # @param cos_theta_t TODO: see paper
   def compute_schlick_r(n_1, n_2, cos_theta_i, cos_theta_t)
-    r_0 = ((n_1 - n_2) / (n_1 + n_2))**2
+    r_0 = ((n_1 - n_2) / (n_1 + n_2))**2.0
     x = (n_1 <= n_2) ? (1.0 - cos_theta_i) : (1.0 - cos_theta_t)
 		r_0 + (1.0 - r_0)*(x**5.0)
   end
-  
   
 end
