@@ -24,14 +24,7 @@ class Refractive
   end
   
   def evaluate_specular_reflection(hit_record)
-		reflection_direction = reflect(hit_record.normal, hit_record.w);
-		brdf_contribution = Spectrum.new(@ks);  
-    args = {:brdf => brdf_contribution,
-            :emission => Spectrum.new(0.0),
-            :w => reflection_direction,
-            :is_specular => false,
-            :p => 1.0}
-		ShadingSample.new args
+    nil
   end
   
   def has_specular_refraction?
@@ -61,15 +54,9 @@ class Refractive
     
     total_internal_refraction = (sin2_thata_t > 1)
     
-    # schlick approximation for refraction coefficient R 
-    r_schlick = 1.0
-    unless (total_internal_refraction)
-      r_0 = ((n_1 - n_2) / (n_1 + n_2))**2
-      x = (n_1 <= n_2) ? (1.0 - cos_theta_i) : (1.0 - cos_theta_t)
-  		r_schlick = r_0 + (1.0 - r_0)*(x**5.0)
-    else
-      return nil
-    end
+    # schlick approximation for refraction coefficient R     
+    return nil if total_internal_refraction
+    r_schlick = compute_schlick_r(n_1, n_2, cos_theta_i, cos_theta_t)  
     
     # t from the paper
     t_vec = w_in.s_copy
@@ -117,6 +104,12 @@ class Refractive
   # @param w_in incident light direction.
   def inside_material?(normal, w_in)
     normal.dot(w_in) > 0.0
+  end
+  
+  def compute_schlick_r(n_1, n_2, cos_theta_i, cos_theta_t)
+    r_0 = ((n_1 - n_2) / (n_1 + n_2))**2
+    x = (n_1 <= n_2) ? (1.0 - cos_theta_i) : (1.0 - cos_theta_t)
+		r_0 + (1.0 - r_0)*(x**5.0)
   end
   
   
