@@ -24,7 +24,49 @@ class Refractive
   end
   
   def evaluate_specular_reflection(hit_record)
-    nil
+    normal = hit_record.normal.s_copy
+    w_in = hit_record.normal.s_copy
+    
+    n_1 = 1.0
+    n_2 = @refractive_idx
+    
+    # is hit not inside refractive material
+    unless inside_material?(normal, w_in)
+      n_1 = @refractive_idx
+      n_2 = 1.0
+      normal.negate
+    end
+    
+    refraction_ratio = n_1/n_2
+    cos_theta_i = w_in.dot(normal)
+		w_in.negate();
+    
+    sin2_thata_t = (refraction_ratio**2.0)*(1.0-(cos_theta_i**2.0))
+    cos_theta_t = Math::sqrt(1.0 - sin2_thata_t)
+    
+    total_internal_refraction = (sin2_thata_t > 1)
+    
+    # schlick approximation for refraction coefficient R     
+    return nil if total_internal_refraction
+    reflected_part = compute_schlick_r(n_1, n_2, cos_theta_i, cos_theta_t)  
+  
+		return nil if (reflectedPart < 1e-5)
+    
+    r_dir = w_in.s_copy
+    scaled_normal = normal.s_copy.scale(2.0*cos_theta_i)
+    r_dir.add(scaled_normal)
+    
+    brdf_contribution = Spectrum.new(1.0)
+		brdf_contribution.mult(reflected_part) 
+
+    brdf_contribution = Spectrum.new(1.0)
+    brdf_contribution.mult(1.0 - r_schlick)  
+    args = {:brdf => brdf_contribution,
+            :emission => Spectrum.new(0.0),
+            :w => r_dir,
+            :is_specular => true,
+            :p => reflected_part}
+		ShadingSample.new args
   end
   
   def has_specular_refraction?
