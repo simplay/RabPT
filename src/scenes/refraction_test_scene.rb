@@ -43,7 +43,7 @@ class RefractionTestScene
     @integrator_factory = PointLightIntegratorFactory.new
     @sampler_factory = OneSamplerFactory.new
     
-    red = Diffuse.new(Spectrum.new(Vector3f.new(1.0, 0.0, 1.0)));
+    air = Refractive.new(1.001);
     
     
     blinn = Blinn.new(Spectrum.new(Vector3f.new(1.0, 0.0, 0.0)), Spectrum.new(0.6), 50.0)
