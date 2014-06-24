@@ -116,9 +116,9 @@ class Refractive
     attr_reader :normal,
                 :w_in,
                 :cos_theta_i,
-                :@cos_theta_t,
-                :@sin2_thata_t,
-                :@total_internal_refraction,
+                :cos_theta_t,
+                :sin2_thata_t,
+                :total_internal_refraction,
                 :n_1, :n_2
                 
     def initialize(hit_record)
