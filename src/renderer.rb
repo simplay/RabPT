@@ -60,13 +60,13 @@ class Renderer
   
   def scene_instance_from(selection, spp)
     case selection
-    when "1"
+    when 1
       CameraTestScene.new(@dimM, @dimN, spp)
-    when "2"
+    when 2
       BlinnTestScene.new(@dimM, @dimN, spp)
-    when "3"
+    when 3
       InstancingTestScene.new(@dimM, @dimN, spp)
-    when "4"
+    when 4
       MeshLoadingTestScene.new(@dimM, @dimN, spp)
     else
       CameraTestScene.new(@dimM, @dimN, spp)
