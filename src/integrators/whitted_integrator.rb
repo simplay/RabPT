@@ -5,16 +5,51 @@ class WhittedIntegrator
   
   include Integrator
   
-  attr_accessor :root, :light_list
+  attr_accessor :root, :light_list,
+                :reflected_part,
+                :refracted_part,
+                :total_refracted_reflection
+  
+  
+  
+	MAX_BOUNCES = 5;
   
   def initialize scene
     @root = scene.root
     @light_list = scene.light_list.container
+    @reflected_part = Spectrum.new(0.0)
+    @refracted_part = Spectrum.new(0.0)
+    @total_refracted_reflection = Spectrum.new(0.0)
   end
   
 
   def integrate ray
+    
+    hit_record = root.intersect(ray)
+    total_contribution = Spectrum.new(0.0)
+    
+    unless hit_record.nil?
+      
+      emission = hit_record.material.evaluateEmission(hit_record, hit_record.w)
+      return emission unless emission.nil?
+      
+      return @total_refracted_reflection if has_reflrefr_contribution(hit_record, ray)
+      
 
+  			// Iterate over all light sources
+  			Iterator<LightGeometry> lightSources = lightList.iterator();
+  			while (lightSources.hasNext()) {
+  				LightGeometry lightSource = lightSources.next();
+  				Spectrum currentContribution = getContributionOf(lightSource,
+  						intersectionsEyeScene, CameraRay.t);
+  				totalContribution.add(currentContribution);
+  			}
+
+    end
+    
+
+
+    total_contribution
   end
   
   # Make sample budget for a pixel. Since this integrator only samples the 2D 
