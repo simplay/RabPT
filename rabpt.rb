@@ -6,9 +6,13 @@ require "pry"
 require 'optparse'
 require File.join(File.dirname(__FILE__), 'src/renderer.rb')
 
+Version = "0.0.1"
+
 user_args = {}
 opt_parser = OptionParser.new do |opt|
-  opt.banner = "TODO usage hints"
+  opt.banner = "Usage: ruby rabpt.rb -s 4 -w 128 -h 128 -f my_scene_file -i 5 
+  \nFor additional information please visit RabPT's github repository:\nhttps://github.com/simplay/RabPT"
+                
   opt.separator  ""
   # some defaults
   user_args[:SPP] = 8
@@ -34,7 +38,7 @@ opt_parser = OptionParser.new do |opt|
     exit
   end
   opt.on_tail("--version", "Show version") do
-    puts ::Version.join('.')
+    puts "rabpt #{Version}"
     exit
   end
 end
@@ -45,6 +49,7 @@ begin
     raise OptionParser::MissingArgument if user_args[arg].nil?
   end
 rescue OptionParser::MissingArgument
+  puts "Incorrect input argument(s) passed\n"
   puts opt_parser.help
   exit
 end
