@@ -1,5 +1,5 @@
 require_relative '../src/materials/diffuse.rb'
-require_relative '../util/vector2f.rb'
+require_relative '../util/calculus/algebra/vector2f.rb'
 require 'pry'
 
 describe Diffuse do

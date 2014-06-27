@@ -1,5 +1,5 @@
 require_relative '../util/optics.rb'
-require_relative '../util/vector3f.rb'
+require_relative '../util/calculus/algebra/vector3f.rb'
 require 'pry'
 
 describe Optics do

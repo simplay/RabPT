@@ -4,9 +4,9 @@ class HitRecord
   # Stores information about a ray-surface intersection. This information 
   # is typically used for shading.
   
-  require_relative '../util/vector2f.rb'
-  require_relative '../util/vector3f.rb'
-  require_relative'../util/matrix3f.rb'
+  require_relative '../util/calculus/algebra/vector2f.rb'
+  require_relative '../util/calculus/algebra/vector3f.rb'
+  require_relative'../util/calculus/algebra/matrix3f.rb'
   require_relative'materials/material.rb'
   
   ##
