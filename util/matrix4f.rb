@@ -1,6 +1,6 @@
 class Matrix4f
-  require File.join(File.dirname(__FILE__), 'vector4f.rb')
-  require File.join(File.dirname(__FILE__), 'matrix3f.rb') 
+  require_relative 'vector4f.rb'
+  require_relative 'matrix3f.rb' 
   require "pry"
   
   EPSILON = 0.001

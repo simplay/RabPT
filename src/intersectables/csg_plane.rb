@@ -1,8 +1,9 @@
+# TODO the logic of this class is currently not correctly implemented. Just move along :)
 class CsgPlane
-  require File.join(File.dirname(__FILE__), 'csg_solid.rb')
-  require File.join(File.dirname(__FILE__), '../ray.rb')
-  require File.join(File.dirname(__FILE__), '../hit_record.rb')
-  require File.join(File.dirname(__FILE__), '../materials/material.rb')
+  require_relative 'csg_solid.rb'
+  require_relative '../ray.rb'
+  require_relative '../hit_record.rb'
+  require_relative '../materials/material.rb'
   
   include CsgSolid
   

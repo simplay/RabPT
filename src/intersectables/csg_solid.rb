@@ -6,7 +6,7 @@ module CsgSolid
   # intersection point with the object is the first interval boundary where the ray enters the 
   # object the first time.
   
-  require File.join(File.dirname(__FILE__), 'interval_boundary.rb')
+  require_relative 'interval_boundary.rb'
   
   attr_accessor :material
   

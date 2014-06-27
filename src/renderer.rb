@@ -1,6 +1,4 @@
 class Renderer
-  require File.join(File.dirname(__FILE__), 'scenes/debug_scene.rb')
-
   require_relative '../util/obj_reader.rb'
   require_relative 'scenes/camera_test_scene.rb'
   require_relative 'scenes/blinn_test_scene.rb'

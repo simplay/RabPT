@@ -4,10 +4,10 @@ class HitRecord
   # Stores information about a ray-surface intersection. This information 
   # is typically used for shading.
   
-  require File.join(File.dirname(__FILE__), '../util/vector2f.rb')
-  require File.join(File.dirname(__FILE__), '../util/vector3f.rb')
-  require File.join(File.dirname(__FILE__), '../util/matrix3f.rb')
-  require File.join(File.dirname(__FILE__), 'materials/material.rb')
+  require_relative '../util/vector2f.rb'
+  require_relative '../util/vector3f.rb'
+  require_relative'../util/matrix3f.rb'
+  require_relative'materials/material.rb'
   
   ##
   # :attr_accessor: 

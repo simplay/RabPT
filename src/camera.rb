@@ -2,7 +2,7 @@
 # C transformation matric from world to camera space.
 # Cinv is transofrmation matrix from world coordinates to camera space.
 
-require File.join(File.dirname(__FILE__), '../util/vector3f.rb')
+require_relative '../util/vector3f.rb'
 require_relative '../util/vector4f.rb'
 
 class Camera

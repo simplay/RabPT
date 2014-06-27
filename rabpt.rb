@@ -4,7 +4,7 @@ require "rubygems"
 require "imageruby"
 require "pry"
 require 'optparse'
-require File.join(File.dirname(__FILE__), 'src/renderer.rb')
+require_relative 'src/renderer.rb'
 
 Version = "0.0.1"
 

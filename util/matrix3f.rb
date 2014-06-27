@@ -1,6 +1,6 @@
 class Matrix3f
-  require File.join(File.dirname(__FILE__), 'vector3f.rb')
-  require File.join(File.dirname(__FILE__), 'matrix2f.rb')
+  require_relative 'vector3f.rb'
+  require_relative 'matrix2f.rb'
   
   attr_accessor :m00, :m01, :m02,
                 :m10, :m11, :m12,
