@@ -1,9 +1,11 @@
-require 'pry'
-require_relative 'vector4f.rb'
-
+require_relative 'vectorable.rb'
+require_relative 'vector2f.rb'
+require_relative 'vector4f.rb' 
+ 
 class Vector3f
-  EPSILON = 0.001
   attr_accessor :x, :y, :z
+  
+  include Vectorable
   
   def initialize(x_f, y_f, z_f)
     self.x = x_f
@@ -17,7 +19,6 @@ class Vector3f
   def s_copy
     Vector3f.new(@x, @y, @z)
   end
-  
   
   # make an instance of vector3f from a given array
   # @array: Array containing 3 Float arguments
@@ -61,46 +62,9 @@ class Vector3f
     self
   end
   
-  # me = T*me
-  # applied a tranformation matrix 
-  # to this vector and overwrite its values
-  # this method overwrites 
-  # the components of this vector
-  # @param t Matrix3f transformation
-  # @return updated me:Vector3f
-  def transform t
-    ovwrite_me t.vectormult(self)
-  end
-  
   # compute euclidian scalar product between this and other
   def dot other
     @x*other.x + @y*other.y + @z*other.z
-  end
-  
-  def dotted
-    dot self
-  end
-  
-  # <(me-other),(me-other)>^2
-  # computed squared dotproduct of 
-  # distance vector, whereat
-  # distacne is from me to other 
-  # @param other Vector3f
-  # @return distance from me to other squared:Float
-  def dist_to_sqr(other)
-    s_copy.sub(other).dotted
-  end
-  
-  # compute euclidian distance between self and other
-  # @param other Vector3f
-  # @return euclidian distance betwenn: Float 
-  def norm_2 other
-    dot = dot(other)
-    Math::sqrt(dot)
-  end
-  
-  def length
-    norm_2(self)
   end
   
   # ret = me x other
@@ -126,25 +90,7 @@ class Vector3f
     @y = @y*by
     @z = @z*by
     self
-  end
-  
-  # me = -me
-  # invertes direction of this vector
-  # this method overwrites 
-  # the components of this vector
-  # @return updated self Vector3f
-  def negate
-    scale(-1.0)
-  end
-  
-  # get unit vector version of this vector
-  # this method overwrites 
-  # the components of this vector
-  # return updated self Vector3f
-  def normalize
-    normalization_factor = norm_2 self
-    self.scale (1.0 / normalization_factor.to_f) unless normalization_factor==0.0
-  end
+  end  
   
   # other == self
   # check whether components of this vector are 
@@ -155,18 +101,6 @@ class Vector3f
     (@x == other.x) && (@y == other.y) && (@z == other.z)
   end
   
-  # || other - self || < epsilon
-  # check whether components of this vector are 
-  # approximately the same according to the 2Norm
-  # to a given other vector
-  # @param other Vector3f
-  # @return Boolean are they approxi. the same
-  def approx_same_values_as? other
-    delta = s_copy.sub(other).to_a.inject(0.0) do |result, element| 
-      result + element**2.0 
-    end
-    delta < EPSILON
-  end
   
   # showing tripple of vector components
   # @return String: pretty stringified components.
