@@ -66,5 +66,18 @@ module Vectorable
     ovwrite_me t.vectormult(self)
   end
   
+  # computes outgoing mirror direction, reflected off
+  # at hit_position, relying on incident light direction
+  # and the surface normal at that postion.
+  # uses self as incident direction
+  # theta_i denotes the angle between
+  # surface normal and indicdent light direction.
+  # Snell's law: r = 2*dot(n,i)n-i
+  # @param normal:Vector3f surface normal
+  # @return w_out: Vector3f mirror reflection direction.
+  def reflection normal
+    cos_theta_i = self.dot(normal)
+    normal.s_copy.scale(2.0*cos_theta_i).add(w_in.s_copy.negate)
+  end
   
 end
