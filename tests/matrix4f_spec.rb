@@ -1,4 +1,4 @@
-require_relative '../util/matrix4f.rb'
+require_relative '../util/calculus/algebra/matrix4f.rb'
 
 describe Matrix4f do
   before(:each) do

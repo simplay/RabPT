@@ -1,6 +1,11 @@
+require_relative 'vectorable.rb'
+require_relative 'vector3f.rb'
+require_relative 'vector4f.rb' 
+ 
 class Vector2f
-  EPSILON = 0.001
   attr_accessor :x, :y
+  
+  include Vectorable
   
   def initialize(x, y)
     @x = x
@@ -35,16 +40,6 @@ class Vector2f
     @x*other.x + @y*other.y
   end
   
-  # compute euclidian distance between this and other
-  def norm_2 other
-    dot = dot(other)
-    Math::sqrt(dot)
-  end
-  
-  def length
-    norm_2(self)
-  end
-  
   # scale this vector by a constant
   def scale by
     @x = @x*by
@@ -52,21 +47,8 @@ class Vector2f
     self
   end
   
-  # get unit vector version of this vector
-  def normalize
-    normalization_factor = norm_2 self
-    self.scale (1.0 / normalization_factor.to_f) unless normalization_factor==0.0
-  end
-  
   def same_values_as? other
     (@x == other.x) && (@y == other.y)
-  end
-  
-  def approx_same_values_as? other
-    delta = copy_s.sub(other).to_a.inject(0.0) do |result, element| 
-      result + element**2.0 
-    end
-    delta < EPSILON
   end
   
   def to_s

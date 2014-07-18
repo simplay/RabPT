@@ -1,14 +1,17 @@
+require_relative 'vectorable.rb'
+require_relative 'vector2f.rb'
 require_relative 'vector3f.rb'
- 
+
 class Vector4f
-  EPSILON = 0.001
   attr_accessor :x, :y, :z, :w
   
+  include Vectorable
+  
   def initialize(x_f, y_f, z_f, w_f)
-    self.x = x_f
-    self.y = y_f
-    self.z = z_f
-    self.w = w_f
+    @x = x_f
+    @y = y_f
+    @z = z_f
+    @w = w_f
   end
   
   # shallow copy of this vector3f
@@ -42,29 +45,9 @@ class Vector4f
     self
   end
   
-  # applied a tranformation matrix 
-  # to this vector and overwrite its values
-  def transform t
-    ovwrite_me t.vectormult(self)
-  end
-  
-  def dotted
-    dot self
-  end
-  
    # compute euclidian scalar product between this and other
   def dot other
     @x*other.x + @y*other.y + @z*other.z + @w*other.w
-  end
-  
-  # compute euclidian distance between this and other
-  def norm_2 other
-    dot = dot(other)
-    Math::sqrt(dot)
-  end
-  
-  def length
-    norm_2(self)
   end
   
   # scale this vector by a constant
@@ -76,22 +59,9 @@ class Vector4f
     self
   end
   
-  # get unit vector version of this vector
-  def normalize
-    normalization_factor = norm_2 self
-    self.scale (1.0 / normalization_factor.to_f)
-  end
-  
   def same_values_as? other
     (@x == other.x) && (@y == other.y) && (@z == other.z) && (@w == other.w) 
   end
-  
-  def approx_same_values_as? other
-    delta = copy_s.sub(other).to_a.inject(0.0) do |result, element| 
-      result + element**2.0 
-    end
-    delta < EPSILON
-  end  
   
   def to_s
     "(#{@x},#{@y},#{@z},#{@w})"

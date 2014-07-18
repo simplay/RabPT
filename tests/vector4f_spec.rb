@@ -1,5 +1,5 @@
-require_relative '../util/vector4f.rb'
-require_relative '../util/vector3f.rb'
+require_relative '../util/calculus/algebra/vector4f.rb'
+require_relative '../util/calculus/algebra/vector3f.rb'
 describe Vector4f do
   let(:v1) { Vector4f.new(1.0, 2.0, 4.0, 1.0) }
   let(:v1_orig) { Vector4f.new(1.0, 2.0, 4.0, 1.0) }
