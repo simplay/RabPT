@@ -8,10 +8,10 @@ class Vector4f
   include Vectorable
   
   def initialize(x_f, y_f, z_f, w_f)
-    self.x = x_f
-    self.y = y_f
-    self.z = z_f
-    self.w = w_f
+    @x = x_f
+    @y = y_f
+    @z = z_f
+    @w = w_f
   end
   
   # shallow copy of this vector3f
