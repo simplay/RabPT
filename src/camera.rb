@@ -2,8 +2,8 @@
 # C transformation matric from world to camera space.
 # Cinv is transofrmation matrix from world coordinates to camera space.
 
-require_relative '../util/vector3f.rb'
-require_relative '../util/vector4f.rb'
+require_relative '../util/calculus/algebra/vector3f.rb'
+require_relative '../util/calculus/algebra/vector4f.rb'
 
 class Camera
   # Given the specification of a ray in image space, a camera constructs 
@@ -24,14 +24,15 @@ class Camera
                 :r,
                 :l,
                 :camera_matrix
-  
-  # @param eye from position of camera
-  # @param lookAt to position of camera
-  # @param up height
-  # @param fov field of view angle [degree]
-  # @param aspect aspect retio w/h
-  # @param width image width
-  # @param height image height
+
+  # @param args is a hash including the following keys:
+  #   :eye from position of camera
+  #   :lookAt to position of camera
+  #   :up height
+  #   :fov field of view angle [degree]
+  #   :aspect aspect retio w/h
+  #   :width image width
+  #   :param height image height
   def initialize(args = {}) 
     args.each do |key, value|
       send("#{key}=", value)
@@ -65,7 +66,7 @@ class Camera
   end
   
   private
-  
+
   def compute_camera_matrix
     from = Vector3f.new(@eye.x, @eye.y, @eye.z)
     to = Vector3f.new(@look_at.x, @look_at.y, @look_at.z)

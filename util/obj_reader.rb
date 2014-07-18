@@ -1,5 +1,5 @@
 require 'pry'
-require_relative 'vector3f.rb'
+require_relative 'calculus/algebra/vector3f.rb'
 
 class ObjReader
   # obj file format storing basic triangular mesh data

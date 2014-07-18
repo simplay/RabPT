@@ -25,3 +25,5 @@ Temporary Items
 *.bmp
 *.png
 *.jpg
+
+.idea/*

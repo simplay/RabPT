@@ -69,7 +69,7 @@ module Vectorable
   # computes outgoing mirror direction, reflected off
   # at hit_position, relying on incident light direction
   # and the surface normal at that postion.
-  # uses self as incident direction
+  # uses self as incident direction.
   # theta_i denotes the angle between
   # surface normal and indicdent light direction.
   # Snell's law: r = 2*dot(n,i)n-i

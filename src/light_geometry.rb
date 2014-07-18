@@ -1,7 +1,7 @@
 module LightGeometry
   require_relative 'intersectable.rb'
   require_relative 'hit_record.rb'
-  require_relative '../util/vector3f.rb'
+  require_relative '../util/calculus/algebra/vector3f.rb'
   include Intersectable
   
   # An interface to implement light sources. Light sources derive from 
