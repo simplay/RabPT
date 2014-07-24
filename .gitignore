@@ -25,3 +25,6 @@ Temporary Items
 *.bmp
 *.png
 *.jpg
+
+# rubymine ignores
+.idea
