@@ -10,7 +10,7 @@ Version = "0.0.1"
 
 user_args = {}
 opt_parser = OptionParser.new do |opt|
-  opt.banner = "Usage: ruby rabpt.rb -s 4 -w 128 -h 128 -f my_scene_file -i 5 
+  opt.banner = "Usage example: ruby rabpt.rb -s 4 -w 128 -h 128 -f my_scene_file -i 5
   \nFor additional information please visit RabPT's github repository:\nhttps://github.com/simplay/RabPT"
                 
   opt.separator  ""
@@ -41,6 +41,7 @@ opt_parser = OptionParser.new do |opt|
     puts "rabpt #{Version}"
     exit
   end
+
 end
 begin 
   opt_parser.parse!
