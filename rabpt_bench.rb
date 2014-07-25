@@ -2,6 +2,7 @@ require 'optparse'
 
 require_relative 'benchmarks/vector3f_benchmark'
 require_relative 'benchmarks/vector4f_benchmark'
+require_relative 'benchmarks/matrix4f_benchmark'
 
 user_args = {}
 opt_parser = OptionParser.new do |opt|
@@ -43,6 +44,8 @@ if user_args[:bench_task].eql?("vec3")
   Vector3fBenchmark.new.run_benchmark
 elsif(user_args[:bench_task].eql?("vec4"))
   Vector4fBenchmark.new.run_benchmark
+elsif(user_args[:bench_task].eql?("mat4"))
+  Matrix4fBenchmark.new.run_benchmark
 else
   puts "Incorrect input argument(s) passed\n"
   puts opt_parser.help

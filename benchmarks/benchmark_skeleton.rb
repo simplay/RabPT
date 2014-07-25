@@ -8,6 +8,7 @@ require_relative '../util/matrix4f.rb'
 
 module BenchmarkSkeleton
   ITERATIONS =1_000_000
+  ITERATIONS_LOW = 1_000
 
   def run_benchmark
     print " DONE\n"

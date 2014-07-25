@@ -69,12 +69,7 @@ class Vector4fBenchmark
       x.report("Vector4f#transform"){ ITERATIONS.times do |idx|
         @vec4f_array_b[idx].transform(@matrix4f_a[idx])
       end}
-
-      x.report("Vector4f#transform"){ ITERATIONS.times do |idx|
-        @matrix4f_a[idx].invert
-      end}
-
     end
-   end
-
+  end
+  
 end
