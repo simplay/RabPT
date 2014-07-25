@@ -5,10 +5,10 @@ class Vector4f
   attr_accessor :x, :y, :z, :w
   
   def initialize(x_f, y_f, z_f, w_f)
-    self.x = x_f
-    self.y = y_f
-    self.z = z_f
-    self.w = w_f
+    @x = x_f
+    @y = y_f
+    @z = z_f
+    @w = w_f
   end
   
   # shallow copy of this vector3f
@@ -87,7 +87,7 @@ class Vector4f
   end
   
   def approx_same_values_as? other
-    delta = copy_s.sub(other).to_a.inject(0.0) do |result, element| 
+    delta = s_copy.sub(other).to_a.inject(0.0) do |result, element|
       result + element**2.0 
     end
     delta < EPSILON

@@ -1,5 +1,7 @@
-require_relative 'benchmarks/vector3f_benchmark'
 require 'optparse'
+
+require_relative 'benchmarks/vector3f_benchmark'
+require_relative 'benchmarks/vector4f_benchmark'
 
 user_args = {}
 opt_parser = OptionParser.new do |opt|
