@@ -1,5 +1,7 @@
-## RabPT - A Ruby Ray- and bidirectional Path-Tracer
-+ A collection of various physical phenomenon rendering approaches, following basic ray-tracing approaches, implemented as a ruby application.
+# RabPT - A Ruby Ray- and bidirectional Path-Tracer
+**RabPT** is a collection of various physical phenomenon rendering approaches, following basic ray-tracing approaches, implemented as a ruby application.
+
+**RabPT** is licensed under the [MIT License](https://github.com/simplay/RabPT/blob/master/LICENSE).
 
 ### run this application:
 1. Install Gems: run ````bundle````
