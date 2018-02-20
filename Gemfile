@@ -5,9 +5,9 @@ gem 'imageruby'
 # allow to render bmp images
 gem 'imageruby-bmp'
 # Debugger, only works with MRI
-gem "pry"
 group :development do
-	gem "pry-debugger", "~> 0.2.2"
+  gem 'pry'
+  gem 'pry-remote'
 end
 # tests
 gem "rspec"
