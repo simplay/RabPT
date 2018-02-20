@@ -1,6 +1,4 @@
 module Optics
-  
-  
   # computes outgoing mirror direction, reflected off
   # at hit_position, relying on incident light direction
   # and the surface normal at that postion.
@@ -14,12 +12,10 @@ module Optics
     cos_theta_i = w_in.dot(normal)
     normal.s_copy.scale(2.0*cos_theta_i).add(w_in.s_copy.negate)
   end
-  
+
   def self.refraction
   end
-  
+
   def self.fresnel(w_in, w_out)
   end
-  
-
 end

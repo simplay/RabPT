@@ -1,11 +1,9 @@
+require_relative '../sampler.rb'
+
+# Returns always one sample at 0.5 in all dimensions.
 class OneSampler
-  # Returns always one sample at 0.5 in all dimensions.
-  require_relative '../sampler.rb'
   include Sampler
-  
-  def initialize
-  end
-  
+
   def make_samples(n, d)
     sample_row = []
     d.times do

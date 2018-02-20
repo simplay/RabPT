@@ -3,7 +3,6 @@ GEM
   specs:
     coderay (1.1.0)
     diff-lcs (1.2.5)
-    ffi (1.9.3)
     ffi (1.9.3-java)
     imageruby (0.2.5)
     imageruby-bmp (0.1.0)

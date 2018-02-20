@@ -1,24 +1,21 @@
-class Instance  
-  # when arranges a scene, we would have serveral occurences of similar object instances,
-  # such as many spheres placed in our scene. instead creating many versions of 
-  # the same kind of object we actually could make use of creating instances instead.
-  # basicallz, an instance has a reference to a common, shadered intersectable and
-  # a homogeneous tranformation which describes how an object is rotated, translated, 
-  # scaled and sheared in its using scene. An instance of an intersectable then
-  # never gets modified, only its transformation matrix gets updated. This allows
-  # to save us from creating many similar intersectable instances, which reduces 
-  # the overall memorz usage und furthermore makes it quite handz to create
-  # a scene.
-  
-  require 'pry'
-  require_relative '../intersectable.rb'
-  require_relative '../ray.rb'
-  require_relative '../hit_record.rb'
-  
+require_relative '../intersectable.rb'
+require_relative '../ray.rb'
+require_relative '../hit_record.rb'
+
+# when arranges a scene, we would have serveral occurences of similar object instances,
+# such as many spheres placed in our scene. instead creating many versions of
+# the same kind of object we actually could make use of creating instances instead.
+# basicallz, an instance has a reference to a common, shadered intersectable and
+# a homogeneous tranformation which describes how an object is rotated, translated,
+# scaled and sheared in its using scene. An instance of an intersectable then
+# never gets modified, only its transformation matrix gets updated. This allows
+# to save us from creating many similar intersectable instances, which reduces
+# the overall memorz usage und furthermore makes it quite handz to create
+# a scene.
+class Instance
   include Intersectable
-  
-  ##
-  # :attr_accessor: 
+
+  # :attr_accessor:
   #   transf: Matrix4f
   #     homogeneous tranformation
   #     described in local object coordinate system
@@ -36,26 +33,26 @@ class Instance
   #   intersectable: Intersectable
   #     a reference of an instance of an intersectable,
   #     such as a sphere or a plane for example.
-  
+
   attr_accessor :transf,
                 :inv_transf,
                 :trasp_inv_transf,
                 :intersectable
-          
-  # stores intersectable and its transformation 
-  # @param intersectable:Intersectable 
+
+  # stores intersectable and its transformation
+  # @param intersectable:Intersectable
   #        instance of an intersectable
   # @param transformation: Matrix4f
   #        homogeneous transformation
-  #        applied on this intersectable               
+  #        applied on this intersectable
   def initialize(intersectable, transformation)
     @intersectable = intersectable
     @transf = transformation
-    
+
     @inv_transf = transformation.s_copy.inv
-    @trasp_inv_transf = @inv_transf.s_copy.transpose    
+    @trasp_inv_transf = @inv_transf.s_copy.transpose
   end
-  
+
   # intersect ray with given encapsulated instance
   # delegate to instance and report its resulting
   # hitrecord.
@@ -69,16 +66,16 @@ class Instance
     instance_origin.transform(@inv_transf)
     instance_direction.transform(@inv_transf)
 
-    ray_args = {:origin => instance_origin.s_copy.to_vec3f, 
-                :direction => instance_direction.s_copy.to_vec3f, 
+    ray_args = {:origin => instance_origin.s_copy.to_vec3f,
+                :direction => instance_direction.s_copy.to_vec3f,
                 :t => ray.t}
     instance_ray = Ray.new ray_args
 		hit_record = @intersectable.intersect(instance_ray);
 		(hit_record == nil) ? nil : assembly_hit_record(hit_record)
   end
-  
+
   private
-  
+
   def assembly_hit_record hit_record
     transf_position = hit_record.position.s_copy.to_vec4f(1.0).transform(@transf)
     transf_normal = hit_record.normal.s_copy.to_vec4f.transform(@inv_transf).normalize
@@ -95,5 +92,5 @@ class Instance
     }
     HitRecord.new hit_record_args
   end
-  
+
 end
