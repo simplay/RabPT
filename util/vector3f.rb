@@ -77,7 +77,7 @@ class Vector3f
   end
 
   def dotted
-    dot self
+    dot(self)
   end
 
   # <(me-other),(me-other)>^2
@@ -108,9 +108,9 @@ class Vector3f
   # @param other Vector3f
   # @return cross product:Vector3f
   def cross(other)
-    c_x = @y*other.z - @z*other.y
-    c_y = @z*other.x - @x*other.z
-    c_z = @x*other.y - @y*other.x
+    c_x = @y * other.z - @z * other.y
+    c_y = @z * other.x - @x * other.z
+    c_z = @x * other.y - @y * other.x
     Vector3f.new(c_x,c_y,c_z)
   end
 
@@ -120,10 +120,10 @@ class Vector3f
   # the components of this vector
   # @param by Vector3f
   # @return scaled version it self: Vector3f
-  def scale by
-    @x = @x*by
-    @y = @y*by
-    @z = @z*by
+  def scale(by)
+    @x = @x * by
+    @y = @y * by
+    @z = @z * by
     self
   end
 
@@ -141,8 +141,10 @@ class Vector3f
   # the components of this vector
   # return updated self Vector3f
   def normalize
-    normalization_factor = norm_2 self
-    self.scale (1.0 / normalization_factor.to_f) unless normalization_factor==0.0
+    normalization_factor = norm_2(self)
+    return self if normalization_factor.zero?
+
+    self.scale (1.0 / normalization_factor.to_f)
   end
 
   # other == self

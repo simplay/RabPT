@@ -45,7 +45,7 @@ class Mesh < IntersectableList
     @material = material
 
     @indices.length.times do |idx|
-      self.put(MeshTriangle.new(self, idx))
+      put(MeshTriangle.new(self, idx))
     end
   end
 

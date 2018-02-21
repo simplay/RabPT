@@ -14,7 +14,6 @@ class Diffuse
   # @param kd the diffuse reflectance
   # Default diffuse material with reflectance (1,1,1).
   def initialize(k_d)
-    @k_d = 1.0 if k_d.nil?
     @k_d = Spectrum.new(k_d)
 
     # normalization
@@ -23,7 +22,7 @@ class Diffuse
   end
 
   def evaluate_brdf(hit_record, w_out, w_in)
-    Spectrum.new(@k_d)
+    Spectrum.new(k_d)
   end
 
   def evaluate_emission(hit_record, w_out)
@@ -49,13 +48,13 @@ class Diffuse
   def shading_sample(hit_record, sample)
     # transformed random sampled numbers
     psi_1_t = Math::sqrt(sample[0])
-    psi_2_t = sample[1]*2.0*Math::PI
+    psi_2_t = sample[1] * 2.0 * Math::PI
 
-    x = Math::cos(psi_2_t)*psi_1_t
-    y = Math::sin(psi_2_t)*psi_1_t
+    x = Math::cos(psi_2_t) * psi_1_t
+    y = Math::sin(psi_2_t) * psi_1_t
     z = Math::sqrt(1.0 - sample[0]);
 
-    dir = Vector3f.new(x,y,z)
+    dir = Vector3f.new(x, y, z)
 
     tangentspace = hit_record.tbs
     dir.transform(tangentspace);
@@ -87,6 +86,6 @@ class Diffuse
   end
 
   def to_s
-    "diffuse material with k_d: #{@k_d.to_s}"
+    "diffuse material with k_d: #{k_d}"
   end
 end

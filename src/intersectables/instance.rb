@@ -39,58 +39,75 @@ class Instance
                 :trasp_inv_transf,
                 :intersectable
 
-  # stores intersectable and its transformation
-  # @param intersectable:Intersectable
-  #        instance of an intersectable
-  # @param transformation: Matrix4f
-  #        homogeneous transformation
-  #        applied on this intersectable
+  # Stores intersectable and its transformation
+  #
+  # @param intersectable:Intersectable instance of an intersectable
+  # @param transformation: Matrix4f homogeneous transformation applied on this
+  #   intersectable
   def initialize(intersectable, transformation)
-    @intersectable = intersectable
-    @transf = transformation
-
-    @inv_transf = transformation.s_copy.inv
+    @intersectable    = intersectable
+    @transf           = transformation
+    @inv_transf       = transformation.s_copy.inv
     @trasp_inv_transf = @inv_transf.s_copy.transpose
   end
 
-  # intersect ray with given encapsulated instance
-  # delegate to instance and report its resulting
-  # hitrecord.
-  # Note that we have to apply the transformation
-  # matrix encapsulated by this instance.
-  # @param ray:Ray
-  # @return HitRecord provided by intersectable
-  def intersect ray
+  # intersect ray with given encapsulated instance delegate to instance and
+  # report its resulting hitrecord. Note that we have to apply the
+  # transformation matrix encapsulated by this instance.
+  #
+  # @param ray [Ray]
+  # @return [HitRecord] provided by intersectable
+  def intersect(ray)
     instance_origin = ray.origin.s_copy.to_vec4f(1.0)
     instance_direction = ray.direction.s_copy.to_vec4f
-    instance_origin.transform(@inv_transf)
-    instance_direction.transform(@inv_transf)
+    instance_origin.transform(inv_transf)
+    instance_direction.transform(inv_transf)
 
-    ray_args = {:origin => instance_origin.s_copy.to_vec3f,
-                :direction => instance_direction.s_copy.to_vec3f,
-                :t => ray.t}
-    instance_ray = Ray.new ray_args
-		hit_record = @intersectable.intersect(instance_ray);
-		(hit_record == nil) ? nil : assembly_hit_record(hit_record)
+    ray_args = {
+      origin: instance_origin.s_copy.to_vec3f,
+      direction: instance_direction.s_copy.to_vec3f,
+      t: ray.t
+    }
+    instance_ray = Ray.new(ray_args)
+
+		hit_record = intersectable.intersect(instance_ray);
+    return nil if hit_record.nil?
+
+    assembly_hit_record(hit_record)
   end
 
   private
 
-  def assembly_hit_record hit_record
-    transf_position = hit_record.position.s_copy.to_vec4f(1.0).transform(@transf)
-    transf_normal = hit_record.normal.s_copy.to_vec4f.transform(@inv_transf).normalize
-    transf_w_in = hit_record.w.to_vec4f.transform(@trasp_inv_transf).normalize
-    hit_record_args = {
-      :position => transf_position.to_vec3f,
-      :normal => transf_normal.to_vec3f,
-      :w => transf_w_in.to_vec3f,
-      :intersectable => hit_record.intersectable,
-      :material => hit_record.material,
-      :u => hit_record.u,
-      :v => hit_record.v,
-      :t => hit_record.t
-    }
-    HitRecord.new hit_record_args
-  end
+  def assembly_hit_record(hit_record)
+    # compute transformed hit position
+    transf_position = hit_record.position
+                                .s_copy
+                                .to_vec4f(1.0)
+                                .transform(transf)
 
+    # compute normal at hit position
+    transf_normal = hit_record.normal
+                              .s_copy
+                              .to_vec4f
+                              .transform(inv_transf)
+                              .normalize
+
+    transf_w_in = hit_record.w
+                            .to_vec4f
+                            .transform(trasp_inv_transf)
+                            .normalize
+
+    hit_record_args = {
+      position: transf_position.to_vec3f,
+      normal: transf_normal.to_vec3f,
+      w: transf_w_in.to_vec3f,
+      intersectable: hit_record.intersectable,
+      material: hit_record.material,
+      u: hit_record.u,
+      v: hit_record.v,
+      t: hit_record.t
+    }
+
+    HitRecord.new(hit_record_args)
+  end
 end

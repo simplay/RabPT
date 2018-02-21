@@ -7,8 +7,8 @@ class PointLightIntegrator
 
   attr_accessor :root, :light_list
 
-  def initialize scene
-    @root = scene.root
+  def initialize(scene)
+    @root       = scene.root
     @light_list = scene.light_list.container
   end
 
@@ -19,12 +19,12 @@ class PointLightIntegrator
   # @param CameraRay primary camera ray
   # @return total contribution of this primary ray
   def integrate(ray)
-    hit_record = @root.intersect(ray)
+    hit_record = root.intersect(ray)
     contribution = Spectrum.new(0.0)
 
     return contribution if hit_record.nil?
 
-    @light_list.each do |light_source|
+    light_list.each do |light_source|
       current_contribution = contribution_of(light_source, hit_record, ray.t)
       contribution.add(current_contribution)
     end
@@ -59,14 +59,18 @@ class PointLightIntegrator
 
     return Spectrum.new(0.0) if occluded?(hit_record.position, light_dir, t, d2)
 
-    brdf_contribution = hit_record.material.evaluate_brdf(hit_record, hit_record.w, light_dir)
+    brdf_contribution = hit_record.material.evaluate_brdf(
+      hit_record,
+      hit_record.w,
+      light_dir
+    )
 
     # shading: brdf * emission * dot(normal,light_dir) * geom_term
     contribution = Spectrum.new(brdf_contribution)
 
-    l = light_dir.s_copy
-    l.negate
-    light_emission = light_hit.material.evaluate_emission(light_hit, l)
+    opposite_light_dir = light_dir.s_copy.negate
+    light_emission = light_hit.material
+                              .evaluate_emission(light_hit, opposite_light_dir)
 
     contribution.mult(light_emission)
 
@@ -85,14 +89,14 @@ class PointLightIntegrator
   # @return is light source occluded by object at hitPostion?
   def occluded?(hit_position, light_dir, t, eps)
     ray_args = {
-      :origin => hit_position,
-      :direction => light_dir,
-      :t => t,
-      :should_perturbate => true
+      origin: hit_position,
+      direction: light_dir,
+      t: t,
+      should_perturbate: true
     }
 
     shadow_ray = Ray.new(ray_args)
-    shadow_hit = @root.intersect(shadow_ray)
+    shadow_hit = root.intersect(shadow_ray)
 
     return false if shadow_hit.nil?
 

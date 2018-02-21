@@ -8,17 +8,18 @@ class DebugIntegrator
 
   attr_accessor :scene
 
-  def initialize scene
+  def initialize(scene)
     @scene = scene
   end
 
-  # Return some value useful for debugging.
+  # @param ray [Ray]
   def integrate(ray)
-    hit_record = @scene.root.intersect(ray)
+    hit_record = scene.root.intersect(ray)
     contribution = Spectrum.new(0.0)
+
     return contribution if hit_record.nil?
 
-    if hit_record.t > 0.0
+    if hit_record.positive?
       # render green if hit point was "in front" of ray origin
       Spectrum.new(Vector3f.new(0.0, 1.0, 0.0))
     else
@@ -33,6 +34,6 @@ class DebugIntegrator
   # @param sampler the sampler to be usef for generating the samples
   # @param n the desired number of samples
   def make_pixel_samples(sampler, n)
-    sampler.make_samples(n, 2);
+    sampler.make_samples(n, 2)
   end
 end

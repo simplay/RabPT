@@ -34,7 +34,8 @@ class Refractive
 		return nil if (reflected_part < 1e-5)
 
     r_dir = local_space.w_in.s_copy
-    scaled_normal = local_space.normal.s_copy.scale(2.0 * local_space.cos_theta_i)
+    scaled_normal = local_space.normal.s_copy
+                               .scale(2.0 * local_space.cos_theta_i)
     r_dir.add(scaled_normal)
 
     brdf_contribution = Spectrum.new(1.0)
@@ -65,10 +66,14 @@ class Refractive
     refractive_part = 1.0 - local_space.compute_schlick_r
 
     # t from the paper
-    scale_factor = local_space.refraction_ratio*local_space.cos_theta_i - local_space.cos_theta_t
+    scale_factor  = local_space.refraction_ratio * local_space.cos_theta_i
+    scale_factor -= local_space.cos_theta_t
+
     scaled_normal = local_space.normal.s_copy.scale(scale_factor)
 
-    t_dir = local_space.w_in.s_copy.scale(local_space.refraction_ratio)
+    t_dir = local_space.w_in.s_copy
+                       .scale(local_space.refraction_ratio)
+
     t_dir.add(scaled_normal)
 
     brdf_contribution = Spectrum.new(1.0)
@@ -112,7 +117,7 @@ class Refractive
   # @param normal at surface hit
   # @param w_in incident light direction.
   def inside_material?(normal, w_in)
-    normal.dot(w_in) > 0.0
+    normal.dot(w_in).positive?
   end
 
   class LocalSpace
@@ -125,7 +130,6 @@ class Refractive
                 :n_1, :n_2
 
     def initialize(hit_record)
-
       @normal = hit_record.normal.s_copy
       @w_in = hit_record.normal.s_copy
       @refraction_ratio = refractive_ratio(@normal, @w_in)
@@ -133,8 +137,8 @@ class Refractive
       @cos_theta_i = @w_in.dot(@normal)
   		@w_in.negate
 
-      @sin2_thata_t = (@refraction_ratio**2.0) * (1.0-(@cos_theta_i**2.0))
-      @cos_theta_t = Math::sqrt(1.0 - @sin2_thata_t)
+      @sin2_thata_t = (@refraction_ratio**2.0) * (1.0 - (@cos_theta_i**2.0))
+      @cos_theta_t  = Math::sqrt(1.0 - @sin2_thata_t)
 
       @total_internal_refraction = (@sin2_thata_t > 1)
 
@@ -149,7 +153,7 @@ class Refractive
     def compute_schlick_r
       r_0 = ((@n_1 - @n_2) / (@n_1 + @n_2))**2.0
       x = (@n_1 <= @n_2) ? (1.0 - @cos_theta_i) : (1.0 - @cos_theta_t)
-  		r_0 + (1.0 - r_0)*(x**5.0)
+  		r_0 + (1.0 - r_0) * (x**5.0)
     end
 
     def refractive_ratio(normal, w_in)
@@ -162,6 +166,7 @@ class Refractive
         @n_2 = 1.0
         normal.negate
       end
+
       @n_1 / @n_2
     end
   end

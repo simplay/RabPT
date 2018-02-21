@@ -14,13 +14,13 @@ class MeshTriangle
   # compute triangle spanning vertices
   # TODO explain beta_gama
   def initialize(mesh, index)
-    facs = mesh.indices[index+1]
     @mesh = mesh
+    facs = mesh.indices[index + 1]
 
     verts = mesh.vertices.values_at(facs.x, facs.y, facs.z)
     norms = mesh.normals.values_at(facs.x, facs.y, facs.z)
 
-    puts facs.to_s + " " + (verts.map &:to_s).inspect + " " + index.to_s
+    puts "#{facs} #{verts.map(&:to_s).inspect} #{index}"
 
     # spanning triangle points
     @p_x = verts[0]
@@ -32,17 +32,18 @@ class MeshTriangle
     @n_z = norms[2]
   end
 
-  def intersect ray
+  def intersect(ray)
     hit_record = nil
 
-    a_to_b = @p_x.s_copy.sub(@p_y)
-    a_to_c = @p_x.s_copy.sub(@p_z)
+    a_to_b = p_x.s_copy.sub(p_y)
+    a_to_c = p_x.s_copy.sub(p_z)
 
     triangle = Matrix3f.new(nil, nil, nil)
-		triangle.set_column_at(1, a_to_b);
-		triangle.set_column_at(2, a_to_c);
-    triangle.set_column_at(3, ray.direction);
-    b = @p_x.s_copy.sub(ray.origin)
+		triangle.set_column_at(1, a_to_b)
+		triangle.set_column_at(2, a_to_c)
+    triangle.set_column_at(3, ray.direction)
+
+    b = p_x.s_copy.sub(ray.origin)
 
     # solve system
     # beta_gamma_triangle = System.solve3x3System(triangle, b)
@@ -65,8 +66,8 @@ class MeshTriangle
       hit_normal = make_normal(bgt)
       w_in = ray.direction.s_copy.normalize.negate
 
-      tangent = @p_x.s_copy.sub(@p_y).scale(0.5)
-      tan_b = @p_x.s_copy.sub(@p_z).scale(0.5)
+      tangent = p_x.s_copy.sub(p_y).scale(0.5)
+      tan_b = p_x.s_copy.sub(p_z).scale(0.5)
       tangent.add(tan_b).normalize
 
       hash = {
@@ -76,7 +77,7 @@ class MeshTriangle
         tangent: tangent,
         w: w_in,
         intersectable: self,
-        material: @mesh.material,
+        material: mesh.material,
         u: 0.0,
         v: 0.0
       }
@@ -90,32 +91,22 @@ class MeshTriangle
 
   def make_normal(bgt)
     # note that: alpha + beta + gamma = 1
-    a = @n_x.s_copy.scale(1.0 - bgt.x - bgt.y)
-    b = @n_y.s_copy.scale(bgt.x)
-    c = @n_z.s_copy.scale(bgt.y)
+    a = n_x.s_copy.scale(1.0 - bgt.x - bgt.y)
+    b = n_y.s_copy.scale(bgt.x)
+    c = n_z.s_copy.scale(bgt.y)
     a.add(b).add(c).normalize
   end
 
   # use BC coordinates
   # was triangle intersected
-  def inside_triangle? (beta, gamma)
-    unit_range = [0.0, 1.0]
-    no_triangle_hit = [beta,gamma].any? do |expression|
-      is_between?(expression, unit_range, "<=")
+  def inside_triangle?(beta, gamma)
+    no_triangle_hit = [beta, gamma].any? do |expression|
+      expression >= 0.0 && 1 >= expression
     end
 
-    # inside or outhsie triangle but not ON triangle (i.e. hit)
-    no_triangle_hit ? false : is_between?((gamma+beta), unit_range, ">")
-  end
+    return false if no_triangle_hit
 
-  # is given  value fulfilling condition
-  # condition: range.first <= value <= range.last
-  #
-  # @param value to check whether it is in range.
-  # @param range Array contining upper and lower bound of range.
-  # @param operation, i.e. comparission operator, as string
-  # @return condition:Boolean state
-  def is_between?(value, range, operation)
-    value.send(operation, range.first) || range.last.send(operation, value)
+    value = gamma + beta
+    value >= 0.0 && 1 >= value
   end
 end

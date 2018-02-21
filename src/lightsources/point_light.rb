@@ -21,11 +21,10 @@ class PointLight
   # Sample a point on the light geometry.
   def sample
     hit_record_args = {
-      position: @position.s_copy,
-      material: @material,
+      position: position.s_copy,
+      material: material,
       p: 1.0
     }
-
     HitRecord.new(hit_record_args)
   end
 

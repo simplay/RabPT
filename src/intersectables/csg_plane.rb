@@ -33,16 +33,20 @@ class CsgPlane
   # implicit plane: f(p) = dot(n,(p-a))
   # intersection: f(p(t)) = 0. Solve for t.
   # plug t_i into p(t_i) will give intersection point
-  def intersect ray
-    cos_theta = @normal.dot(ray.direction)
+  def intersect(ray)
+    cos_theta = normal.dot(ray.direction)
     return nil if cos_theta == 0.0
-    t = -(@normal.dot(@ray.origin) + @distance) / cos_theta;
+    t = -(normal.dot(ray.origin) + distance) / cos_theta;
+
+    return nil if t <= 0.0
+
     ray_dir = ray.direction.copy_s
-    intersection_position = ray_dir.scale(t).add(ray.origin)
+    intersection_position = ray_dir.scale(t)
+                                   .add(ray.origin)
     w_in = ray.direction.copy_s
     w_in.negate
     w_in.normalize
-    hit_normal = @normal.copy_s
+    hit_normal = normal.copy_s
 
     # TODO implement texture coordinates for planes
     hash = {
@@ -50,12 +54,10 @@ class CsgPlane
       normal: hit_normal,
       w: w_in,
       intersectable: self,
-      material: @material,
+      material: material,
       u: 0.0,
       v: 0.0
     }
-    hit_record = HitRecord.new(hash)
-
-    (t > 0.0) ? hit_record : nil
+    HitRecord.new(hash)
   end
 end

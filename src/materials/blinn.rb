@@ -18,14 +18,16 @@ class Blinn
   def evaluate_brdf(hit_record, w_out, w_in)
     contribution = Spectrum.new(0.0)
 
-    diffuse = Spectrum.new(@diffuse_contribution)
-    specular = Spectrum.new(@specular_contribution)
-    ambient = Spectrum.new(@diffuse_contribution);
+    diffuse  = Spectrum.new(diffuse_contribution)
+    specular = Spectrum.new(specular_contribution)
+    ambient  = Spectrum.new(diffuse_contribution);
 
-    halfway_vector = w_in.s_copy.add(w_out).normalize
+    halfway_vector = w_in.s_copy
+                         .add(w_out)
+                         .normalize
 
     diffuse.scale(w_in.dot(hit_record.normal))
-    specular.scale(halfway_vector.dot(hit_record.normal)**@shinyness_power)
+    specular.scale(halfway_vector.dot(hit_record.normal)**shinyness_power)
 
     contribution.add(diffuse)
     contribution.add(specular)

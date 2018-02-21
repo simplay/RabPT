@@ -24,14 +24,14 @@ class Sphere
   # Solve S(r(t)) = 0 for t
   # @param ray incident hitting us: Ray
   # @return HitRecord
-  def intersect ray
+  def intersect(ray)
     zeros = find_intersection_parameter(ray)
     return nil if zeros.nil?
 
     # zeros = zeros.sort
-    (zeros.first > 0.0) ? make_hit_record(ray, zeros.first)
-                        : ((zeros.last > 0.0) ? make_hit_record(ray, zeros.last)
-                                              : nil)
+    return make_hit_record(ray, zeros.first) if zeros.first.positive?
+    return make_hit_record(ray, zeros.last) if zeros.last.positive?
+    nil
   end
 
   private
@@ -40,8 +40,8 @@ class Sphere
   # @param t:Float param to find intersectiin point r(t)
   def make_hit_record(ray, t)
     hit_point = ray.point_at(t)
-    hit_normal = hit_point.s_copy.sub(@center)
-    hit_normal.scale(1.0 / @radius)
+    hit_normal = hit_point.s_copy.sub(center)
+    hit_normal.scale(1.0 / radius)
 
     w_in = ray.direction.s_copy.normalize.negate
 
@@ -54,7 +54,7 @@ class Sphere
       w: w_in,
       t: t,
       intersectable: self,
-      material: @material,
+      material: material,
       u: u,
       v: v
     }
@@ -66,8 +66,8 @@ class Sphere
   # a*t^2 + b*t + c = 0 for t
   def find_intersection_parameter(ray)
     a = ray.direction.dotted
-    b = 2.0 * ray.direction.s_copy.dot(ray.origin.s_copy.sub(@center))
-    c = ray.origin.s_copy.sub(@center).dotted - @radius * @radius
+    b = 2.0 * ray.direction.s_copy.dot(ray.origin.s_copy.sub(center))
+    c = ray.origin.s_copy.sub(center).dotted - radius * radius
     solve_quadric(a, b, c)
   end
 
@@ -83,5 +83,4 @@ class Sphere
     right = Math::sqrt(discriminant)
     [left - right, left + right].map { |arg| arg / (2.0 * a) }
   end
-
 end

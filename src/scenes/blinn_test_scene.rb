@@ -17,15 +17,15 @@ class BlinnTestScene
   include Scene
 
   def initialize(width, height, spp)
-    @width = width
+    @width  = width
     @height = height
-    @spp = spp
+    @spp    = spp
 
-    eye = Vector3f.new(0.0, 0.0, 3.0)
+    eye     = Vector3f.new(0.0, 0.0, 3.0)
     look_at = Vector3f.new(0.0, 0.0, 0.0)
-    up = Vector3f.new(0.0, 1.0, 0.0)
-    fov = 60.0
-    aspect = @width.to_f / @height.to_f
+    up      = Vector3f.new(0.0, 1.0, 0.0)
+    fov     = 60.0
+    aspect  = @width.to_f / @height.to_f
 
     camera_args = {
       eye: eye,

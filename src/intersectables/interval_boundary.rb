@@ -1,4 +1,6 @@
 class IntervalBoundary
+  include Comparable
+
   attr_accessor :t,
                 :hit_record,
                 :belongs_to,
@@ -6,17 +8,11 @@ class IntervalBoundary
 
   def initialize(args = {})
     args.each do |key, value|
-      send("#{key}=",value)
+      send("#{key}=", value)
     end
   end
 
-  def compare_to(other)
-    if @t < other.t
-      return -1
-    elsif @t == other.t
-      return 0
-    else
-      return 1
-    end
+  def <=>(other)
+    t <=> other.t
   end
 end

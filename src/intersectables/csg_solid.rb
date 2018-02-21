@@ -25,9 +25,10 @@ module CsgSolid
   # cos_theta is angle between suface normal
   # at point where ray hit onto and ray's direction
   # vector.
+  # @return [Symbol] :start, :end
   def boundary_type(hit_record, ray)
     cos_theta = hit_record.dot(ray.direction)
-    (cos_theta < 0.0) ? BoundaryType::START : BoundaryType::END
+    cos_theta < 0.0 ? :start : :end
   end
 
   # Compute the boundaries of the intersection intervals of this CSG solid with
@@ -35,21 +36,7 @@ module CsgSolid
   #
   # @param ray the ray that intersects the CSG solid
   # @return boundaries of intersection intervals
-  def interval_boundaries ray
+  def interval_boundaries(ray)
     raise "not implemented"
-  end
-
-  protected
-
-  # this acts as an inherited enum
-  class BoundaryType
-    START = :start
-    FRONT = :end
-  end
-
-  # this acts as an inherited enum
-  class BelongsTo
-    LEFT = :left
-    RIGHT = :right
   end
 end

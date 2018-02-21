@@ -4,7 +4,7 @@ require_relative 'debug_integrator.rb'
 class DebugIntegratorFactory
   include IntegratorFactory
 
-  def make scene
+  def make(scene)
     DebugIntegrator.new(scene)
   end
 end

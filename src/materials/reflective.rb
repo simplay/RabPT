@@ -11,7 +11,7 @@ class Reflective
   end
 
   def evaluate_brdf(hit_record, w_out, w_in)
-    Spectrum.new(@k_d)
+    Spectrum.new(k_d)
   end
 
   def evaluate_emission(hit_record, w_out)
@@ -61,7 +61,7 @@ class Reflective
   end
 
   def to_s
-    "reflective material with k_d: #{@k_d.to_s}"
+    "reflective material with k_d: #{k_d}"
   end
 
   private
@@ -76,6 +76,7 @@ class Reflective
   # @return w_out: Vector3f mirror reflection direction.
   def reflect(normal, w_in)
     cos_theta_i = w_in.dot(normal)
-    normal.s_copy.scale(2.0 * cos_theta_i).add(w_in.s_copy)
+    normal.s_copy.scale(2.0 * cos_theta_i)
+                 .add(w_in.s_copy)
   end
 end
