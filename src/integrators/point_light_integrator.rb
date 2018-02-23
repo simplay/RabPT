@@ -1,7 +1,3 @@
-require_relative '../integrator.rb'
-require_relative '../ray.rb'
-require_relative '../spectrum.rb'
-
 class PointLightIntegrator
   include Integrator
 

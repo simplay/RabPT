@@ -1,6 +1,3 @@
-require_relative 'material.rb'
-require_relative '../spectrum.rb'
-
 class PointLightMaterial
   include Material
 

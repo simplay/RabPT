@@ -1,7 +1,3 @@
-require_relative '../intersectable.rb'
-require_relative '../ray.rb'
-require_relative '../hit_record.rb'
-
 # Defines a triangle by referring back to a Mesh and its vertex and index
 # arrays.
 class MeshTriangle

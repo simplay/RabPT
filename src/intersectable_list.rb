@@ -1,5 +1,3 @@
-require_relative 'intersectable.rb'
-
 class IntersectableList
   include Intersectable
 

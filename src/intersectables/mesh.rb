@@ -1,8 +1,3 @@
-require_relative '../intersectable.rb'
-require_relative '../ray.rb'
-require_relative '../hit_record.rb'
-require_relative 'mesh_triangle.rb'
-
 # A triangle mesh. The mesh internally stores the triangles using vertex and
 # index arrays. The mesh also instantiates a {@link MeshTriangle} for each
 # triangle, and the mesh provides an iterator to iterate through the triangles.

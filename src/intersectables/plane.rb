@@ -1,7 +1,3 @@
-require_relative '../intersectable.rb'
-require_relative '../ray.rb'
-require_relative '../hit_record.rb'
-
 # Construct a plane given its normal @param n and distance to the origin @param
 # d. Note that the distance is along the direction that the normal points.  The
 # sign matters!

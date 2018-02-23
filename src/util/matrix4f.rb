@@ -1,6 +1,3 @@
-require_relative 'vector4f.rb'
-require_relative 'matrix3f.rb'
-
 class Matrix4f
 
   EPSILON = 0.001

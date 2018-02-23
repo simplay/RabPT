@@ -1,5 +1,3 @@
-require_relative 'interval_boundary.rb'
-
 # A CSG solid object that can be intersected by a ray. If a CSG object is
 # intersected by a ray, we determine all intersection intervals and their
 # boundaries, that is, the intervals along the ray where the ray is either

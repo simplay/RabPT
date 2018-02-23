@@ -1,8 +1,3 @@
-require_relative 'csg_solid.rb'
-require_relative '../ray.rb'
-require_relative '../hit_record.rb'
-require_relative '../materials/material.rb'
-
 # TODO the logic of this class is currently not correctly implemented. Just
 # move along :)
 class CsgPlane

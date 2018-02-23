@@ -1,5 +1,3 @@
-require_relative '../film'
-
 # Uses a box filter when accumulating samples on a film. A box filter means
 # that samples contribute only to the pixel that they lie in. Sample values
 # are simply averaged.

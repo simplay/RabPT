@@ -1,5 +1,3 @@
-require_relative '../util/vector3f.rb'
-
 class Spectrum
   attr_accessor :r, :g, :b
 

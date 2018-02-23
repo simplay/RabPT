@@ -1,6 +1,3 @@
-require_relative '../light_geometry.rb'
-require_relative '../materials/point_light_material.rb'
-
 # Implements a point light using a PointLightMaterial.
 class PointLight
   include LightGeometry

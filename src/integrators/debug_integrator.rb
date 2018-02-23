@@ -1,5 +1,3 @@
-require_relative '../integrator.rb'
-
 # Use this integrator for debugging purposes. For example, you can simply
 # return a white spectrum if the ray hits something, and black otherwise. Any
 # other visualization of data associated with a hit record may be useful.

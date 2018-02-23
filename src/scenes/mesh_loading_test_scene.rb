@@ -1,18 +1,3 @@
-require_relative '../scene.rb'
-require_relative '../films/box_filter_film.rb'
-require_relative '../integrators/debug_integrator_factory.rb'
-require_relative '../integrators/point_light_integrator_factory.rb'
-require_relative '../samplers/one_sampler_factory.rb'
-require_relative '../intersectables/plane.rb'
-require_relative '../intersectables/sphere.rb'
-require_relative '../intersectables/mesh.rb'
-require_relative '../intersectable_list.rb'
-require_relative '../light_list.rb'
-require_relative '../spectrum.rb'
-require_relative '../lightsources/point_light.rb'
-require_relative '../materials/diffuse.rb'
-require_relative '../materials/blinn.rb'
-
 # Test scene for pinhole camera specifications.
 class MeshLoadingTestScene
   include Scene

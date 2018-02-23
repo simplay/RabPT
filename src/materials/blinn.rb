@@ -1,5 +1,3 @@
-require_relative 'material.rb'
-
 # A basic diffuse material.
 class Blinn
   include Material

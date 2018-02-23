@@ -1,6 +1,3 @@
-require_relative '../integrator_factory.rb'
-require_relative 'whitted_integrator.rb'
-
 class WhittedIntegratorFactory
   include IntegratorFactory
 

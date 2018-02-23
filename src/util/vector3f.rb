@@ -1,5 +1,3 @@
-require_relative 'vector4f.rb'
-
 class Vector3f
   EPSILON = 0.001
 

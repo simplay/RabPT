@@ -1,6 +1,3 @@
-require_relative 'vector3f.rb'
-require_relative 'matrix2f.rb'
-
 class Matrix3f
   attr_accessor :m00, :m01, :m02,
                 :m10, :m11, :m12,

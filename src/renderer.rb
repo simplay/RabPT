@@ -1,10 +1,3 @@
-require_relative '../util/obj_reader.rb'
-require_relative 'scenes/camera_test_scene.rb'
-require_relative 'scenes/blinn_test_scene.rb'
-require_relative 'scenes/instancing_test_scene.rb'
-require_relative 'scenes/mesh_loading_test_scene.rb'
-require_relative 'scenes/refraction_test_scene.rb'
-
 class Renderer
   include ImageRuby
 

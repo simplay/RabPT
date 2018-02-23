@@ -2,9 +2,6 @@
 # matrix from world to camera space. Cinv is transformation matrix from world
 # coordinates to camera space.
 
-require_relative '../util/vector3f.rb'
-require_relative '../util/vector4f.rb'
-
 # Given the specification of a ray in image space, a camera constructs
 # a corresponding ray in world space.
 class Camera

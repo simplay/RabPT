@@ -1,11 +1,3 @@
-require_relative '../util/matrix4f.rb'
-require_relative '../util/vector3f.rb'
-require_relative '../util/obj_reader.rb'
-require_relative 'camera.rb'
-require_relative 'integrators/debug_integrator.rb'
-require_relative 'integrators/point_light_integrator.rb'
-require_relative '../util/matrix4f.rb'
-
 # Defines scene properties that need to be made accessible to the renderer.
 module Scene
   attr_accessor :spp,

@@ -1,5 +1,3 @@
-require_relative 'vector3f.rb'
-
 # obj file format storing basic triangular mesh data
 # for further information please have a look at:
 # http://en.wikipedia.org/wiki/Wavefront_.obj_file

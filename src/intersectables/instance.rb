@@ -1,7 +1,3 @@
-require_relative '../intersectable.rb'
-require_relative '../ray.rb'
-require_relative '../hit_record.rb'
-
 # when arranges a scene, we would have serveral occurences of similar object instances,
 # such as many spheres placed in our scene. instead creating many versions of
 # the same kind of object we actually could make use of creating instances instead.
