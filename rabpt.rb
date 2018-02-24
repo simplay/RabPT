@@ -1,10 +1,11 @@
 #!/usr/bin/env jruby
 
-require "rubygems"
-require "imageruby"
-require "pry"
+$LOAD_PATH.unshift File.expand_path('src')
+
+require 'rubygems'
+require 'imageruby'
 require 'optparse'
-require_relative 'src/renderer.rb'
+require 'dependencies'
 
 Version = "0.0.1"
 
@@ -12,7 +13,7 @@ user_args = {}
 opt_parser = OptionParser.new do |opt|
   opt.banner = "Usage example: ruby rabpt.rb -s 4 -w 128 -h 128 -f my_scene_file -i 5
   \nFor additional information please visit RabPT's github repository:\nhttps://github.com/simplay/RabPT"
-                
+
   opt.separator  ""
   # some defaults
   user_args[:SPP] = 8
@@ -41,9 +42,9 @@ opt_parser = OptionParser.new do |opt|
     puts "rabpt #{Version}"
     exit
   end
-
 end
-begin 
+
+begin
   opt_parser.parse!
   required_args = [:SPP, :M, :N, :file_name, :selected_scene]
   required_args.each do |arg|

@@ -1,14 +1,12 @@
-require_relative '../util/optics.rb'
-require_relative '../util/vector3f.rb'
-require 'pry'
+require_relative 'spec_helper'
 
 describe Optics do
   describe "when performing reflective geometry operation" do
-    
+
     it "should provide a #reflection querry" do
       (Optics.respond_to? :reflection).should be_true
     end
-    
+
     describe "for positive orthogonal normal on plane xy plane" do
       it "should return reflection equal to negated incident direction" do
         w_in = Vector3f.new(4.0, 0.0, 0.0)
@@ -19,5 +17,4 @@ describe Optics do
       end
     end
   end
-  
 end

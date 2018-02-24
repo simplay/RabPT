@@ -1,52 +1,50 @@
 class Matrix4f
-  require_relative 'vector4f.rb'
-  require_relative 'matrix3f.rb' 
-  require "pry"
-  
+
   EPSILON = 0.001
   attr_accessor :m00, :m01, :m02, :m03,
                 :m10, :m11, :m12, :m13,
                 :m20, :m21, :m22, :m23,
                 :m30, :m31, :m32, :m33
-                
+
   def initialize(row_x, row_y, row_z, row_w)
-    if ([row_x, row_y, row_z, row_w].all? &:nil?)
+    if [row_x, row_y, row_z, row_w].all?(&:nil?)
       row_x = Vector4f.new(0.0, 0.0, 0.0, 0.0)
       row_y = Vector4f.new(0.0, 0.0, 0.0, 0.0)
       row_z = Vector4f.new(0.0, 0.0, 0.0, 0.0)
       row_w = Vector4f.new(0.0, 0.0, 0.0, 0.0)
     end
+
     @m00 = row_x.x; @m01 = row_x.y; @m02 = row_x.z; @m03 = row_x.w;
     @m10 = row_y.x; @m11 = row_y.y; @m12 = row_y.z; @m13 = row_y.w;
     @m20 = row_z.x; @m21 = row_z.y; @m22 = row_z.z; @m23 = row_z.w;
     @m30 = row_w.x; @m31 = row_w.y; @m32 = row_w.z; @m33 = row_w.w;
   end
-  
+
   # dimension of this matrix
   def dim
     4
   end
-  
+
   # overwrite all entries of this 4x4 matrix
   # by the elements of a provided other matrix
   def ovwrite_me other
     (1..4).each do |i|
       (1..4).each do |j|
-        set_at(i, j, other.at(i,j)) 
+        set_at(i, j, other.at(i,j))
       end
     end
     self
   end
-  
+
   # get a copy of this matrix' schema
-  def s_copy 
+  def s_copy
     v1 = Vector4f.new(@m00, @m01, @m02, @m03)
     v2 = Vector4f.new(@m10, @m11, @m12, @m13)
     v3 = Vector4f.new(@m20, @m21, @m22, @m23)
     v4 = Vector4f.new(@m30, @m31, @m32, @m33)
     Matrix4f.new(v1, v2, v3, v4)
   end
-  
+
   # set this object to 4x4 identity matrix
   # move to special matrices
   def make_identity
@@ -56,7 +54,7 @@ class Matrix4f
     v4 = Vector4f.new(0.0, 0.0, 0.0, 1.0)
     ovwrite_me Matrix4f.new(v1, v2, v3, v4)
   end
-  
+
   # return identity matrix
   # @return identity matrix:Matrix4f
   def self.identity
@@ -66,28 +64,28 @@ class Matrix4f
     v4 = Vector4f.new(0.0, 0.0, 0.0, 1.0)
     Matrix4f.new(v1, v2, v3, v4)
   end
-  
+
   # translate relying on homogeneous transformation
   # overwrites and returns self
   # @param by:Vector3f representing translation vector
   # @return updated self
-  def translate by
+  def translate(by)
     t = Matrix4f.new(nil, nil, nil, nil).make_identity
-    
+
     other = by.to_a
     other << 1.0
-    
+
     (1..4).each do |idx|
       t.set_at(idx,4, other[idx-1])
     end
     t.mult(self)
     ovwrite_me t
   end
-  
+
   # apply a rotation matrix around
-  # given axis by given degree cclw. 
+  # given axis by given degree cclw.
   # angle is an angle in degree.
-  # internally, it will be recomputed 
+  # internally, it will be recomputed
   # to a angle in radians
   # axis is a symbol representing the
   # target axis
@@ -96,7 +94,7 @@ class Matrix4f
     rot.mult(self)
     ovwrite_me rot
   end
-  
+
   # transpose this matrix
   def transpose
     swap(:m10, :m01)
@@ -107,31 +105,31 @@ class Matrix4f
     swap(:m32, :m23)
     self
   end
-  
-  # first row equal index 
-  def row kth 
+
+  # first row equal index
+  def row(kth)
     entry_parser kth
   end
-  
+
   # first column equal index 1
-  def column kth
-    self.transpose 
+  def column(kth)
+    self.transpose
     col = entry_parser kth
-    self.transpose 
+    self.transpose
     col
   end
-  
+
   # write val into (i,j) element of this matrix
-  def setElementAt(i, j, val) 
+  def setElementAt(i, j, val)
     send("m#{i-1}#{j-1}=", val)
     self
   end
-  
+
   # get val of (i,j) element of this matrix
-  def elementAt(i, j) 
+  def elementAt(i, j)
     send("m#{i-1}#{j-1}")
   end
-  
+
   # replace i-th row of this matrix
   # by a given row
   def set_row_at(ith, row)
@@ -141,7 +139,7 @@ class Matrix4f
       col_idx += 1
     end
   end
-  
+
   # replace j-th column of this matrix
   # by a given column
   def set_column_at(jth, column)
@@ -151,88 +149,88 @@ class Matrix4f
       row_idx += 1
     end
   end
-  
+
   # assumption: dimensions match
   # perfroms a matrix4f matrix4f multiplication
-  def mult other
+  def mult(other)
     values = []
     (1..4).each do |i|
       (1..4).each do |j|
         values << row(j).dot(other.column(i))
       end
-    end  
+    end
     counter = 0
     (1..4).each do |i|
       (1..4).each do |j|
         setElementAt(j,i, values[counter])
         counter += 1
       end
-    end  
+    end
     self
   end
-  
+
   # assumption vec4f is a column vector
   # performs a matrix4f vector4f multiplaction
-  def vectormult vec4f
+  def vectormult(vec4f)
     values = []
     (1..4).each do |i|
       values << row(i).dot(vec4f)
     end
     Vector4f.new(values[0], values[1], values[2], values[3])
   end
-  
+
   # add other to me
-  def add other
+  def add(other)
     applyBinaryComponentwise(:+, other)
   end
-  
+
   # substract other from me
-  def sub other
+  def sub(other)
     applyBinaryComponentwise(:-, other)
   end
-  
+
   # is element (i,j) of other matrix
   # EXACTLY the same as element (i,j)
-  # of this matrix. EXACTLY means there is 
-  # no finite arithmetical difference which 
+  # of this matrix. EXACTLY means there is
+  # no finite arithmetical difference which
   # might slightly alter the values.
-  def same_values_as? other
+  def same_values_as?(other)
     predicat = true
     (1..4).each do |idx|
       predicat &&= other.row(idx).same_values_as?(self.row(idx))
     end
     predicat
   end
-  
+
   # is element (i,j) of other matrix
   # approximately the same as element (i,j)
-  # of this matrix. 
-  # we compute deltas between row elements 
-  # of other and self. we compare those deltas 
+  # of this matrix.
+  # we compute deltas between row elements
+  # of other and self. we compare those deltas
   # in a least square sense (
   # i.e is the sum of squared deltas below a given threshold
-  def approx_same_values_as? other
+  def approx_same_values_as?(other)
     predicat = true
     (1..4).each do |idx|
       delta_vec = row(idx).sub(other.row(idx)).to_a
-      delta = delta_vec.inject(0.0) do |result, element| 
-        result + element**2.0 
+      delta = delta_vec.inject(0.0) do |result, element|
+        result + element**2.0
       end
       predicat &&= (delta < EPSILON)
     end
     predicat
   end
-  
+
   # scale every element of this matrix by given value
-  def scale by  
+  def scale(by)
     (1..4).each do |i|
       (1..4).each do |j|
-        set_at(i, j, at(i,j)*by) 
+        set_at(i, j, at(i,j)*by)
       end
     end
-    self  
+    self
   end
-  
+
   # diagonal elements of this matrix
   # represented as a vectror4f
   def diag
@@ -242,7 +240,7 @@ class Matrix4f
     end
     Vector4f.new(d[0], d[1], d[2], d[3])
   end
-  
+
   # get sub/block matrix defined by a mask
   # we are masking by using two indices
   # a row/ and a column index
@@ -251,7 +249,7 @@ class Matrix4f
   # i.e. A_i,j will give us a (N-1)x(N-1) matrix
   # consisting of matrix A without having row i
   # and without having column j.
-  def masked_block(row_idx, column_idx) 
+  def masked_block(row_idx, column_idx)
     elements = []
     (1..4).each do |i|
       (1..4).each do |j|
@@ -260,20 +258,18 @@ class Matrix4f
         end
       end
     end
-    
+
     # here assumption 3x3
     a1 = elements[0..2]
     a2 = elements[3..5]
     a3 = elements[6..8]
-    
+
     v1 = Vector3f.new(a1[0], a1[1], a1[2])
     v2 = Vector3f.new(a2[0], a2[1], a2[2])
     v3 = Vector3f.new(a3[0], a3[1], a3[2])
     Matrix3f.new(v1, v2, v3)
   end
-  
 
-  
   # note this is highly unstable for some matrices
   # and has a runtime of O(N^3 N!)
   # explicit inverse for a 4x4 matrix
@@ -287,9 +283,9 @@ class Matrix4f
       adj
       scale(f)
       self
-    end   
+    end
   end
-  
+
   # Adjugate of this matrix
   def adj
     snapshot = s_copy
@@ -299,54 +295,55 @@ class Matrix4f
         sign = ((i+j)%2 == 0)? 1 : -1
         setElementAt(i,j, sign*snapshot.masked_block(i,j).det)
       end
-    end  
+    end
     transpose
   end
-  
+
   def is_singular?
     det == 0.0
   end
-  
+
   # recursive det calculation
   def det
     s1 = at(1,1)
-    
+
     r11 = Vector3f.new(at(2,2),at(2,3),at(2,4))
     r12 = Vector3f.new(at(3,2),at(3,3),at(3,4))
     r13 = Vector3f.new(at(4,2),at(4,3),at(4,4))
     det1 = (Matrix3f.new(r11, r12, r13)).det
-    
+
     s2 = at(1,2)
     r21 = Vector3f.new(at(2,1),at(2,3),at(2,4))
     r22 = Vector3f.new(at(3,1),at(3,3),at(3,4))
     r23 = Vector3f.new(at(4,1),at(4,3),at(4,4))
     det2 = (Matrix3f.new(r21, r22, r23)).det
-    
+
     s3 = at(1,3)
     r31 = Vector3f.new(at(2,1),at(2,2),at(2,4))
     r32 = Vector3f.new(at(3,1),at(3,2),at(3,4))
     r33 = Vector3f.new(at(4,1),at(4,2),at(4,4))
     det3 = (Matrix3f.new(r31, r32, r33)).det
-    
+
     s4 = at(1,4)
     r41 = Vector3f.new(at(2,1),at(2,2),at(2,3))
     r42 = Vector3f.new(at(3,1),at(3,2),at(3,3))
     r43 = Vector3f.new(at(4,1),at(4,2),at(4,3))
     det4 = (Matrix3f.new(r41, r42, r43)).det
-    
+
     (s1*det1 - s2*det2 + s3*det3 - s4*det4)
   end
-  
+
   def to_s
     str = ""
     3.times {|idx| str << "#{row(idx+1).to_s}\n"}
     str << row(4).to_s
   end
-  
+
   private
-  
-  def entry_parser at 
+
+  def entry_parser(at)
     collection = nil
+
     case at
     when 1
       collection = Vector4f.new(@m00, @m01, @m02, @m03)
@@ -359,7 +356,7 @@ class Matrix4f
     end
     collection
   end
-  
+
   # deuglyfy this helper bz using chained sends
   # and a for for loop
   def applyBinaryComponentwise(op, other)
@@ -381,53 +378,52 @@ class Matrix4f
     @m33 = @m33.send(op, other.m33)
     self
   end
-  
+
   # swaps two elements of this matrix
-  def swap(a, b)  
+  def swap(a, b)
     tmp = send("#{a}")
     send("#{a}=",send("#{b}"))
     send("#{b}=",tmp)
   end
-  
+
   # counter clock wise rotation
   # Math::cos(Math::PI) is -1.0
   def rotate_z_axis_by degree
     rot = Matrix4f.new(nil, nil, nil, nil).make_identity
     pi = Math::PI
-    angle = (degree.to_f*pi) / 180.0
+    angle = (degree.to_f * pi) / 180.0
     rot.set_at(1, 1, Math::cos(angle))
     rot.set_at(2, 2, Math::cos(angle))
     rot.set_at(1, 2, Math::sin(-angle))
     rot.set_at(2, 1, Math::sin(angle))
     rot
   end
-  
+
   # counter clock wise rotation
-  def rotate_y_axis_by degree
+  def rotate_y_axis_by(degree)
     rot = Matrix4f.new(nil, nil, nil, nil).make_identity
     pi = Math::PI
-    angle = (degree.to_f*pi) / 180.0
+    angle = (degree.to_f * pi) / 180.0
     rot.set_at(1, 1, Math::cos(angle))
     rot.set_at(3, 3, Math::cos(angle))
     rot.set_at(3, 1, Math::sin(-angle))
     rot.set_at(1, 3, Math::sin(angle))
     rot
   end
-  
+
   # counter clock wise rotation
-  def rotate_x_axis_by degree
+  def rotate_x_axis_by(degree)
     rot = Matrix4f.new(nil, nil, nil, nil).make_identity
     pi = Math::PI
-    angle = (degree.to_f*pi) / 180.0
+    angle = (degree.to_f * pi) / 180.0
     rot.set_at(2, 2, Math::cos(angle))
     rot.set_at(3, 3, Math::cos(angle))
     rot.set_at(2, 3, Math::sin(-angle))
     rot.set_at(3, 2, Math::sin(angle))
     rot
   end
-  
-    
-  alias_method :set_at, :setElementAt 
+
+  alias_method :set_at, :setElementAt
   alias_method :at, :elementAt
   alias_method :inv, :invert
 end
