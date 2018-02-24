@@ -1,4 +1,4 @@
-require_relative '../util/matrix4f.rb'
+require_relative 'spec_helper'
 
 describe Matrix4f do
   before(:each) do

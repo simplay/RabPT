@@ -1,10 +1,8 @@
-require_relative '../src/materials/diffuse.rb'
-require_relative '../util/vector2f.rb'
+require_relative 'spec_helper'
 
 describe Diffuse do
   before(:each) do
     @diffuse_material = Diffuse.new(nil)
-
     hit_record_args = {
       position: Vector3f.new(1.0, 2.0, 1.0),
       normal: Vector3f.new(1.0, 0.0, 0.0),

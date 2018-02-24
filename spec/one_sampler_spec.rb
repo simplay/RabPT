@@ -1,4 +1,4 @@
-require_relative '../src/samplers/one_sampler.rb'
+require_relative 'spec_helper'
 
 describe OneSampler do
   before(:each) do

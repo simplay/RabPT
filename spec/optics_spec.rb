@@ -1,5 +1,4 @@
-require_relative '../util/optics.rb'
-require_relative '../util/vector3f.rb'
+require_relative 'spec_helper'
 
 describe Optics do
   describe "when performing reflective geometry operation" do

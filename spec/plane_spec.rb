@@ -1,5 +1,4 @@
-require_relative '../../src/intersectables/plane.rb'
-require_relative '../../util/vector3f.rb'
+require_relative 'spec_helper'
 
 describe Plane do
   before(:each) do
