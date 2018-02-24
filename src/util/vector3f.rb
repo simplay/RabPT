@@ -9,6 +9,10 @@ class Vector3f
     @z = z_f
   end
 
+  def ==(other)
+    (x == other.x) && (y == other.y) && (z == other.z)
+  end
+
   # shallow copy of this vector3f
   # @return new instance of this vector
   #         having the same components
