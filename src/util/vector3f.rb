@@ -149,15 +149,6 @@ class Vector3f
     self.scale (1.0 / normalization_factor.to_f)
   end
 
-  # other == self
-  # check whether components of this vector are
-  # exactly the same to a given other vector
-  # @param other Vector3f
-  # @return Boolean are they the same
-  def same_values_as?(other)
-    (@x == other.x) && (@y == other.y) && (@z == other.z)
-  end
-
   # || other - self || < epsilon
   # check whether components of this vector are
   # approximately the same according to the 2Norm

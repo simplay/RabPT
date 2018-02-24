@@ -59,7 +59,7 @@ class Vector2f
     self.scale (1.0 / normalization_factor.to_f) unless normalization_factor == 0.0
   end
 
-  def same_values_as? other
+  def ==(other)
     (@x == other.x) && (@y == other.y)
   end
 

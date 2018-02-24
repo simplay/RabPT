@@ -194,10 +194,10 @@ class Matrix4f
   # of this matrix. EXACTLY means there is
   # no finite arithmetical difference which
   # might slightly alter the values.
-  def same_values_as?(other)
+  def ==(other)
     predicat = true
     (1..4).each do |idx|
-      predicat &&= other.row(idx).same_values_as?(self.row(idx))
+      predicat &&= other.row(idx) == row(idx)
     end
     predicat
   end

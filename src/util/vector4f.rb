@@ -81,8 +81,8 @@ class Vector4f
     self.scale (1.0 / normalization_factor.to_f)
   end
 
-  def same_values_as?(other)
-    (@x == other.x) && (@y == other.y) && (@z == other.z) && (@w == other.w)
+  def ==(other)
+    (x == other.x) && (y == other.y) && (z == other.z) && (w == other.w)
   end
 
   def approx_same_values_as?(other)
