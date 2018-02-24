@@ -1,5 +1,10 @@
 source "http://rubygems.org"
 
+platforms :ruby do
+  gem 'pronto'
+  gem 'pronto-rubocop'
+end
+
 # image processing library - see https://github.com/tario/imageruby
 gem 'imageruby'
 
