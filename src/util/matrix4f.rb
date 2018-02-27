@@ -159,6 +159,7 @@ class Matrix4f
         values << row(j).dot(other.column(i))
       end
     end
+
     counter = 0
     (1..4).each do |i|
       (1..4).each do |j|
@@ -209,16 +210,10 @@ class Matrix4f
   # of other and self. we compare those deltas
   # in a least square sense (
   # i.e is the sum of squared deltas below a given threshold
-  def approx_same_values_as?(other)
-    predicat = true
-    (1..4).each do |idx|
-      delta_vec = row(idx).sub(other.row(idx)).to_a
-      delta = delta_vec.inject(0.0) do |result, element|
-        result + element**2.0
-      end
-      predicat &&= (delta < EPSILON)
-    end
-    predicat
+  def sum
+    (1..4).map do |idx|
+      delta_vec = row(idx).sum
+    end.inject(:+)
   end
 
   # scale every element of this matrix by given value

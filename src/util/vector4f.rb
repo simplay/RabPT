@@ -51,6 +51,10 @@ class Vector4f
     dot self
   end
 
+  def sum
+    to_a.inject(:+)
+  end
+
    # compute euclidian scalar product between this and other
   def dot other
     @x * other.x + @y * other.y + @z * other.z + @w * other.w

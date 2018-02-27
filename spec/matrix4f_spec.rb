@@ -76,130 +76,72 @@ describe Matrix4f do
     @Ma_copy = Matrix4f.new(v1, v2, v3, v4)
   end
 
-  it "Im myself id==id" do
-    @M2.same_values_as?(@M2).should be_true
+  it "can compare by its components" do
+    expect(@M2).not_to eq(@M1)
+    expect(@M1).to eq(@M1)
   end
 
-  it "Im myself and no one else" do
-    @M2.same_values_as?(@M1).should_not be_true
+  it "can transpose a matrix" do
+    expect(@T.transpose).to eq(@Tt)
   end
 
-  it "transposing T gives Tt" do
-    @T.transpose.same_values_as?(@Tt).should be_true
+  it "can peform a matrix multiplication" do
+    expect(@Enum.mult(@M2)).to eq(@EnumTimesM2)
   end
 
-  it "transposing T gives not T" do
-    @T.transpose.same_values_as?(@Tcopy).should_not be_true
-  end
-
-  it "row getter work as they are supposed to" do
-    predicat = true
-    rows = [@v1r, @v2r, @v3r, @v4r]
-    (1..4).each do |idx|
-      predicat &&= @M1.row(idx).same_values_as?(rows[idx-1])
-    end
-    predicat.should be_true
-  end
-
-  it "row getter work as they are supposed to" do
-    predicat = true
-    columns = [@v1c, @v2c, @v3c, @v4c]
-    (1..4).each do |idx|
-      predicat &&= @M1.column(idx).same_values_as?(columns[idx-1])
-    end
-    predicat.should be_true
-  end
-
-  it "#elementAt getter work as they are supposed to" do
-    predicat = true
-    counter = 1
-    columns = [@v1c, @v2c, @v3c, @v4c]
-    (1..4).each do |i|
-      (1..4).each do |j|
-        predicat &&= (@Enum.elementAt(i,j)== counter)
-        counter += 1
-      end
-    end
-    predicat.should be_true
-  end
-
-  it "#elementAt getter work as they are supposed to (sanity check)" do
-    predicat = true
-    counter = 0
-    columns = [@v1c, @v2c, @v3c, @v4c]
-    (1..4).each do |i|
-      (1..4).each do |j|
-        predicat &&= (@Enum.elementAt(i,j)== counter)
-        counter += 1
-      end
-    end
-    predicat.should_not be_true
-  end
-
-  it "Enum times M2 gives expected result EnumTimesM2" do
-    @Enum.mult(@M2).same_values_as?(@EnumTimesM2).should be_true
-  end
-
-  it "@Enum times v1c gives expected result" do
+  it "can perform a matrix vector multiplication" do
     v1 = Vector4f.new(1.0, 2.0, 3.0, 4.0)
     res = Vector4f.new(30.0, 70.0, 110.0, 150.0)
-    @Enum.vectormult(v1).same_values_as?(res).should be_true
+    expect(@Enum.vectormult(v1)).to eq(res)
   end
 
-  it "Eigenaddition is twice the matrix" do
-    @M1.add(@M1).same_values_as?(@twoM1).should be_true
+  it "can perform a matrix addition" do
+    expect(@M1.add(@M1)).to eq(@twoM1)
   end
 
-  it "Eigensubtraction is zerp" do
-    @M1.sub(@M1).same_values_as?(@Z).should be_true
+  it "can perform a matrix subtraction" do
+    expect(@M1.sub(@M1)).to eq(@Z)
   end
 
-  it "det identity matrix is 1" do
-    @I.det.should eq(1.0)
-  end
+  it "can compute the determinant" do
+    expect(@I.det).to eq(1)
+    expect(@Z.det).to eq(0)
+    expect(@T.det).to eq(1)
 
-  it "det zero matrix is 0" do
-    @Z.det.should eq(0.0)
-  end
-
-  it "det homogeneous translation is 1" do
-    @T.det.should eq(1.0)
-  end
-
-  it "det should be correct calculated" do
     v1 = Vector4f.new(5.0, 0.0, 3.0, -1.0)
     v2 = Vector4f.new(3.0, 0.0, 0.0, 4.0)
     v3 = Vector4f.new(-1.0, 2.0, 4.0, -2.0)
     v4 = Vector4f.new(1.0, 0.0, 0.0, 5.0)
-    A = Matrix4f.new(v1, v2, v3, v4)
-    A.det.should eq(66.0)
+    a = Matrix4f.new(v1, v2, v3, v4)
+    expect(a.det).to eq(66.0)
   end
 
-  it "me times inverse is identity" do
+  it "can compute the inverse" do
     prod = @Ma.invert.mult(@Ma_copy)
-    prod.approx_same_values_as?(@I).should be_true
+    expect(prod.sum).to be_within(0.0001).of(4)
   end
 
-  it "adj operator for 3x3 matrix is correctly computed" do
+  it "can compute the adjugate" do
     v1 = Vector3f.new(1.0, 0.0, 2.0)
     v2 = Vector3f.new(2.0, 1.0, 3.0)
     v3 = Vector3f.new(0.0, 3.0, 1.0)
     m = Matrix3f.new(v1, v2, v3)
+
     v1 = Vector3f.new(-8.0, 6.0, -2.0)
     v2 = Vector3f.new(-2.0, 1.0, 1.0)
     v3 = Vector3f.new(6.0, -3.0, 1.0)
     m_adj = Matrix3f.new(v1, v2, v3)
 
-    m.adj.same_values_as?(m_adj).should be_true
+    expect(m.adj).to eq(m_adj)
   end
 
-  it "det operator for 3x3 matrix is corretly computed" do
+  it "can compute the determinat" do
     v1 = Vector3f.new(1.0, 0.0, 2.0)
     v2 = Vector3f.new(2.0, 1.0, 3.0)
     v3 = Vector3f.new(0.0, 3.0, 1.0)
     m = Matrix3f.new(v1, v2, v3)
     m_copy = Matrix3f.new(v1, v2, v3)
-    m.det.should eq(4)
+    expect(m.det).to eq(4)
   end
 
   it "A 3x3 times its inverses gives id" do
@@ -208,18 +150,11 @@ describe Matrix4f do
     v3 = Vector3f.new(0.0, 3.0, 1.0)
     m = Matrix3f.new(v1, v2, v3)
     m_copy = Matrix3f.new(v1, v2, v3)
-    m.invert.mult(m_copy).same_values_as?(@id_3x3).should be_true
-  end
-
-  it "same_values_as implies approx_same_values_as" do
-    pred = @T.transpose.same_values_as?(@Tt)
-    @T.transpose
-    pred &&= @T.transpose.approx_same_values_as?(@Tt)
-    pred.should be_true
+    expect(m.invert.mult(m_copy)).to eq(@id_3x3)
   end
 
   it "translations are correctly applied" do
-    @I.translate(Vector3f.new(1.0, 2.0, 3.0)).same_values_as?(@T).should be_true
+    expect(@I.translate(Vector3f.new(1.0, 2.0, 3.0))).to eq(@T)
   end
 
   it "rotation around x axis should yield expected result" do
@@ -229,7 +164,7 @@ describe Matrix4f do
     v4 = Vector4f.new(0.0, 0.0, 0.0, 1.0)
     a = Matrix4f.new(v1, v2, v3, v4)
     @I.rotate(180.0, :x)
-    @I.approx_same_values_as?(a).should be_true
+    expect(@I.sub(a).sum).to be_within(0.0001).of(0)
   end
 
   it "rotation around y axis should yield expected result" do
@@ -239,7 +174,7 @@ describe Matrix4f do
     v4 = Vector4f.new(0.0, 0.0, 0.0, 1.0)
     a = Matrix4f.new(v1, v2, v3, v4)
     @I.rotate(180.0, :y)
-    @I.approx_same_values_as?(a).should be_true
+    expect(@I.sub(a).sum).to be_within(0.0001).of(0)
   end
 
   it "rotation around z axis should yield expected result" do
@@ -249,18 +184,18 @@ describe Matrix4f do
     v4 = Vector4f.new(0.0, 0.0, 0.0, 1.0)
     a = Matrix4f.new(v1, v2, v3, v4)
     @I.rotate(180.0, :z)
-    @I.approx_same_values_as?(a).should be_true
+    expect(@I.sub(a).sum).to be_within(0.0001).of(0)
   end
 
   it "replacing a row works as expected" do
     m = Matrix4f.new(nil,nil,nil,nil).make_identity
-    m.set_at(1,1, 2.0)
-    m.set_at(1,2, 3.0)
-    m.set_at(1,3, 4.0)
-    m.set_at(1,4, 5.0)
-
+    m.set_at(1, 1, 2.0)
+    m.set_at(1, 2, 3.0)
+    m.set_at(1, 3, 4.0)
+    m.set_at(1, 4, 5.0)
     @I.set_row_at(1, Vector4f.new(2.0, 3.0, 4.0, 5.0))
-    @I.same_values_as?(m).should be_true
+
+    expect(@I).to eq(m)
   end
 
   it "replacing a column works as expected" do
@@ -271,33 +206,11 @@ describe Matrix4f do
     m.set_at(4,1, 5.0)
 
     @I.set_column_at(1, Vector4f.new(2.0, 3.0, 4.0, 5.0))
-    @I.same_values_as?(m).should be_true
-  end
-
-  it "replacing a column works as expected" do
-    m = Matrix4f.new(nil,nil,nil,nil).make_identity
-    m.set_at(1,1, 2.0)
-    m.set_at(2,1, 3.0)
-    m.set_at(3,1, 4.0)
-    m.set_at(4,1, 5.0)
-
-    @I.set_row_at(1, Vector4f.new(2.0, 3.0, 4.0, 5.0))
-    @I.same_values_as?(m).should_not be_true
-  end
-
-  it "replacing a row works as expected" do
-    m = Matrix4f.new(nil,nil,nil,nil).make_identity
-    m.set_at(1,1, 2.0)
-    m.set_at(1,2, 3.0)
-    m.set_at(1,3, 4.0)
-    m.set_at(1,4, 5.0)
-
-    @I.set_column_at(1, Vector4f.new(2.0, 3.0, 4.0, 5.0))
-    @I.same_values_as?(m).should_not be_true
+    expect(@I).to eq(m)
   end
 
   it "should be possible to make an identity matrix instance" do
-    Matrix4f.identity.same_values_as?(@I).should be_true
-    Matrix3f.identity.same_values_as?(@id_3x3).should be_true
+    expect(Matrix4f.identity).to eq(@I)
+    expect(Matrix3f.identity).to eq(@id_3x3)
   end
 end
