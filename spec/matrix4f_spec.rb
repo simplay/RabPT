@@ -121,43 +121,11 @@ describe Matrix4f do
     expect(prod.sum).to be_within(0.0001).of(4)
   end
 
-  it "can compute the adjugate" do
-    v1 = Vector3f.new(1.0, 0.0, 2.0)
-    v2 = Vector3f.new(2.0, 1.0, 3.0)
-    v3 = Vector3f.new(0.0, 3.0, 1.0)
-    m = Matrix3f.new(v1, v2, v3)
-
-    v1 = Vector3f.new(-8.0, 6.0, -2.0)
-    v2 = Vector3f.new(-2.0, 1.0, 1.0)
-    v3 = Vector3f.new(6.0, -3.0, 1.0)
-    m_adj = Matrix3f.new(v1, v2, v3)
-
-    expect(m.adj).to eq(m_adj)
-  end
-
-  it "can compute the determinat" do
-    v1 = Vector3f.new(1.0, 0.0, 2.0)
-    v2 = Vector3f.new(2.0, 1.0, 3.0)
-    v3 = Vector3f.new(0.0, 3.0, 1.0)
-    m = Matrix3f.new(v1, v2, v3)
-    m_copy = Matrix3f.new(v1, v2, v3)
-    expect(m.det).to eq(4)
-  end
-
-  it "A 3x3 times its inverses gives id" do
-    v1 = Vector3f.new(1.0, 0.0, 2.0)
-    v2 = Vector3f.new(2.0, 1.0, 3.0)
-    v3 = Vector3f.new(0.0, 3.0, 1.0)
-    m = Matrix3f.new(v1, v2, v3)
-    m_copy = Matrix3f.new(v1, v2, v3)
-    expect(m.invert.mult(m_copy)).to eq(@id_3x3)
-  end
-
-  it "translations are correctly applied" do
+  it "can get translated" do
     expect(@I.translate(Vector3f.new(1.0, 2.0, 3.0))).to eq(@T)
   end
 
-  it "rotation around x axis should yield expected result" do
+  it "can be rotated around x axis" do
     v1 = Vector4f.new(1.0, 0.0, 0.0, 0.0)
     v2 = Vector4f.new(0.0, -1.0, 0.0, 0.0)
     v3 = Vector4f.new(0.0, 0.0, -1.0, 0.0)
@@ -167,7 +135,7 @@ describe Matrix4f do
     expect(@I.sub(a).sum).to be_within(0.0001).of(0)
   end
 
-  it "rotation around y axis should yield expected result" do
+  it "can be rotated around y axis" do
     v1 = Vector4f.new(-1.0, 0.0, 0.0, 0.0)
     v2 = Vector4f.new(0.0, 1.0, 0.0, 0.0)
     v3 = Vector4f.new(0.0, 0.0, -1.0, 0.0)
@@ -177,7 +145,7 @@ describe Matrix4f do
     expect(@I.sub(a).sum).to be_within(0.0001).of(0)
   end
 
-  it "rotation around z axis should yield expected result" do
+  it "can be rotated around z axis" do
     v1 = Vector4f.new(-1.0, 0.0, 0.0, 0.0)
     v2 = Vector4f.new(0.0, -1.0, 0.0, 0.0)
     v3 = Vector4f.new(0.0, 0.0, 1.0, 0.0)
@@ -187,7 +155,7 @@ describe Matrix4f do
     expect(@I.sub(a).sum).to be_within(0.0001).of(0)
   end
 
-  it "replacing a row works as expected" do
+  it "can set row values" do
     m = Matrix4f.new(nil,nil,nil,nil).make_identity
     m.set_at(1, 1, 2.0)
     m.set_at(1, 2, 3.0)
@@ -198,7 +166,7 @@ describe Matrix4f do
     expect(@I).to eq(m)
   end
 
-  it "replacing a column works as expected" do
+  it "can set column values" do
     m = Matrix4f.new(nil,nil,nil,nil).make_identity
     m.set_at(1,1, 2.0)
     m.set_at(2,1, 3.0)
@@ -209,8 +177,7 @@ describe Matrix4f do
     expect(@I).to eq(m)
   end
 
-  it "should be possible to make an identity matrix instance" do
+  it "can generate the identity matrix" do
     expect(Matrix4f.identity).to eq(@I)
-    expect(Matrix3f.identity).to eq(@id_3x3)
   end
 end
