@@ -39,7 +39,9 @@ class Renderer
     begin
       user_input = (args[:file_name].nil? || args[:file_name].empty?) ? '' : "_#{args[:file_name].to_s}"
       file_name = @scene.file_name + user_input
-      @image.save("#{OUTPUT_PATH}#{file_name}.bmp", :bmp)
+      unless ENV['SKIP_WRITE']
+        @image.save("#{OUTPUT_PATH}#{file_name}.bmp", :bmp)
+      end
     rescue
       print 'Could no generate the image'
     end
