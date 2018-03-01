@@ -9,6 +9,10 @@ class Vector3f
     @z = z_f
   end
 
+  def ==(other)
+    (x == other.x) && (y == other.y) && (z == other.z)
+  end
+
   # shallow copy of this vector3f
   # @return new instance of this vector
   #         having the same components
@@ -143,15 +147,6 @@ class Vector3f
     return self if normalization_factor.zero?
 
     self.scale (1.0 / normalization_factor.to_f)
-  end
-
-  # other == self
-  # check whether components of this vector are
-  # exactly the same to a given other vector
-  # @param other Vector3f
-  # @return Boolean are they the same
-  def same_values_as?(other)
-    (@x == other.x) && (@y == other.y) && (@z == other.z)
   end
 
   # || other - self || < epsilon

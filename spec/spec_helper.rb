@@ -7,8 +7,6 @@ require 'rubygems'
 require 'imageruby'
 require 'dependencies'
 
-Dir.glob('./test/*_spec.rb').each { |f| require f }
-
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|

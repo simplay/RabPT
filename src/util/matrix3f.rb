@@ -146,10 +146,10 @@ class Matrix3f
     applyBinaryComponentwise(:-, other)
   end
 
-  def same_values_as?(other)
+  def ==(other)
     predicat = true
     (1..3).each do |idx|
-      predicat &&= other.row(idx).same_values_as?(self.row(idx))
+      predicat &&= other.row(idx) == row(idx)
     end
     predicat
   end
@@ -158,7 +158,7 @@ class Matrix3f
   def scale(by)
     (1..3).each do |i|
       (1..3).each do |j|
-        val = at(i,j)*by
+        val = at(i,j) * by
         setElementAt(i, j, val)
       end
     end
@@ -170,7 +170,7 @@ class Matrix3f
     sign = 1.0
     (1..3).each do |i|
       (1..3).each do |j|
-        setElementAt(i,j, sign*snapshot.masked_block(i,j).det)
+        setElementAt(i,j, sign * snapshot.masked_block(i, j).det)
         sign *= -1.0
       end
     end
