@@ -1,59 +1,69 @@
 #!/usr/bin/env jruby
 
-$LOAD_PATH.unshift File.expand_path('src')
+$LOAD_PATH.unshift(File.expand_path('src'))
 
 require 'rubygems'
 require 'imageruby'
 require 'optparse'
 require 'dependencies'
 
-Version = "0.0.1"
+VERSION = '0.0.1'.freeze
 
 user_args = {}
-opt_parser = OptionParser.new do |opt|
-  opt.banner = "Usage example: ruby rabpt.rb -s 4 -w 128 -h 128 -f my_scene_file -i 5
-  \nFor additional information please visit RabPT's github repository:\nhttps://github.com/simplay/RabPT"
+opt_parser = OptionParser.new do |opts|
+  opts.banner = <<~BANNER
+    Usage example: ruby rabpt.rb -s 4 -w 128 -h 128 -f my_scene_file -i 5
+    For additional information please visit RabPT's github repository:
+    https://github.com/simplay/RabPT"
+  BANNER
 
-  opt.separator  ""
-  # some defaults
-  user_args[:SPP] = 8
+  opts.on('-s', '--spp [SPP]', Integer,
+          'Number of samples per pixel') do |spp|
+    user_args[:spp] = spp
+  end
 
-  opt.on("-s", "--spp N", Integer, "the number of samples per pixel") do |spp|
-    user_args[:SPP] = spp
+  opts.on('-w', '--width [WIDTH]', Integer,
+          'Width of the resulting image') do |width|
+    user_args[:width] = width
   end
-  opt.on("-w", "--width WIDTH", Integer, "width of the resulting image") do |width|
-    user_args[:M] = width
+
+  opts.on('-h', '--height [HEIGHT]', Integer,
+          'Height of the resulting image') do |height|
+    user_args[:height] = height
   end
-  opt.on("-h", "--height HEIGHT", Integer, "height of the resulting image") do |height|
-    user_args[:N] = height
-  end
-  opt.on("-f", "--filename FILENAME", String, "name of the file that the resulting image will be saved in (without file extension)") do |file_name|
+
+  opts.on('-f', "--filename [FILENAME]", String,
+          'output filename') do |file_name|
     user_args[:file_name] = file_name
   end
-  opt.on("-i", "--inputscene N", Integer, "Number of the scene that is going to be rendered") do |selected_scene|
+
+  opts.on('-i', "--inputscene [INPUTSCENE]", Integer,
+          'Scence to render') do |selected_scene|
     user_args[:selected_scene] = selected_scene
   end
 
-  opt.on_tail("-h", "--help", "Show this message") do
-    puts opt
+  opts.on_tail('-h', '--help', 'Show this message') do
+    puts opts
     exit
   end
-  opt.on_tail("--version", "Show version") do
-    puts "rabpt #{Version}"
+
+  opts.on_tail('--version', 'Show version') do
+    puts "RabPT v#{VERSION}"
     exit
   end
 end
 
 begin
   opt_parser.parse!
-  required_args = [:SPP, :M, :N, :file_name, :selected_scene]
+  required_args = %i(spp width height file_name selected_scene)
   required_args.each do |arg|
     raise OptionParser::MissingArgument if user_args[arg].nil?
   end
 rescue OptionParser::MissingArgument
-  puts "Incorrect input argument(s) passed\n"
+  puts 'Incorrect input argument(s) passed'
+  puts
   puts opt_parser.help
   exit
 end
 
-Renderer.new user_args
+Renderer.new(user_args)
