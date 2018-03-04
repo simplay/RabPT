@@ -16,8 +16,6 @@ class MeshTriangle
     verts = mesh.vertices.values_at(facs.x, facs.y, facs.z)
     norms = mesh.normals.values_at(facs.x, facs.y, facs.z)
 
-    puts "#{facs} #{verts.map(&:to_s).inspect} #{index}"
-
     # spanning triangle points
     @p_x = verts[0]
     @p_y = verts[1]
