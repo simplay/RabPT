@@ -52,6 +52,7 @@ require 'scenes/blinn_test_scene'
 require 'scenes/camera_test_scene'
 require 'scenes/instancing_test_scene'
 require 'scenes/mesh_loading_test_scene'
+require 'scenes/triangle_test_scene'
 require 'scenes/refraction_test_scene'
 
 

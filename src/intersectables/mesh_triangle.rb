@@ -11,10 +11,9 @@ class MeshTriangle
   # TODO explain beta_gama
   def initialize(mesh, index)
     @mesh = mesh
-    facs = mesh.indices[index + 1]
-
-    verts = mesh.vertices.values_at(facs.x, facs.y, facs.z)
-    norms = mesh.normals.values_at(facs.x, facs.y, facs.z)
+    faces = mesh.indices[index]
+    verts = mesh.vertices.values_at(faces.x, faces.y, faces.z)
+    norms = mesh.normals.values_at(faces.x, faces.y, faces.z)
 
     # spanning triangle points
     @p_x = verts[0]

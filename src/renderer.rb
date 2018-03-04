@@ -69,6 +69,8 @@ class Renderer
                     MeshLoadingTestScene
                   when 5
                     RefractionTestScene
+                  when 6
+                    TriangleTestScene
                   else
                     CameraTestScene
                   end

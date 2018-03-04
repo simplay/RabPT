@@ -27,4 +27,8 @@ describe 'Rabpt' do
   it "can run RefractionTestScene" do
     expect(execute(mode: 5).success?).to be(true)
   end
+
+  it "can run TriangleTestScene" do
+    expect(execute(mode: 6).success?).to be(true)
+  end
 end
