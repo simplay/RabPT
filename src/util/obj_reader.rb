@@ -2,8 +2,6 @@
 # for further information please have a look at:
 # http://en.wikipedia.org/wiki/Wavefront_.obj_file
 class ObjReader
-  ObjReader::BASEPATH = 'meshes/'.freeze
-
   attr_reader :mesh_data,
               :x_min, :x_max,
               :y_min, :y_max,
@@ -13,7 +11,7 @@ class ObjReader
   #        the file name of the target
   #        obj file + its extension
   # E.g. file_name = "teapot.obj"
-  def initialize file_name
+  def initialize(file_name)
     @x_min = Float::MAX
     @y_min = Float::MAX
     @z_min = Float::MAX
@@ -29,10 +27,10 @@ class ObjReader
     vertex_counter = 1
     normal_counter = 1
     face_counter = 1
-    path = ObjReader::BASEPATH + file_name
-    file = File.new(path, "r")
+    file_path = File.join('meshes', file_name)
+    file = File.read(file_path)
 
-    while (line = file.gets)
+    file.split(/\n/).each do |line|
       arguments = line.split
       case arguments[0]
       when "v"
@@ -63,7 +61,6 @@ class ObjReader
       end
       counter = counter + 1
     end
-    file.close
 
     # number vertex noramls corresponds to number of mesh vertices
     normals = normals.reject do |key|
