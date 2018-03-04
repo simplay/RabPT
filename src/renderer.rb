@@ -8,16 +8,13 @@ class Renderer
   OUTPUT_PATH           = 'output/'.freeze
 
   if RUBY_PLATFORM == 'java'
-    require 'java'
-    require_relative 'rendering_task.rb'
-
     java_import 'java.util.concurrent.Callable'
     java_import 'java.util.concurrent.FutureTask'
     java_import 'java.util.concurrent.LinkedBlockingQueue'
     java_import 'java.util.concurrent.ThreadPoolExecutor'
     java_import 'java.util.concurrent.TimeUnit'
     java_import 'java.lang.Runtime'
-    CORE_POOL_THREADS = Runtime.getRuntime.availableProcessors
+    CORE_POOL_THREADS = Runtime.get_runtime.available_processors
   end
 
   attr_accessor :image,
@@ -112,14 +109,18 @@ class Renderer
     num_tasks.times do |k|
       block[:ymin] = k * delta_height + 1
       block[:ymax] = (k + 1) * delta_height
-      tasks << FutureTask.new(RenderingTask.new(block, scene, integrator, sampler))
+      tasks << FutureTask.new(
+        RenderingTask.new(block, scene, integrator, sampler)
+      )
     end
 
     # handle reminder rows
     if reminder_rows > 0
       block[:ymin] = scene.height - reminder_rows + 1
       block[:ymax] = scene.height + 1
-      tasks << FutureTask.new(RenderingTask.new(block, scene, integrator, sampler))
+      tasks << FutureTask.new(
+        RenderingTask.new(block, scene, integrator, sampler)
+      )
     end
 
     print 'Progress: '
@@ -190,7 +191,7 @@ class Renderer
     stars = PROGRESS_STAR_COUNT
 
     num_tasks = (scene.height / ROW_NUMBER_PER_THREAD).to_i
-    reminder_rows = scene.height - num_tasks*ROW_NUMBER_PER_THREAD
+    reminder_rows = scene.height - num_tasks * ROW_NUMBER_PER_THREAD
     num_tasks += 1 if reminder_rows > 0
     pixels_per_star = (num_tasks / stars).to_i
     (pixels_per_star < 1) ? 1 : pixels_per_star
