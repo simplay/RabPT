@@ -18,7 +18,6 @@ require 'light_geometry'
 require 'light_list'
 require 'ray'
 require 'renderer'
-require 'rendering_task'
 require 'sampler'
 require 'sampler_factory'
 require 'scene'
@@ -55,3 +54,8 @@ require 'scenes/instancing_test_scene'
 require 'scenes/mesh_loading_test_scene'
 require 'scenes/refraction_test_scene'
 
+
+if RUBY_PLATFORM == 'java'
+  require 'java'
+  require 'rendering_task'
+end
