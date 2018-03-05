@@ -23,10 +23,10 @@ class ObjReader
     faces = {}
     normals = {}
 
-    counter = 1
+    counter = 0
     vertex_counter = 1
     normal_counter = 1
-    face_counter = 1
+    face_counter = 0
     file_path = File.join('meshes', file_name)
     file = File.read(file_path)
 
@@ -53,6 +53,8 @@ class ObjReader
 				normal = Vector3f.make_from_floats(arguments[1..3].map &:to_f)
         normals[normal_counter] = normal.normalize
         normal_counter += 1
+      when "vt"
+        # TODO: impelement reading tangents
 
       when "#"
         # meta mesh information
