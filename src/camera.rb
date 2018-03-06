@@ -86,7 +86,7 @@ class Camera
     yc = Vector4f.new(v.x, v.y, v.z, 0.0)
     e = Vector4f.new(from.x, from.y, from.z, 1.0)
 
-    @camera_matrix = Matrix4f.new(nil, nil, nil, nil)
+    @camera_matrix = Matrix4f.new
     @camera_matrix.set_column_at(1, xc)
     @camera_matrix.set_column_at(2, yc)
     @camera_matrix.set_column_at(3, zc)

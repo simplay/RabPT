@@ -76,11 +76,12 @@ class Matrix4f
   # return identity matrix
   # @return identity matrix:Matrix4f
   def self.identity
-    v1 = Vector4f.new(1.0, 0.0, 0.0, 0.0)
-    v2 = Vector4f.new(0.0, 1.0, 0.0, 0.0)
-    v3 = Vector4f.new(0.0, 0.0, 1.0, 0.0)
-    v4 = Vector4f.new(0.0, 0.0, 0.0, 1.0)
-    Matrix4f.new(v1, v2, v3, v4)
+    Matrix4f.new(
+      1.0, 0.0, 0.0, 0.0,
+      0.0, 1.0, 0.0, 0.0,
+      0.0, 0.0, 1.0, 0.0,
+      0.0, 0.0, 0.0, 1.0
+    )
   end
 
   # translate relying on homogeneous transformation
@@ -88,13 +89,13 @@ class Matrix4f
   # @param by:Vector3f representing translation vector
   # @return updated self
   def translate(by)
-    t = Matrix4f.new(nil, nil, nil, nil).make_identity
+    t = Matrix4f.identity
 
     other = by.to_a
     other << 1.0
 
     (1..4).each do |idx|
-      t.set_at(idx,4, other[idx-1])
+      t.set_at(idx, 4, other[idx - 1])
     end
     t.mult(self)
     ovwrite_me t
@@ -439,7 +440,7 @@ class Matrix4f
   # counter clock wise rotation
   # Math::cos(Math::PI) is -1.0
   def rotate_z_axis_by degree
-    rot = Matrix4f.new(nil, nil, nil, nil).make_identity
+    rot = Matrix4f.identity
     pi = Math::PI
     angle = (degree.to_f * pi) / 180.0
     rot.set_at(1, 1, Math::cos(angle))
@@ -451,7 +452,7 @@ class Matrix4f
 
   # counter clock wise rotation
   def rotate_y_axis_by(degree)
-    rot = Matrix4f.new(nil, nil, nil, nil).make_identity
+    rot = Matrix4f.identity
     pi = Math::PI
     angle = (degree.to_f * pi) / 180.0
     rot.set_at(1, 1, Math::cos(angle))
@@ -463,7 +464,7 @@ class Matrix4f
 
   # counter clock wise rotation
   def rotate_x_axis_by(degree)
-    rot = Matrix4f.new(nil, nil, nil, nil).make_identity
+    rot = Matrix4f.identity
     pi = Math::PI
     angle = (degree.to_f * pi) / 180.0
     rot.set_at(2, 2, Math::cos(angle))
