@@ -11,12 +11,9 @@ class MeshTriangle
   # TODO explain beta_gama
   def initialize(mesh, index)
     @mesh = mesh
-    facs = mesh.indices[index + 1]
-
-    verts = mesh.vertices.values_at(facs.x, facs.y, facs.z)
-    norms = mesh.normals.values_at(facs.x, facs.y, facs.z)
-
-    puts "#{facs} #{verts.map(&:to_s).inspect} #{index}"
+    faces = mesh.indices[index]
+    verts = mesh.vertices.values_at(faces.x, faces.y, faces.z)
+    norms = mesh.normals.values_at(faces.x, faces.y, faces.z)
 
     # spanning triangle points
     @p_x = verts[0]
@@ -93,16 +90,21 @@ class MeshTriangle
     a.add(b).add(c).normalize
   end
 
-  # use BC coordinates
-  # was triangle intersected
-  def inside_triangle?(beta, gamma)
-    no_triangle_hit = [beta, gamma].any? do |expression|
-      expression >= 0.0 && 1 >= expression
-    end
+  # if 0 < a*t + b < 1 then we are below line.
+  # if we are below two intersecting lines, then we are inside a triangle.
+  #
+  # @param t1 [Float] parameter of affine line
+  # @param t2 [Float] parameter of affine line
+  # @return [Boolean] true if we are inside a triangle spanned by 3 lines
+  def inside_triangle?(t1, t2)
+    outside_line1 = t1 <= 0.0 || t1 >= 1.0
+    outside_line2 = t2 <= 0.0 || t2 >= 1.0
 
-    return false if no_triangle_hit
+    # conservative inside check
+    return false if outside_line1 || outside_line2
 
-    value = gamma + beta
-    value >= 0.0 && 1 >= value
+    # parameterization within
+    t = t1 + t2
+    t > 0.0 && t < 1.0
   end
 end

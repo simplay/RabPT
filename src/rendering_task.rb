@@ -1,6 +1,3 @@
-# used to call java code
-require 'java'
-
 java_import 'java.util.concurrent.Callable'
 java_import 'java.util.concurrent.FutureTask'
 java_import 'java.util.concurrent.LinkedBlockingQueue'
@@ -34,20 +31,20 @@ class RenderingTask
   private
 
   def compute_contribution
-    @x_range.each do |j|
-      @y_range.each do |i|
-        samples = @integrator.make_pixel_samples(@sampler, @scene.spp);
+    x_range.each do |j|
+      y_range.each do |i|
+        samples = integrator.make_pixel_samples(sampler, scene.spp);
         # for N sampels per pixel
         (1..samples.length).each do |k|
 
           # make ray
-          ray = @scene.camera.make_world_space_ray(i, j, samples[k-1])
+          ray = scene.camera.make_world_space_ray(i, j, samples[k-1])
 
           # evaluate ray
-          ray_spectrum = @integrator.integrate(ray)
+          ray_spectrum = integrator.integrate(ray)
 
           # write to film
-          @scene.film.add_sample(
+          scene.film.add_sample(
             i.to_f + samples[k-1][0].to_f,
             j.to_f + samples[k-1][1].to_f,
             ray_spectrum

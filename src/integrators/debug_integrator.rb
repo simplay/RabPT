@@ -17,7 +17,7 @@ class DebugIntegrator
 
     return contribution if hit_record.nil?
 
-    if hit_record.positive?
+    if hit_record.t.positive?
       # render green if hit point was "in front" of ray origin
       Spectrum.new(Vector3f.new(0.0, 1.0, 0.0))
     else
