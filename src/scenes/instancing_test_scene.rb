@@ -43,6 +43,7 @@ class InstancingTestScene
                                .translate(Vector3f.new(0.0, -2.0, 0.0))
 
     center_instance = Instance.new(sphere, Matrix4f.identity)
+
     right_instance = Instance.new(sphere, translation_right)
     left_instance = Instance.new(sphere, translation_left)
 

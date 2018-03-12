@@ -40,6 +40,30 @@ end
 
 
 Benchmark.bm do |x|
+  x.report('RabPT#translate') do
+    a = Matrix4f.new(
+      ran, ran, ran, ran,
+      ran, ran, ran, ran,
+      ran, ran, ran, ran,
+      ran, ran, ran, ran
+    )
+    t = Vector3f.new(ran, ran, ran)
+    a.translate(t)
+  end
+  x.report('translate2') do
+    a = Matrix4f.new(
+      ran, ran, ran, ran,
+      ran, ran, ran, ran,
+      ran, ran, ran, ran,
+      ran, ran, ran, ran
+    )
+    t = Vector3f.new(ran, ran, ran)
+    a.translate2(t)
+  end
+end
+
+
+Benchmark.bm do |x|
   x.report('RabPT#mult4f') do
     m1 = Matrix4f.new(
       ran, ran, ran, ran,
@@ -54,7 +78,9 @@ Benchmark.bm do |x|
       ran, ran, ran, ran,
       ran, ran, ran, ran
     )
+    m1.mult(m2)
   end
+
   x.report('ejml#mult4f') do
     a = [
       ran, ran, ran, ran,
@@ -73,4 +99,8 @@ Benchmark.bm do |x|
     m2 = org.ejml.simple.SimpleMatrix.new(4, 4, true, b.to_java(:float))
     m1.mult(m2)
   end
+
+
+
+
 end

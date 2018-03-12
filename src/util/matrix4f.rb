@@ -84,11 +84,7 @@ class Matrix4f
     )
   end
 
-  # translate relying on homogeneous transformation
-  # overwrites and returns self
-  # @param by:Vector3f representing translation vector
-  # @return updated self
-  def translate(by)
+  def translate2(by)
     t = Matrix4f.identity
 
     other = by.to_a
@@ -99,6 +95,18 @@ class Matrix4f
     end
     t.mult(self)
     ovwrite_me t
+  end
+
+  # translate relying on homogeneous transformation
+  # overwrites and returns self
+  # @param by:Vector3f representing translation vector
+  # @return updated self
+  def translate(by)
+    @m03 = @m00 * by.x + @m01 * by.y + @m02 * by.z + @m03
+    @m13 = @m10 * by.x + @m11 * by.y + @m12 * by.z + @m13
+    @m23 = @m20 * by.x + @m21 * by.y + @m22 * by.z + @m23
+    @m33 = @m30 * by.x + @m31 * by.y + @m32 * by.z + @m33
+    self
   end
 
   # apply a rotation matrix around
@@ -114,14 +122,13 @@ class Matrix4f
     ovwrite_me rot
   end
 
-  # transpose this matrix
   def transpose
-    swap(:m10, :m01)
-    swap(:m20, :m02)
-    swap(:m30, :m03)
-    swap(:m21, :m12)
-    swap(:m31, :m13)
-    swap(:m32, :m23)
+    m01 = @m10; @m10 = @m01; @m01 = m01
+    m02 = @m20; @m20 = @m02; @m02 = m02
+    m03 = @m30; @m30 = @m03; @m03 = m03
+    m21 = @m12; @m12 = @m21; @m21 = m21
+    m31 = @m13; @m13 = @m31; @m31 = m31
+    m32 = @m23; @m23 = @m32; @m32 = m32
     self
   end
 
@@ -172,20 +179,31 @@ class Matrix4f
   # assumption: dimensions match
   # perfroms a matrix4f matrix4f multiplication
   def mult(other)
-    values = []
-    (1..4).each do |i|
-      (1..4).each do |j|
-        values << row(j).dot(other.column(i))
-      end
-    end
+    m00 = @m00 * other.m00 + @m01 * other.m10 + @m02 * other.m20 + @m03 * other.m30
+    m01 = @m00 * other.m01 + @m01 * other.m11 + @m02 * other.m21 + @m03 * other.m31
+    m01 = @m00 * other.m02 + @m01 * other.m12 + @m02 * other.m22 + @m03 * other.m32
+    m01 = @m00 * other.m03 + @m01 * other.m13 + @m02 * other.m23 + @m03 * other.m33
 
-    counter = 0
-    (1..4).each do |i|
-      (1..4).each do |j|
-        setElementAt(j,i, values[counter])
-        counter += 1
-      end
-    end
+    m10 = @m10 * other.m00 + @m11 * other.m10 + @m12 * other.m20 + @m13 * other.m30
+    m11 = @m10 * other.m01 + @m11 * other.m11 + @m12 * other.m21 + @m13 * other.m31
+    m11 = @m10 * other.m02 + @m11 * other.m12 + @m12 * other.m22 + @m13 * other.m32
+    m11 = @m10 * other.m03 + @m11 * other.m13 + @m12 * other.m23 + @m13 * other.m33
+
+    m20 = @m20 * other.m00 + @m21 * other.m10 + @m22 * other.m20 + @m23 * other.m30
+    m21 = @m20 * other.m01 + @m21 * other.m11 + @m22 * other.m21 + @m23 * other.m31
+    m21 = @m20 * other.m02 + @m21 * other.m12 + @m22 * other.m22 + @m23 * other.m32
+    m21 = @m20 * other.m03 + @m21 * other.m13 + @m22 * other.m23 + @m23 * other.m33
+
+    m30 = @m30 * other.m00 + @m31 * other.m10 + @m32 * other.m20 + @m33 * other.m30
+    m31 = @m30 * other.m01 + @m31 * other.m11 + @m32 * other.m21 + @m33 * other.m31
+    m31 = @m30 * other.m02 + @m31 * other.m12 + @m32 * other.m22 + @m33 * other.m32
+    m31 = @m30 * other.m03 + @m31 * other.m13 + @m32 * other.m23 + @m33 * other.m33
+
+    @m00 = m00; @m01 = m01; @m02 = m02; @m03 = m03
+    @m10 = m10; @m11 = m11; @m12 = m12; @m13 = m13
+    @m20 = m20; @m21 = m21; @m22 = m22; @m23 = m23
+    @m30 = m30; @m31 = m31; @m32 = m32; @m33 = m33
+
     self
   end
 
