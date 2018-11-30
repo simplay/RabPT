@@ -46,3 +46,9 @@ In the following a list of required steps to perform in order to let the applica
 2. `jruby -S gem install imageruby`
 3. `jruby -S gem install imageruby-bmp`
 4. Start App: `jruby -S rabpt.rb img_width img_height spp name_ext sel_scene`
+
+## Use Truffleruby
+
+Tested using `truffleruby-1.0.0-rc9`
+
+Example: `RUBYOPT="-W0" ruby rabpt.rb -s 4 -w 128 -h 128 -f my_scene_file -i 3`
