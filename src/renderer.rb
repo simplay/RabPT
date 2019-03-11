@@ -142,22 +142,22 @@ class Renderer
   end
 
   def write_image
-    film_img = scene.film.image
-    idn = 0
-    idm = 0
+    # film_img = scene.film.image
+    # idn = 0
+    # idm = 0
 
-    # write pixelwise into image
-    film_img.each do |row|
-      idm = 0
-      row.each do |pixel|
-        x = toInt255(pixel.r)
-        y = toInt255(pixel.g)
-        z = toInt255(pixel.b)
-        image[idm, idn] =  Color.from_rgb(x, y, z)
-        idm += 1
-      end
-      idn += 1
-    end
+    # # write pixelwise into image
+    # film_img.each do |row|
+    #   idm = 0
+    #   row.each do |pixel|
+    #     x = toInt255(pixel.r)
+    #     y = toInt255(pixel.g)
+    #     z = toInt255(pixel.b)
+    #     image[idm, idn] =  Color.from_rgb(x, y, z)
+    #     idm += 1
+    #   end
+    #   idn += 1
+    # end
   end
 
   # foreach pixel
