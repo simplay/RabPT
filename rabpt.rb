@@ -1,6 +1,7 @@
 #!/usr/bin/env jruby
 
 $LOAD_PATH.unshift(File.expand_path('src'))
+$LOAD_PATH.unshift(File.expand_path('lib'))
 
 require 'rubygems'
 require 'imageruby'
